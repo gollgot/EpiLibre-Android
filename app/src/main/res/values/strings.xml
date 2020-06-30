@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EpiLibre</string>
+    <string name="menu_guest_connection">Connexion</string>
 </resources>

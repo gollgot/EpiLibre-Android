@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Connexion"
+        android:title="@string/menu_guest_connection"
         android:icon="@drawable/ic_sign_in"
         android:id="@+id/itemGuestMenuSignIn"
-        app:showAsAction="always"
+        app:showAsAction="never"
         />
 </menu>
