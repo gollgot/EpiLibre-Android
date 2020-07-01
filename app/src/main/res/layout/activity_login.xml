@@ -14,7 +14,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/loginTvConnection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -24,38 +23,50 @@
             android:layout_marginTop="50dp"
             android:text="@string/login_tv_connection" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/loginEtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textEmailAddress"
-            android:hint="@string/login_hint_email"
-            android:drawableStart="@drawable/ic_mail"
-            android:drawablePadding="10dp"
             android:layout_marginTop="50dp"
-            android:textColorHint="@color/colorPrimary"
-            android:backgroundTint="@color/colorPrimary"/>
+            android:hint="@string/login_hint_email"
+            app:startIconDrawable="@drawable/ic_mail"
+            app:endIconMode="clear_text"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/loginEtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword"
+            android:layout_marginTop="15dp"
             android:hint="@string/login_hint_password"
-            android:drawableStart="@drawable/ic_lock"
-            android:drawablePadding="10dp"
-            android:textColorHint="@color/colorPrimary"
-            android:backgroundTint="@color/colorPrimary"/>
+            app:startIconDrawable="@drawable/ic_lock"
+            app:endIconMode="password_toggle"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/loginBtnConnection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:background="@drawable/btn_primary_color"
             android:textColor="@color/white"
-            android:layout_marginTop="30dp"
             android:text="@string/login_tv_connection" />
+
     </LinearLayout>
 </RelativeLayout>
