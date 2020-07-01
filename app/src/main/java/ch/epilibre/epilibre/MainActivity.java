@@ -36,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 // Get boolean data from Intent
                 boolean isConnected = data.getBooleanExtra("isConnected", false);
                 if(isConnected){
-                    user = new User();
-                    Snackbar.make(findViewById(android.R.id.content), "Bienvenue", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(android.R.id.content), "Bienvenue " + user.getFirstname() + " " + user.getLastname(), Snackbar.LENGTH_SHORT).show();
                     // Force to reload the options menu (will call the onPrepareOptionsMenu)
                     invalidateOptionsMenu();
                     tv.setText("Connected");
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, LOGIN_ACTIVITY_REQUEST_CODE);
                 return true;
             case R.id.itemGuestMenuSignOut:
-                user = null;
+                user = null; // Remove user data
                 invalidateOptionsMenu();
                 tv.setText("Hello World");
                 Snackbar.make(findViewById(android.R.id.content), "Vous vous êtes déconnecté", Snackbar.LENGTH_SHORT).show();
@@ -89,5 +88,13 @@ public class MainActivity extends AppCompatActivity {
      */
     public static User getUser(){
         return user;
+    }
+
+    /**
+     * Static method to set a new User
+     * @param user A new User
+     */
+    public static void setUser(User user){
+        MainActivity.user = user;
     }
 }
