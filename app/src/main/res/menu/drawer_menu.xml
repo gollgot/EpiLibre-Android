@@ -3,25 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="Shop">
+    <item android:title="@string/drawer_group_shop">
         <menu>
             <!-- Products-->
             <item android:id="@+id/drawer_menu__item_products"
                 android:icon="@drawable/ic_products"
-                android:title="Produits"/>
+                android:title="@string/drawer_item_products"/>
             <!-- Categories -->
             <item android:id="@+id/drawer_menu__item_categories"
                 android:icon="@drawable/ic_categories"
-                android:title="Categories"/>
+                android:title="@string/drawer_item_categories"/>
         </menu>
     </item>
 
-    <item android:title="Utilisateurs">
+    <item android:title="@string/drawer_group_users">
         <menu>
             <!-- Products-->
             <item android:id="@+id/drawer_menu__item_users"
                 android:icon="@drawable/ic_users"
-                android:title="Utilisateurs"/>
+                android:title="@string/drawer_item_users"/>
         </menu>
     </item>
 
