@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Shop">
+        <menu>
+            <!-- Products-->
+            <item android:id="@+id/drawer_menu__item_products"
+                android:icon="@drawable/ic_products"
+                android:title="Produits"/>
+            <!-- Categories -->
+            <item android:id="@+id/drawer_menu__item_categories"
+                android:icon="@drawable/ic_categories"
+                android:title="Categories"/>
+        </menu>
+    </item>
+
+    <item android:title="Utilisateurs">
+        <menu>
+            <!-- Products-->
+            <item android:id="@+id/drawer_menu__item_users"
+                android:icon="@drawable/ic_users"
+                android:title="Utilisateurs"/>
+        </menu>
+    </item>
+
+
+</menu>

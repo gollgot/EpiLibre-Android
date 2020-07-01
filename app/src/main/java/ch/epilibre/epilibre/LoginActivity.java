@@ -74,16 +74,34 @@ public class LoginActivity extends AppCompatActivity {
      * If fail: Set error and wait
      */
     private void authenticate(){
-        String targetEmail = "loic";
-        String targetPassword = "loic";
+        String targetEmail1 = "loic";
+        String targetPassword1 = "loic";
+
+        String targetEmail2 = "sarah";
+        String targetPassword2 = "sarah";
+
+        String targetEmail3 = "david";
+        String targetPassword3 = "david";
 
         String emailEntered = etEmail.getEditText().getText().toString();
         String passwordEntered = etPassword.getEditText().getText().toString();
 
         // Auth OK
-        if(emailEntered.equalsIgnoreCase(targetEmail) && passwordEntered.equalsIgnoreCase(targetPassword)){
+        if(emailEntered.equalsIgnoreCase(targetEmail1) && passwordEntered.equalsIgnoreCase(targetPassword1)){
             // Store into session manager all user data and start the MainActivity
             sessionManager.createLoginSession(1, "Loïc", "Dessaules", "loic.dessaules@heig-vd.ch", "SUPER_ADMIN");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            finish();
+            startActivity(intent);
+        }else if(emailEntered.equalsIgnoreCase(targetEmail2) && passwordEntered.equalsIgnoreCase(targetPassword2)){
+            // Store into session manager all user data and start the MainActivity
+            sessionManager.createLoginSession(2, "Sarah", "Voirin", "sarah.voirin@epfl.ch", "ADMIN");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            finish();
+            startActivity(intent);
+        }else if(emailEntered.equalsIgnoreCase(targetEmail3) && passwordEntered.equalsIgnoreCase(targetPassword3)){
+            // Store into session manager all user data and start the MainActivity
+            sessionManager.createLoginSession(3, "David", "Dupond", "david.dupond@epfl.ch", "SELLER");
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             finish();
             startActivity(intent);
