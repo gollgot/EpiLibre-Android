@@ -6,6 +6,6 @@
         android:title="@string/menu_guest_connection"
         android:icon="@drawable/ic_sign_in"
         android:id="@+id/itemGuestMenuSignIn"
-        app:showAsAction="never"
+        app:showAsAction="always"
         />
 </menu>
