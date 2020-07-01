@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">EpiLibre</string>
-    <string name="menu_guest_connection">Connexion</string>
+    <string name="menu_guest_sign_in">Connexion</string>
+    <string name="menu_guest_sign_out">Déconnexion</string>
     <string name="login_tv_connection">Connexion</string>
     <string name="login_hint_email">Email</string>
     <string name="login_hint_password">Password</string>

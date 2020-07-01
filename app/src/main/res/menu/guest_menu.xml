@@ -3,9 +3,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="@string/menu_guest_connection"
+        android:title="@string/menu_guest_sign_in"
         android:icon="@drawable/ic_sign_in"
         android:id="@+id/itemGuestMenuSignIn"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:title="@string/menu_guest_sign_out"
+        android:icon="@drawable/ic_sign_out"
+        android:id="@+id/itemGuestMenuSignOut"
+        app:showAsAction="ifRoom"
         />
 </menu>
