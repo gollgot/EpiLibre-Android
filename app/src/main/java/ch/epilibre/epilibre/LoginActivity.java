@@ -13,6 +13,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private SessionManager sessionManager;
     private TextInputLayout etEmail;
     private TextInputLayout etPassword;
     private Button btnLogin;
@@ -22,6 +23,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Check if we already logged in -> skip the login activity and launch the MainActivity
+        sessionManager = new SessionManager(getApplicationContext());
+        if(sessionManager.isLoggedIn()){
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            finish();
+            startActivity(intent);
+        }
+
         etEmail = findViewById(R.id.loginEtEmail);
         etPassword = findViewById(R.id.loginEtPassword);
         btnLogin = (Button) findViewById(R.id.loginBtnConnection);
@@ -29,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(formInputsCorrect()){
                     authenticate();
                 }
@@ -66,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
      * If fail: Set error and wait
      */
     private void authenticate(){
-        String targetEmail = "loic.dessaules@heig-vd.ch";
+        String targetEmail = "loic";
         String targetPassword = "loic";
 
         String emailEntered = etEmail.getEditText().getText().toString();
@@ -74,16 +82,11 @@ public class LoginActivity extends AppCompatActivity {
 
         // Auth OK
         if(emailEntered.equalsIgnoreCase(targetEmail) && passwordEntered.equalsIgnoreCase(targetPassword)){
-
-            // Create the connected user
-            User user = new User(1, "Loïc", "Dessaules", "loic.dessaules@heig-vd.ch", Role.SUPER_ADMIN);
-            MainActivity.setUser(user);
-
-            // Comeback to previous activity (MainActivity) and notify it that result is OK and we are connected
-            Intent intent = new Intent();
-            intent.putExtra("isConnected", true);
-            setResult(RESULT_OK, intent);
+            // Store into session manager all user data and start the MainActivity
+            sessionManager.createLoginSession(1, "Loïc", "Dessaules", "loic.dessaules@heig-vd.ch", "SUPER_ADMIN");
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             finish();
+            startActivity(intent);
         }
         // Error
         else{
