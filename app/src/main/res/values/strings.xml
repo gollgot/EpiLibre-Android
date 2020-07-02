@@ -12,4 +12,6 @@
     <string name="drawer_item_products">Produits</string>
     <string name="drawer_item_categories">Categories</string>
     <string name="drawer_item_users">Utilisateurs</string>
+    <string name="main_shopping_list">Liste d\'achat</string>
+    <string name="main_add_product">Ajouter un produit</string>
 </resources>

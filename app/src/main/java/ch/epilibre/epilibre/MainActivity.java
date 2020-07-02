@@ -26,16 +26,14 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     private SessionManager sessionManager;
     private User user;
 
     private final static int LAUNCH_PRODUCTS_ACTIVITY = 1;
-    private Map<String, Integer> products;
+    private Map<String, Integer> shoppingList;
     private TextView tv;
-    private Button btnProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +43,16 @@ public class MainActivity extends AppCompatActivity {
         // Fetch the current user (in this activity we have obligatory a connected user)
         sessionManager = new SessionManager(getApplicationContext());
         user = sessionManager.getUserDetails();
-        Snackbar.make(findViewById(android.R.id.content), "Bienvenue " + user.getFirstname() + " " + user.getLastname() , Snackbar.LENGTH_SHORT).show();
 
+        // Load the navigation drawer
         loadNavigationDrawer();
 
-        products = new HashMap<>();
+        // Shopping list stuff
+        shoppingList = new HashMap<>();
         tv = (TextView) findViewById(R.id.main_tv);
-        btnProducts = (Button) findViewById(R.id.mainBtnProducts);
+        Button btnAddProduct = (Button) findViewById(R.id.mainBtnAddProduct);
 
-        btnProducts.setOnClickListener(new View.OnClickListener() {
+        btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
@@ -62,9 +61,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Load the navigation Drawer
+     * For SUPER_ADMIN: All menu items
+     * For ADMIN: only shop stuff
+     * For SELLER: No navigation drawer
+     */
     private void loadNavigationDrawer() {
         // Set up the drawer menu and enable the toggle mhamburger menu
-        drawerLayout = (DrawerLayout) findViewById(R.id.mainDrawer);
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.mainDrawer);
 
         if(user.getRole() == Role.SELLER){
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -86,9 +91,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateProducts(){
+    /**
+     * Update the whole shopping list displaying
+     */
+    private void updateShoppingList(){
         tv.setText("");
-        for(Map.Entry<String, Integer> product : products.entrySet()){
+        for(Map.Entry<String, Integer> product : shoppingList.entrySet()){
             tv.append("\n" + product.getKey() + "\t" + product.getValue() + "x");
         }
     }
@@ -98,16 +106,19 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch(requestCode){
+            // Came back from ProductActivity
             case LAUNCH_PRODUCTS_ACTIVITY:
+                // Result OK
                 if(resultCode == Activity.RESULT_OK){
                     String productName = data.getStringExtra("product");
-                    if(products.containsKey(productName)){
-                        products.put(productName, products.get(productName) + 1);
+                    // Add to the hashmap the product and the quantity
+                    if(shoppingList.containsKey(productName)){
+                        shoppingList.put(productName, shoppingList.get(productName) + 1);
                     }else{
-                        products.put(productName, 1);
+                        shoppingList.put(productName, 1);
                     }
 
-                    updateProducts();
+                    updateShoppingList();
                 }
                 break;
         }
@@ -130,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         //Handle item selection
         switch (item.getItemId()) {
             case R.id.itemGuestMenuSignOut:
@@ -145,19 +155,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
-    /*
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if(user != null) {
-            menu.findItem(R.id.itemGuestMenuSignIn).setVisible(false);
-            menu.findItem(R.id.itemGuestMenuSignOut).setVisible(true);
-        }else{
-            menu.findItem(R.id.itemGuestMenuSignIn).setVisible(true);
-            menu.findItem(R.id.itemGuestMenuSignOut).setVisible(false);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }*/
 
 }

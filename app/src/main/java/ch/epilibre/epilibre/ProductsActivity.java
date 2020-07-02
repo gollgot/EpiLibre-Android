@@ -2,11 +2,13 @@ package ch.epilibre.epilibre;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toolbar;
 
 public class ProductsActivity extends AppCompatActivity {
 
@@ -18,6 +20,8 @@ public class ProductsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
+
+        setupCustomToolbar();
 
         btnProduct1 = (Button) findViewById(R.id.products_btn1);
         btnProduct2 = (Button) findViewById(R.id.products_btn2);
@@ -47,6 +51,33 @@ public class ProductsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Hide the current AppTheme ActionBar and place a cutom toolbar
+     * With this custom toolbar we can have a custom arrow back icon with
+     * its own custom onClick listener to comeback to the mainActivity with no result
+     */
+    private void setupCustomToolbar() {
+        // Hide the AppTheme ActionBar
+        getSupportActionBar().hide();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.productsToolbar);
+        toolbar.setTitle("EpiLibre");
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Return to the MainActivity without result
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, returnIntent);
+                finish();
+            }
+        });
+    }
+
+    /**
+     * Return data to the MainActivity
+     * @param button The called Button
+     */
     private void returnData(Button button){
         Intent intent = new Intent();
         intent.putExtra("product",button.getText().toString());

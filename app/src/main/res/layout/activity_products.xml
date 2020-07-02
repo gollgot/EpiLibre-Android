@@ -5,11 +5,20 @@
     android:layout_height="match_parent"
     tools:context=".ProductsActivity">
 
+    <Toolbar
+        android:id="@+id/productsToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:titleTextColor="@color/white"
+        android:background="@color/colorPrimary" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="30dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@id/productsToolbar">
 
         <TextView
             android:id="@+id/textView"

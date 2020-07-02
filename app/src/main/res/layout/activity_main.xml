@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:gravity="center_horizontal"
-            android:text="Liste d'achat"
+            android:text="@string/main_shopping_list"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -43,11 +43,11 @@
             tools:text="Products" />
 
         <Button
-            android:id="@+id/mainBtnProducts"
+            android:id="@+id/mainBtnAddProduct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="Ajouter un produit" />
+            android:text="@string/main_add_product" />
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>
