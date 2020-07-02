@@ -1,11 +1,9 @@
 package ch.epilibre.epilibre;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import java.util.HashMap;
 
 public class SessionManager {
 
@@ -18,7 +16,6 @@ public class SessionManager {
 
     // SharedPref data
     private static final String IS_LOGIN = "isLoggedIn";
-    private static final String USER_ID = "id";
     private static final String USER_FIRSTNAME = "firstname";
     private static final String USER_LASTNAME = "lastName";
     private static final String USER_EMAIL = "email";
@@ -36,21 +33,15 @@ public class SessionManager {
 
     /**
      * Create login session
-     * @param id The user ID
-     * @param firstname The user firstname
-     * @param lastname The user lastname
-     * @param email The user email
-     * @param role The user Role
      */
-    public void createLoginSession(int id, String firstname, String lastname, String email, String role){
+    public void createLoginSession(User user){
         editor.putBoolean(IS_LOGIN, true);
 
         // Store user's data
-        editor.putInt(USER_ID, id);
-        editor.putString(USER_FIRSTNAME, firstname);
-        editor.putString(USER_LASTNAME, lastname);
-        editor.putString(USER_EMAIL, email);
-        editor.putString(USER_ROLE, role);
+        editor.putString(USER_FIRSTNAME, user.getFirstname());
+        editor.putString(USER_LASTNAME, user.getLastname());
+        editor.putString(USER_EMAIL, user.getEmail());
+        editor.putString(USER_ROLE, user.getRole().toString());
 
         // commit changes
         editor.commit();
@@ -63,7 +54,6 @@ public class SessionManager {
      */
     public User getUserDetails(){
         return new User(
-                pref.getInt(USER_ID, -1),
                 pref.getString(USER_FIRSTNAME, null),
                 pref.getString(USER_LASTNAME, null),
                 pref.getString(USER_EMAIL, null),
