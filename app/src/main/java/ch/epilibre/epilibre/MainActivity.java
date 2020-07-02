@@ -32,23 +32,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Fetch the current user (in this activity we have obligatory a connected user)
-        SessionManager sessionManager = new SessionManager(getApplicationContext());
+        sessionManager = new SessionManager(getApplicationContext());
         user = sessionManager.getUserDetails();
         Snackbar.make(findViewById(android.R.id.content), "Bienvenue " + user.getFirstname() + " " + user.getLastname() , Snackbar.LENGTH_SHORT).show();
 
-        loadDrawerMenu();
-
-
+        loadNavigationDrawer();
     }
 
-    private void loadDrawerMenu() {
+    private void loadNavigationDrawer() {
         // Set up the drawer menu and enable the toggle mhamburger menu
         drawerLayout = (DrawerLayout) findViewById(R.id.mainDrawer);
 
         if(user.getRole() == Role.SELLER){
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }else {
-            actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.login_hint_email, R.string.login_hint_password);
+            actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
             drawerLayout.addDrawerListener(actionBarDrawerToggle);
             actionBarDrawerToggle.syncState();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -87,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.itemGuestMenuSignOut:
                 //invalidateOptionsMenu();
-                SessionManager sessionManager = new SessionManager(getApplicationContext());
                 sessionManager.logoutUser();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 finish();

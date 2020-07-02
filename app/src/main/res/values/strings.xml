@@ -5,6 +5,8 @@
     <string name="login_tv_connection">Connexion</string>
     <string name="login_hint_email">Email</string>
     <string name="login_hint_password">Mot de passe</string>
+    <string name="drawer_open">Ouvrir</string>
+    <string name="drawer_close">Fermer</string>
     <string name="drawer_group_shop">Epicerie</string>
     <string name="drawer_group_users">Utilisateurs</string>
     <string name="drawer_item_products">Produits</string>
