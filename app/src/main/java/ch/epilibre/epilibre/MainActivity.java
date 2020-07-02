@@ -1,22 +1,28 @@
 package ch.epilibre.epilibre;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     private User user;
+
+    private final static int LAUNCH_PRODUCTS_ACTIVITY = 1;
+    private Map<String, Integer> products;
+    private TextView tv;
+    private Button btnProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
         Snackbar.make(findViewById(android.R.id.content), "Bienvenue " + user.getFirstname() + " " + user.getLastname() , Snackbar.LENGTH_SHORT).show();
 
         loadNavigationDrawer();
+
+        products = new HashMap<>();
+        tv = (TextView) findViewById(R.id.main_tv);
+        btnProducts = (Button) findViewById(R.id.mainBtnProducts);
+
+        btnProducts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
+                startActivityForResult(intent, LAUNCH_PRODUCTS_ACTIVITY);
+            }
+        });
     }
 
     private void loadNavigationDrawer() {
@@ -60,6 +83,33 @@ public class MainActivity extends AppCompatActivity {
             if (user.getRole() == Role.ADMIN) {
                 itemUsers.setVisible(false);
             }
+        }
+    }
+
+    private void updateProducts(){
+        tv.setText("");
+        for(Map.Entry<String, Integer> product : products.entrySet()){
+            tv.append("\n" + product.getKey() + "\t" + product.getValue() + "x");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode){
+            case LAUNCH_PRODUCTS_ACTIVITY:
+                if(resultCode == Activity.RESULT_OK){
+                    String productName = data.getStringExtra("product");
+                    if(products.containsKey(productName)){
+                        products.put(productName, products.get(productName) + 1);
+                    }else{
+                        products.put(productName, 1);
+                    }
+
+                    updateProducts();
+                }
+                break;
         }
     }
 
