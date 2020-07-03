@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -35,7 +38,9 @@ public class LoginActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private TextInputLayout etEmail;
     private TextInputLayout etPassword;
-    private Button btnLogin;
+
+    private RelativeLayout layoutBackgroundLoader;
+    private ProgressBar loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +55,11 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+        layoutBackgroundLoader = findViewById(R.id.loginLayoutLoaderBackground);
+        loader = findViewById(R.id.loginLoader);
         etEmail = findViewById(R.id.loginEtEmail);
         etPassword = findViewById(R.id.loginEtPassword);
-        btnLogin = (Button) findViewById(R.id.loginBtnConnection);
+        Button btnLogin = findViewById(R.id.loginBtnConnection);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,10 +104,14 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void authenticate(final String email, final String password){
 
+        displayLoader();
+
         final String url = "https://epilibre.gollgot.app/api/auth/login";
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                removeLoader();
+
                 try {
                     JSONObject jsonObjectResponse = new JSONObject(response);
                     JSONObject jsonObjectResource = jsonObjectResponse.getJSONObject("resource");
@@ -121,6 +132,8 @@ public class LoginActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                removeLoader();
+
                 NetworkResponse networkResponse = error.networkResponse;
                 // Error 400 -> Wrong login request
                 if (networkResponse.statusCode == 400) {
@@ -143,7 +156,6 @@ public class LoginActivity extends AppCompatActivity {
             //This is for Headers If You Needed
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                // Password : b1cb3f24f3545258505c835c791a740dbd1469c7706322e595a84a09f4cf913c
                 String credentials = email + ":" + sha256(password);
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 HashMap<String, String> headers = new HashMap<>();
@@ -220,5 +232,28 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         return user;
+    }
+
+    /**
+     * Display a loader ahead a 80% black screen
+     */
+    private void displayLoader(){
+        // Disable user interaction with the screen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        // Display black screen and loader
+        layoutBackgroundLoader.setVisibility(View.VISIBLE);
+        loader.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Remove the loader
+     */
+    private void removeLoader(){
+        // Remove black screen and loader
+        layoutBackgroundLoader.setVisibility(View.GONE);
+        loader.setVisibility(View.GONE);
+        // get user interaction with screen back
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 }
