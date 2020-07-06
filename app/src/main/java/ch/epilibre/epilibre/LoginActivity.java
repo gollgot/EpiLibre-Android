@@ -15,13 +15,16 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONException;
@@ -39,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout etEmail;
     private TextInputLayout etPassword;
 
+    private RelativeLayout layout;
     private RelativeLayout layoutBackgroundLoader;
     private ProgressBar loader;
 
@@ -55,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+        layout = findViewById(R.id.loginLayout);
         layoutBackgroundLoader = findViewById(R.id.loginLayoutLoaderBackground);
         loader = findViewById(R.id.loginLoader);
         etEmail = findViewById(R.id.loginEtEmail);
@@ -134,21 +139,29 @@ public class LoginActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 removeLoader();
 
-                NetworkResponse networkResponse = error.networkResponse;
-                // Error 400 -> Wrong login request
-                if (networkResponse.statusCode == 400) {
-                    etPassword.setError("Email ou mot de passe incorrect");
+                // No internet connection error
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    Snackbar.make(layout, "Aucune connexion, veuillez vérifier votre connexion internet.", Snackbar.LENGTH_SHORT).show();
                 }
-                // Other error -> modal alert
-                else{
-                    new MaterialAlertDialogBuilder(LoginActivity.this)
-                        .setTitle("Une erreur est survenue")
-                        .setMessage("Veuillez réessayer plus tard ou contacter un administrateur")
-                        .setPositiveButton("Fermer", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        })
-                        .show();
+                // Other error
+                else {
+                    NetworkResponse networkResponse = error.networkResponse;
+                    // Error 400 -> Wrong login request
+                    if (networkResponse.statusCode == 400) {
+                        etPassword.setError("Email ou mot de passe incorrect");
+                    }
+                    // Other error -> modal alert
+                    else {
+                        new MaterialAlertDialogBuilder(LoginActivity.this)
+                            .setTitle("Une erreur est survenue")
+                            .setMessage("Veuillez réessayer plus tard ou contacter un administrateur")
+                            .setPositiveButton("Fermer", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                }
+                            })
+                            .show();
+                    }
                 }
             }
         }) {
