@@ -1,7 +1,9 @@
 package ch.epilibre.epilibre;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
     private RelativeLayout layoutBackgroundLoader;
     private ProgressBar loader;
 
+    private final static int LAUNCH_REGISTER_ACTIVITY = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,10 +88,25 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, LAUNCH_REGISTER_ACTIVITY);
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode){
+            // Came back from ProductActivity
+            case LAUNCH_REGISTER_ACTIVITY:
+                // Result OK
+                if(resultCode == Activity.RESULT_OK){
+                    Snackbar.make(layout, "Votre compte à bien été créé et est en attente de validation", Snackbar.LENGTH_LONG).show();
+                }
+                break;
+        }
     }
 
     /**
@@ -121,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
 
         displayLoader();
 
-        final String url = "https://epilibre.gollgot.app/api/auth/login";
+        final String url = Config.API_BASE_URL + Config.API_AUTH_LOGIN;
         StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -179,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
             //This is for Headers If You Needed
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                String credentials = email + ":" + sha256(password);
+                String credentials = email + ":" + Utils.sha256(password);
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 HashMap<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Basic " + base64EncodedCredentials);
@@ -197,38 +216,6 @@ public class LoginActivity extends AppCompatActivity {
         };
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.add(request);
-    }
-
-    /**
-     * Hash a string with SHA-256 algorithm
-     * @param value The value we want to hash
-     * @return The SHA-256 representation of the value
-     */
-    private String sha256(String value) {
-        try {
-            MessageDigest digest = null;
-            try {
-                digest = MessageDigest.getInstance("SHA-256");
-            } catch (NoSuchAlgorithmException e1) {
-                e1.printStackTrace();
-            }
-            digest.reset();
-            return bin2hex(digest.digest(value.getBytes()));
-        } catch (Exception ignored) {
-            return null;
-        }
-    }
-
-    /**
-     * Bin to hex transformer
-     * @param data bytes data
-     * @return String value of the bin data
-     */
-    private String bin2hex(byte[] data) {
-        StringBuilder hex = new StringBuilder(data.length * 2);
-        for (byte b : data)
-            hex.append(String.format("%02x", b & 0xFF));
-        return hex.toString();
     }
 
     /**
