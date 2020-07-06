@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             app:startIconDrawable="@drawable/ic_portrait"
-            android:hint="Prénom"
+            android:hint="@string/register_firstname_hint"
             app:endIconMode="clear_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             app:startIconDrawable="@drawable/ic_portrait"
-            android:hint="Nom"
+            android:hint="@string/register_name_hint"
             app:endIconMode="clear_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             app:startIconDrawable="@drawable/ic_mail"
-            android:hint="Email"
+            android:hint="@string/register_email_hint"
             app:endIconMode="clear_text"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             app:startIconDrawable="@drawable/ic_lock"
-            android:hint="Mot de passe"
+            android:hint="@string/register_password_hint"
             app:endIconMode="password_toggle"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             app:startIconDrawable="@drawable/ic_lock"
-            android:hint="Répétez le mot de passe"
+            android:hint="@string/register_pasword_repeated_hint"
             app:endIconMode="password_toggle"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
@@ -118,7 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="S'enregistrer" />
+            android:text="@string/register_register" />
 
     </LinearLayout>
 

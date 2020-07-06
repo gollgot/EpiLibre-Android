@@ -17,4 +17,9 @@
     <string name="login_no_account">Pas encore de compte ?</string>
     <string name="login_register">Créer un compte</string>
     <string name="register_register">S\'enregistrer</string>
+    <string name="register_firstname_hint">Prénom</string>
+    <string name="register_name_hint">Nom</string>
+    <string name="register_email_hint">Email</string>
+    <string name="register_password_hint">Mot de passe</string>
+    <string name="register_pasword_repeated_hint">Répétez le mot de passe</string>
 </resources>
