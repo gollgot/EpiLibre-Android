@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -64,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         loader = findViewById(R.id.loginLoader);
         etEmail = findViewById(R.id.loginEtEmail);
         etPassword = findViewById(R.id.loginEtPassword);
+        TextView tvRegister = findViewById(R.id.loginTvRegister);
         Button btnLogin = findViewById(R.id.loginBtnConnection);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +77,14 @@ public class LoginActivity extends AppCompatActivity {
                 if(formInputsCorrect(email, password)){
                     authenticate(email, password);
                 }
+            }
+        });
+
+        tvRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 

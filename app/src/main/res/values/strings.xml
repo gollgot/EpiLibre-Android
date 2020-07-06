@@ -14,4 +14,7 @@
     <string name="drawer_item_users">Utilisateurs</string>
     <string name="main_shopping_list">Liste d\'achats</string>
     <string name="main_add_product">Ajouter un produit</string>
+    <string name="login_no_account">Pas encore de compte ?</string>
+    <string name="login_register">Créer un compte</string>
+    <string name="register_register">S\'enregistrer</string>
 </resources>

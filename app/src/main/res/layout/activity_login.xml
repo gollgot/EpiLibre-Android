@@ -68,6 +68,27 @@
             android:textColor="@color/white"
             android:text="@string/login_tv_connection" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_no_account" />
+
+            <TextView
+                android:id="@+id/loginTvRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/login_register" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <!-- INFINITE PROGRESS BAR (Loader) with 80% black background -->
