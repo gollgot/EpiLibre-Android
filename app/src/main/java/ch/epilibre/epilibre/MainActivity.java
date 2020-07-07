@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Fetch the current user (in this activity we have obligatory a connected user)
         sessionManager = new SessionManager(getApplicationContext());
-        user = sessionManager.getUserDetails();
+        user = sessionManager.getUser();
 
         // Load the navigation drawer
         loadNavigationDrawer();

@@ -151,9 +151,8 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject jsonObjectResource = jsonObjectResponse.getJSONObject("resource");
                     String token = jsonObjectResource.getString("token");
 
-                    User user = tokenToUser(token);
                     // Store into session manager all user data and start the MainActivity
-                    sessionManager.createLoginSession(user);
+                    sessionManager.createLoginSession(token);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     finish();
                     startActivity(intent);
@@ -204,44 +203,9 @@ public class LoginActivity extends AppCompatActivity {
                 headers.put("Authorization", "Basic " + base64EncodedCredentials);
                 return headers;
             }
-            /*
-            //Pass Your Parameters here
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("User", UserName);
-                params.put("Pass", PassWord);
-                return params;
-            }*/
         };
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         queue.add(request);
-    }
-
-    /**
-     * Extract User object from the JWT token
-     * @param token The JWT token
-     * @return The User stored into the JWT token
-     */
-    private User tokenToUser(String token){
-        String tokenData = token.split("\\.")[1];
-        byte[] data = Base64.decode(tokenData, Base64.DEFAULT);
-        String text = new String(data, StandardCharsets.UTF_8);
-
-        User user = null;
-        try {
-            JSONObject jsonObjectData = new JSONObject(text);
-            user = new User(
-                jsonObjectData.getString("firstname"),
-                jsonObjectData.getString("lastname"),
-                jsonObjectData.getString("email"),
-                Role.valueOf(jsonObjectData.getString("role"))
-            );
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return user;
     }
 
     /**
