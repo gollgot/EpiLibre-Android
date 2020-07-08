@@ -94,6 +94,7 @@ public class HttpRequest {
                 // No internet connection error
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Snackbar.make(layout, "Aucune connexion, veuillez vérifier votre connexion internet.", Snackbar.LENGTH_SHORT).show();
+                    callback.getErrorNoInternet();
                 }
                 // Other error
                 else {

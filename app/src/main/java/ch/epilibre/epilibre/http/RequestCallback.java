@@ -5,4 +5,5 @@ import com.android.volley.NetworkResponse;
 public interface RequestCallback {
     void getResponse(String response);
     void getError400(NetworkResponse networkResponse);
+    void getErrorNoInternet();
 }

@@ -22,5 +22,10 @@
     <string name="register_email_hint">Email</string>
     <string name="register_password_hint">Mot de passe</string>
     <string name="register_pasword_repeated_hint">Répétez le mot de passe</string>
-    <string name="drawer_item_users_pending">Utilisateurs en attente</string>
+    <string name="drawer_item_users_pending">Utilisateurs en attentes</string>
+    <string name="users_pending_main_title">Utilisateurs en attentes</string>
+    <string name="users_pending_title_plural">utilisateurs en attentes</string>
+    <string name="users_pending_title_singular">utilisateur en attente</string>
+    <string name="users_pending_no_connection">Impossible de récupérer les utilisateurs en attentes, veuillez vérifier votre connexion internet</string>
+    <string name="users_pending_no_data">Aucun utilisateur en attente</string>
 </resources>

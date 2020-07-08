@@ -144,6 +144,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             @Override
             public void getError400(NetworkResponse networkResponse) { }
+
+            @Override
+            public void getErrorNoInternet() {
+                tvUserPendingCount.setVisibility(View.INVISIBLE);
+            }
         });
     }
 

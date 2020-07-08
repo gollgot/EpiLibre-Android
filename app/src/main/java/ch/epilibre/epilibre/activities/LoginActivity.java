@@ -170,6 +170,9 @@ public class LoginActivity extends AppCompatActivity {
                 removeLoader();
                 etPassword.setError("Email ou mot de passe incorrect");
             }
+
+            @Override
+            public void getErrorNoInternet() {}
         });
     }
 

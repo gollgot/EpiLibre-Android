@@ -179,6 +179,9 @@ public class RegisterActivity extends AppCompatActivity {
                     etEmail.setError("Cette adresse est déjà utilisée");
                 }
             }
+
+            @Override
+            public void getErrorNoInternet() {}
         });
 
     }
