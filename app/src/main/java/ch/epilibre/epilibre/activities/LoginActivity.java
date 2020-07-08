@@ -198,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
 
             //This is for Headers If You Needed
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 String credentials = email + ":" + Utils.sha256(password);
                 String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
                 HashMap<String, String> headers = new HashMap<>();

@@ -15,14 +15,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONArray;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.epilibre.epilibre.Config;
+import ch.epilibre.epilibre.HttpRequest;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
+import ch.epilibre.epilibre.RequestCallback;
 import ch.epilibre.epilibre.user.Role;
 import ch.epilibre.epilibre.user.User;
 
@@ -37,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, Integer> shoppingList;
     private TextView tv;
 
+    private DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         user = sessionManager.getUser();
 
         // Load the navigation drawer
+        drawerLayout = findViewById(R.id.mainDrawer);
         loadNavigationDrawer();
 
         // Shopping list stuff
@@ -61,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, LAUNCH_PRODUCTS_ACTIVITY);
             }
         });
+
     }
 
     /**
@@ -70,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
      * For SELLER: No navigation drawer
      */
     private void loadNavigationDrawer() {
-        // Set up the drawer menu and enable the toggle mhamburger menu
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.mainDrawer);
+        // Set up the drawer menu and enable the toggle hamburger menu
 
         // SELLER Restriction
         if(user.getRole() == Role.SELLER){
@@ -96,10 +105,27 @@ public class MainActivity extends AppCompatActivity {
             }
             // SUPER_ADMIN restriction
             else if(user.getRole() == Role.SUPER_ADMIN){
-                TextView userPendingCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_users_pending).getActionView();
-                userPendingCount.setText("3");
+                TextView tvUserPendingCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_users_pending).getActionView();
+                loadPendingUserBadgeCount(tvUserPendingCount);
             }
         }
+    }
+
+    /**
+     * Send a http request to get the number of user pending validation to display it as a badge into
+     * the navigation drawer
+     * @param tvUserPendingCount The badge TextView to update
+     */
+    private void loadPendingUserBadgeCount(final TextView tvUserPendingCount) {
+        final HttpRequest httpRequest = new HttpRequest(MainActivity.this, drawerLayout, Config.API_BASE_URL + Config.API_USERS_PENDING, Request.Method.GET);
+        httpRequest.addBearerToken();
+        httpRequest.executeRequest(new RequestCallback() {
+            @Override
+            public void getResponse(String response) {
+                JSONArray jsonArrayResource = httpRequest.getJSONArrayResource(response);
+                tvUserPendingCount.setText(String.valueOf(jsonArrayResource.length()));
+            }
+        });
     }
 
     /**

@@ -57,6 +57,10 @@ public class SessionManager {
         return tokenToUser(pref.getString(JWT, null));
     }
 
+    public String getToken(){
+        return pref.getString(JWT, null);
+    }
+
     /**
      * Log out the user
      * Clear all preference and add IS_LOGIN -> false
