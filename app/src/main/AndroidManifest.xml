@@ -12,15 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".LoginActivity"
+            android:name=".activities.RegisterActivity"
+            android:parentActivityName=".activities.LoginActivity"
             android:configChanges="orientation|screenSize"/>
-        <activity android:name=".ProductsActivity" />
+        <activity android:name=".activities.ProductsActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize"/>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

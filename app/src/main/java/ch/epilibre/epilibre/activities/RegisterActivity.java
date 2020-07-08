@@ -1,4 +1,4 @@
-package ch.epilibre.epilibre;
+package ch.epilibre.epilibre.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,15 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
@@ -29,11 +25,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import ch.epilibre.epilibre.Config;
+import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.Utils;
 
 public class RegisterActivity extends AppCompatActivity {
 

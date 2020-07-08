@@ -1,4 +1,4 @@
-package ch.epilibre.epilibre;
+package ch.epilibre.epilibre.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,11 +33,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+
+import ch.epilibre.epilibre.Config;
+import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.SessionManager;
+import ch.epilibre.epilibre.Utils;
 
 public class LoginActivity extends AppCompatActivity {
 

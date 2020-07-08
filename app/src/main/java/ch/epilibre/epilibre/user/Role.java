@@ -1,4 +1,4 @@
-package ch.epilibre.epilibre;
+package ch.epilibre.epilibre.user;
 
 public enum Role {
     SUPER_ADMIN,

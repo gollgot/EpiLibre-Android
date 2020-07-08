@@ -10,6 +10,9 @@ import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
 
+import ch.epilibre.epilibre.user.Role;
+import ch.epilibre.epilibre.user.User;
+
 
 public class SessionManager {
 

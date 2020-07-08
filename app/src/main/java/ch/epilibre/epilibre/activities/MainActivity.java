@@ -1,6 +1,5 @@
-package ch.epilibre.epilibre;
+package ch.epilibre.epilibre.activities;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,22 +9,22 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.DragEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.SessionManager;
+import ch.epilibre.epilibre.user.Role;
+import ch.epilibre.epilibre.user.User;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,9 +73,11 @@ public class MainActivity extends AppCompatActivity {
         // Set up the drawer menu and enable the toggle mhamburger menu
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.mainDrawer);
 
+        // SELLER Restriction
         if(user.getRole() == Role.SELLER){
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }else {
+            // Init the drawer
             actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
             drawerLayout.addDrawerListener(actionBarDrawerToggle);
             actionBarDrawerToggle.syncState();
@@ -86,10 +87,17 @@ public class MainActivity extends AppCompatActivity {
             NavigationView navigationView = findViewById(R.id.mainNavigationView);
             Menu menuNav = navigationView.getMenu();
             MenuItem itemUsers = menuNav.findItem(R.id.drawer_menu__item_users);
+            MenuItem itemUsersPending = menuNav.findItem(R.id.drawer_menu__item_users);
 
             // ADMIN restriction
             if (user.getRole() == Role.ADMIN) {
                 itemUsers.setVisible(false);
+                itemUsersPending.setVisible(false);
+            }
+            // SUPER_ADMIN restriction
+            else if(user.getRole() == Role.SUPER_ADMIN){
+                TextView userPendingCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_users_pending).getActionView();
+                userPendingCount.setText("3");
             }
         }
     }

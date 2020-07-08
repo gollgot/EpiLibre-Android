@@ -1,4 +1,6 @@
-package ch.epilibre.epilibre;
+package ch.epilibre.epilibre.user;
+
+import ch.epilibre.epilibre.user.Role;
 
 public class User {
 

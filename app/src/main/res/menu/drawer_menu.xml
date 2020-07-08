@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
     <item android:title="@string/drawer_group_shop">
@@ -18,7 +19,12 @@
 
     <item android:title="@string/drawer_group_users">
         <menu>
-            <!-- Products-->
+            <!-- Pending user validation -->
+            <item android:id="@+id/drawer_menu__item_users_pending"
+                android:icon="@drawable/ic_person_add"
+                android:title="@string/drawer_item_users_pending"
+                app:actionLayout="@layout/menu_counter"/>
+            <!-- All Users -->
             <item android:id="@+id/drawer_menu__item_users"
                 android:icon="@drawable/ic_users"
                 android:title="@string/drawer_item_users"/>
