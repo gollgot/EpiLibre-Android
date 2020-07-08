@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.ViewGroup;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -96,16 +97,23 @@ public class HttpRequest {
                 }
                 // Other error
                 else {
-
-                    new MaterialAlertDialogBuilder(context)
-                        .setTitle("Une erreur est survenue")
-                        .setMessage("Veuillez réessayer plus tard ou contacter un administrateur")
-                        .setPositiveButton("Fermer", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
-                        })
-                        .show();
+                    NetworkResponse networkResponse = error.networkResponse;
+                    // Error 400 Bad request
+                    if (networkResponse.statusCode == 400) {
+                        callback.getError400();
+                    }
+                    // Other error
+                    else{
+                        new MaterialAlertDialogBuilder(context)
+                                .setTitle("Une erreur est survenue")
+                                .setMessage("Veuillez réessayer plus tard ou contacter un administrateur")
+                                .setPositiveButton("Fermer", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                    }
+                                })
+                                .show();
+                    }
                 }
             }
         }) {

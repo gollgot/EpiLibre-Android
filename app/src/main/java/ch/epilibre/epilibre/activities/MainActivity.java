@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             NavigationView navigationView = findViewById(R.id.mainNavigationView);
             Menu menuNav = navigationView.getMenu();
             MenuItem itemUsers = menuNav.findItem(R.id.drawer_menu__item_users);
-            MenuItem itemUsersPending = menuNav.findItem(R.id.drawer_menu__item_users);
+            MenuItem itemUsersPending = menuNav.findItem(R.id.drawer_menu__item_users_pending);
 
             // ADMIN restriction
             if (user.getRole() == Role.ADMIN) {
@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray jsonArrayResource = httpRequest.getJSONArrayResource(response);
                 tvUserPendingCount.setText(String.valueOf(jsonArrayResource.length()));
             }
+            @Override
+            public void getError400() { }
         });
     }
 

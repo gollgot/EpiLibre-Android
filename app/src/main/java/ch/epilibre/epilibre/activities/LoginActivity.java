@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -40,6 +41,8 @@ import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.Utils;
+import ch.epilibre.epilibre.http.HttpRequest;
+import ch.epilibre.epilibre.http.RequestCallback;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -139,75 +142,35 @@ public class LoginActivity extends AppCompatActivity {
      * If fail: Set error and wait
      */
     private void authenticate(final String email, final String password){
+        String credentials = email + ":" + Utils.sha256(password);
 
+        final HttpRequest httpLoginRequest = new HttpRequest(LoginActivity.this, layout, Config.API_BASE_URL + Config.API_AUTH_LOGIN, Request.Method.POST);
+        httpLoginRequest.addHeader("Authorization", "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP));
         displayLoader();
-
-        final String url = Config.API_BASE_URL + Config.API_AUTH_LOGIN;
-        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        httpLoginRequest.executeRequest(new RequestCallback() {
             @Override
-            public void onResponse(String response) {
+            public void getResponse(String response) {
                 removeLoader();
-
                 try {
-                    JSONObject jsonObjectResponse = new JSONObject(response);
-                    JSONObject jsonObjectResource = jsonObjectResponse.getJSONObject("resource");
+                    JSONObject jsonObjectResource = httpLoginRequest.getJSONObjectResource(response);
                     String token = jsonObjectResource.getString("token");
-
-                    // Store into session manager all user data and start the MainActivity
+                    // Store the user JWT into session manager and start the MainActivity
                     sessionManager.createLoginSession(token);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     finish();
                     startActivity(intent);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
 
-        }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void getError400() {
+                // Wrong email or password
                 removeLoader();
-
-                // No internet connection error
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Snackbar.make(layout, "Aucune connexion, veuillez vérifier votre connexion internet.", Snackbar.LENGTH_SHORT).show();
-                }
-                // Other error
-                else {
-                    NetworkResponse networkResponse = error.networkResponse;
-                    // Error 400 -> Wrong login request
-                    if (networkResponse.statusCode == 400) {
-                        etPassword.setError("Email ou mot de passe incorrect");
-                    }
-                    // Other error -> modal alert
-                    else {
-                        new MaterialAlertDialogBuilder(LoginActivity.this)
-                            .setTitle("Une erreur est survenue")
-                            .setMessage("Veuillez réessayer plus tard ou contacter un administrateur")
-                            .setPositiveButton("Fermer", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                }
-                            })
-                            .show();
-                    }
-                }
+                etPassword.setError("Email ou mot de passe incorrect");
             }
-        }) {
-
-            //This is for Headers If You Needed
-            @Override
-            public Map<String, String> getHeaders() {
-                String credentials = email + ":" + Utils.sha256(password);
-                String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-                HashMap<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Basic " + base64EncodedCredentials);
-                return headers;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        queue.add(request);
+        });
     }
 
     /**
