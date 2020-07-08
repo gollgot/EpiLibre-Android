@@ -123,7 +123,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void getResponse(String response) {
                 JSONArray jsonArrayResource = httpRequest.getJSONArrayResource(response);
-                tvUserPendingCount.setText(String.valueOf(jsonArrayResource.length()));
+                // More than 99 users
+                if(jsonArrayResource.length() > 99){
+                    tvUserPendingCount.setText("99+");
+                }
+                // Between 1 and 99 users
+                else if(jsonArrayResource.length() > 0){
+                    tvUserPendingCount.setText(String.valueOf(jsonArrayResource.length()));
+                }
+                // 0 user
+                else{
+                    tvUserPendingCount.setVisibility(View.INVISIBLE);
+                }
             }
             @Override
             public void getError400() { }
