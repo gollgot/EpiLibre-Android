@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private User user;
 
     private final static int LAUNCH_PRODUCTS_ACTIVITY = 1;
+
     private Map<String, Integer> shoppingList;
     private TextView tv;
 
@@ -75,6 +76,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // SUPER_ADMIN stuff
+        if(user.getRole() == Role.SUPER_ADMIN){
+            // Reload the pending user badge count in navigation drawer
+            // in onResume because all the time we came back to this activity, we update the badge
+            NavigationView navigationView = findViewById(R.id.mainNavigationView);
+            TextView tvUserPendingCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_users_pending).getActionView();
+            loadPendingUserBadgeCount(tvUserPendingCount);
+        }
     }
 
     /**
@@ -111,8 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             // SUPER_ADMIN restriction
             else if(user.getRole() == Role.SUPER_ADMIN){
-                TextView tvUserPendingCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_users_pending).getActionView();
-                loadPendingUserBadgeCount(tvUserPendingCount);
+                // Load the pending users badge count into the onResume method
             }
         }
     }
@@ -129,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void getResponse(String response) {
                 JSONArray jsonArrayResource = httpRequest.getJSONArrayResource(response);
+                tvUserPendingCount.setVisibility(View.VISIBLE);
                 // More than 99 users
                 if(jsonArrayResource.length() > 99){
                     tvUserPendingCount.setText("99+");
