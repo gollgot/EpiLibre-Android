@@ -14,6 +14,7 @@ import android.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -34,6 +35,7 @@ import ch.epilibre.epilibre.http.RequestCallback;
 
 public class UsersPendingActivity extends AppCompatActivity {
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar loader;
     private TextView tvTitle;
     private TextView tvNoData;
@@ -49,6 +51,15 @@ public class UsersPendingActivity extends AppCompatActivity {
 
         setupCustomToolbar();
 
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.usersPendingSwipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initRecyclerView(false);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         // Init recycler view on resume, this way when we came back to this activity we update the recycler view
         // And first time, onResume are called after onCreate
     }
@@ -57,11 +68,13 @@ public class UsersPendingActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        initRecyclerView();
+        initRecyclerView(true);
     }
 
-    private void initRecyclerView() {
-        loader.setVisibility(View.VISIBLE);
+    private void initRecyclerView(boolean withCustomLoader) {
+        // This way we can pull to refresh and keep only the pull to refresh loader
+        if(withCustomLoader)
+            loader.setVisibility(View.VISIBLE);
 
         final ArrayList<String> emails = new ArrayList<>();
         final ArrayList<String> firstnames = new ArrayList<>();
@@ -96,6 +109,7 @@ public class UsersPendingActivity extends AppCompatActivity {
                 // If no pending user -> display right text views
                 if(emails.size() == 0){
                     tvTitle.setText(getResources().getString(R.string.users_pending_main_title));
+                    tvNoData.setText(getResources().getString(R.string.users_pending_no_data));
                     tvNoData.setVisibility(View.VISIBLE);
                 }else{
                     tvNoData.setVisibility(View.GONE);
@@ -106,6 +120,7 @@ public class UsersPendingActivity extends AppCompatActivity {
 
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.usersPendingRecycler);
+                recyclerView.setVisibility(View.VISIBLE);
                 RecyclerViewAdapter adapter = new RecyclerViewAdapter(UsersPendingActivity.this, emails, firstnames, lastnames, tvTitle, tvNoData);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(UsersPendingActivity.this));
@@ -117,6 +132,8 @@ public class UsersPendingActivity extends AppCompatActivity {
             @Override
             public void getErrorNoInternet() {
                 loader.setVisibility(View.GONE);
+                RecyclerView recyclerView = findViewById(R.id.usersPendingRecycler);
+                recyclerView.setVisibility(View.GONE);
                 tvTitle.setText(getResources().getString(R.string.users_pending_main_title));
                 tvNoData.setText(getResources().getString(R.string.users_pending_no_connection));
                 tvTitle.setVisibility(View.VISIBLE);
