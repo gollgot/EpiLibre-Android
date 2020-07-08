@@ -48,6 +48,15 @@ public class UsersPendingActivity extends AppCompatActivity {
         tvNoData = findViewById(R.id.usersPendingTvNoData);
 
         setupCustomToolbar();
+
+        // Init recycler view on resume, this way when we came back to this activity we update the recycler view
+        // And first time, onResume are called after onCreate
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         initRecyclerView();
     }
 
@@ -88,6 +97,8 @@ public class UsersPendingActivity extends AppCompatActivity {
                 if(emails.size() == 0){
                     tvTitle.setText(getResources().getString(R.string.users_pending_main_title));
                     tvNoData.setVisibility(View.VISIBLE);
+                }else{
+                    tvNoData.setVisibility(View.GONE);
                 }
 
                 loader.setVisibility(View.GONE);
