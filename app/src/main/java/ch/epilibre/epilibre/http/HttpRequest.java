@@ -99,8 +99,8 @@ public class HttpRequest {
                 else {
                     NetworkResponse networkResponse = error.networkResponse;
                     // Error 400 Bad request
-                    if (networkResponse.statusCode == 400) {
-                        callback.getError400();
+                    if (networkResponse != null && networkResponse.statusCode == 400) {
+                        callback.getError400(networkResponse);
                     }
                     // Other error
                     else{

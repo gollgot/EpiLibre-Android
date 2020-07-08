@@ -165,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void getError400() {
+            public void getError400(NetworkResponse networkResponse) {
                 // Wrong email or password
                 removeLoader();
                 etPassword.setError("Email ou mot de passe incorrect");

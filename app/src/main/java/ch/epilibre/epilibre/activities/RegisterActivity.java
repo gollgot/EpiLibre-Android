@@ -31,6 +31,8 @@ import java.util.Map;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
+import ch.epilibre.epilibre.http.HttpRequest;
+import ch.epilibre.epilibre.http.RequestCallback;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -145,6 +147,9 @@ public class RegisterActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Send HttpRequest to register the new user
+     */
     private void register() {
         final String firstname = etFirstname.getEditText().getText().toString();
         final String lastname = etLastname.getEditText().getText().toString();
@@ -152,67 +157,29 @@ public class RegisterActivity extends AppCompatActivity {
         final String password = etPassword.getEditText().getText().toString();
         final String passwordRepeated = etPasswordRepeated.getEditText().getText().toString();
 
-        final String url = Config.API_BASE_URL + Config.API_AUTH_REGISTER;
-        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        HttpRequest httpRegisterRequest = new HttpRequest(RegisterActivity.this, layout, Config.API_BASE_URL + Config.API_AUTH_REGISTER, Request.Method.POST);
+        httpRegisterRequest.addParam("firstname", firstname);
+        httpRegisterRequest.addParam("lastname", lastname);
+        httpRegisterRequest.addParam("email", email);
+        httpRegisterRequest.addParam("password", Utils.sha256(password));
+        httpRegisterRequest.addParam("passwordRepeated", Utils.sha256(passwordRepeated));
+        httpRegisterRequest.executeRequest(new RequestCallback() {
             @Override
-            public void onResponse(String response) {
+            public void getResponse(String response) {
                 // Return to the LoginActivity with result OK -> account successfully created
                 Intent intent = new Intent();
                 setResult(Activity.RESULT_OK,intent);
                 finish();
             }
 
-        }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                // No internet connection error
-                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Snackbar.make(layout, "Aucune connexion, veuillez vérifier votre connexion internet.", Snackbar.LENGTH_SHORT).show();
+            public void getError400(NetworkResponse networkResponse) {
+                String errorString = new String(networkResponse.data);
+                if (errorString.contains("Email already used")) {
+                    etEmail.setError("Cette adresse est déjà utilisée");
                 }
-                // Other error
-                else {
-                    NetworkResponse networkResponse = error.networkResponse;
+            }
+        });
 
-                    // No internet connection error
-                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Snackbar.make(layout, "Aucune connexion, veuillez vérifier votre connexion internet.", Snackbar.LENGTH_SHORT).show();
-                    }
-                    // Known error
-                    else if(networkResponse != null && networkResponse.data != null){
-                        String errorString = new String(networkResponse.data);
-                        // Error 400 -> Wrong login request
-                        if (networkResponse.statusCode == 400 && errorString.contains("Email already used")) {
-                            etEmail.setError("Cette adresse est déjà utilisée");
-                        }
-                    }
-                    // Other error -> modal alert
-                    else {
-                        new MaterialAlertDialogBuilder(RegisterActivity.this)
-                            .setTitle("Une erreur est survenue")
-                            .setMessage("Veuillez réessayer plus tard ou contacter un administrateur")
-                            .setPositiveButton("Fermer", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                }
-                            })
-                            .show();
-                    }
-                }
-            }
-        }) {
-            // Parameters
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("firstname", firstname);
-                params.put("lastname", lastname);
-                params.put("email", email);
-                params.put("password", Utils.sha256(password));
-                params.put("passwordRepeated", Utils.sha256(passwordRepeated));
-                return params;
-            }
-        };
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        queue.add(request);
     }
 }
