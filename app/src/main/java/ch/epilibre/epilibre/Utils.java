@@ -1,9 +1,15 @@
 package ch.epilibre.epilibre;
 
+import android.view.View;
+import android.widget.Toolbar;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Utils {
+
+    public static final String APP_NAME = "EpiLibre";
+
     /**
      * Hash a string with SHA-256 algorithm
      * @param value The value we want to hash
@@ -34,6 +40,22 @@ public class Utils {
         for (byte b : data)
             hex.append(String.format("%02x", b & 0xFF));
         return hex.toString();
+    }
+
+    /**
+     * Set up a custom Toolbar in place as the default App bar
+     * @param toolbar The custom Toolbar
+     * @param callback The CustomNavigationCallback when we'll press the back arrow
+     */
+    public static void setUpCustomAppBar(Toolbar toolbar, final CustomNavigationCallback callback){
+        toolbar.setTitle(Utils.APP_NAME);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.onBackArrowPressed();
+            }
+        });
     }
 
 }

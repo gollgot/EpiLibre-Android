@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toolbar;
 
+import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.Utils;
 
 public class ProductsActivity extends AppCompatActivity {
 
@@ -53,20 +55,17 @@ public class ProductsActivity extends AppCompatActivity {
     }
 
     /**
-     * Hide the current AppTheme ActionBar and place a cutom toolbar
+     * Hide the current AppTheme ActionBar and set a custom toolbar
      * With this custom toolbar we can have a custom arrow back icon with
      * its own custom onClick listener to comeback to the mainActivity with no result
      */
     private void setupCustomToolbar() {
         // Hide the AppTheme ActionBar
         getSupportActionBar().hide();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.productsToolbar);
-        toolbar.setTitle("EpiLibre");
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        Toolbar toolbar = findViewById(R.id.productsToolbar);
+        Utils.setUpCustomAppBar(toolbar, new CustomNavigationCallback() {
             @Override
-            public void onClick(View v) {
+            public void onBackArrowPressed() {
                 // Return to the MainActivity without result
                 Intent returnIntent = new Intent();
                 setResult(Activity.RESULT_CANCELED, returnIntent);

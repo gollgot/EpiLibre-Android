@@ -1,14 +1,17 @@
 package ch.epilibre.epilibre.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +36,7 @@ import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.user.Role;
 import ch.epilibre.epilibre.user.User;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -95,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
 
             // Disable some menu items depends on your role
             NavigationView navigationView = findViewById(R.id.mainNavigationView);
+            navigationView.bringToFront(); // Mandatory
+            navigationView.setNavigationItemSelectedListener(this);
             Menu menuNav = navigationView.getMenu();
             MenuItem itemUsers = menuNav.findItem(R.id.drawer_menu__item_users);
             MenuItem itemUsersPending = menuNav.findItem(R.id.drawer_menu__item_users_pending);
@@ -207,6 +212,8 @@ public class MainActivity extends AppCompatActivity {
 
     /********* MENU MANAGEMENT *********/
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -229,14 +236,26 @@ public class MainActivity extends AppCompatActivity {
             case R.id.itemGuestMenuSignOut:
                 //invalidateOptionsMenu();
                 sessionManager.logoutUser();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
                 finish();
-                startActivity(intent);
+                startActivity(intentLogin);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle drawer navigation on item selected
+        switch (item.getItemId()) {
+            case R.id.drawer_menu__item_users_pending:
+                Intent intentUsersPending = new Intent(MainActivity.this, UsersPendingActivity.class);
+                startActivity(intentUsersPending);
+                break;
+        }
+        //close navigation drawer
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
