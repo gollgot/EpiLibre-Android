@@ -1,4 +1,4 @@
-package ch.epilibre.epilibre;
+package ch.epilibre.epilibre.http;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import ch.epilibre.epilibre.SessionManager;
 
 public class HttpRequest {
 

@@ -25,10 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epilibre.epilibre.Config;
-import ch.epilibre.epilibre.HttpRequest;
+import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
-import ch.epilibre.epilibre.RequestCallback;
+import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.user.Role;
 import ch.epilibre.epilibre.user.User;
 
