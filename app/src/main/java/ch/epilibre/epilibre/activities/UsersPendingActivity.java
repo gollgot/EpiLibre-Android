@@ -1,11 +1,8 @@
 package ch.epilibre.epilibre.activities;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -79,19 +76,20 @@ public class UsersPendingActivity extends AppCompatActivity {
         final ArrayList<String> emails = new ArrayList<>();
         final ArrayList<String> firstnames = new ArrayList<>();
         final ArrayList<String> lastnames = new ArrayList<>();
+        final ArrayList<Integer> ids = new ArrayList<>();
 
-        RelativeLayout layout = findViewById(R.id.usersPendingLayout);
+        final RelativeLayout layout = findViewById(R.id.usersPendingLayout);
         final HttpRequest httpUsersPendingRequest = new HttpRequest(UsersPendingActivity.this, layout,Config.API_BASE_URL + Config.API_USERS_PENDING, Request.Method.GET);
         httpUsersPendingRequest.addBearerToken();
         httpUsersPendingRequest.executeRequest(new RequestCallback() {
             @Override
             public void getResponse(String response) {
                 JSONArray jsonArrayResource = httpUsersPendingRequest.getJSONArrayResource(response);
-                Log.d("EPILIBRE", String.valueOf(jsonArrayResource.length()));
                 // Parse all json users and fill all array lists
                 for(int i = 0; i < jsonArrayResource.length(); ++i){
                     try {
                         JSONObject jsonObject = jsonArrayResource.getJSONObject(i);
+                        ids.add(jsonObject.getInt("id"));
                         emails.add(jsonObject.getString("email"));
                         firstnames.add(jsonObject.getString("firstname"));
                         lastnames.add(jsonObject.getString("lastname"));
@@ -121,7 +119,7 @@ public class UsersPendingActivity extends AppCompatActivity {
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.usersPendingRecycler);
                 recyclerView.setVisibility(View.VISIBLE);
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(UsersPendingActivity.this, emails, firstnames, lastnames, tvTitle, tvNoData);
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(UsersPendingActivity.this, layout, emails, firstnames, lastnames, ids, tvTitle, tvNoData);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(UsersPendingActivity.this));
             }

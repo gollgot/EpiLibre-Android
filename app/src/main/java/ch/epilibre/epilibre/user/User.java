@@ -1,7 +1,5 @@
 package ch.epilibre.epilibre.user;
 
-import ch.epilibre.epilibre.user.Role;
-
 public class User {
 
     private String firstname;
