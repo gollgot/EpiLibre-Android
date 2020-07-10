@@ -18,7 +18,6 @@ public class SessionManager {
 
     private SharedPreferences pref;
     private Editor editor;
-    private Context context;
 
     // SharedPref file name
     private static final String PREF_NAME = "userPref";
@@ -32,7 +31,6 @@ public class SessionManager {
      * @param context Current Activity Context
      */
     public SessionManager(Context context){
-        this.context = context;
         this.pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         this.editor = pref.edit();
     }
@@ -94,6 +92,7 @@ public class SessionManager {
         try {
             JSONObject jsonObjectData = new JSONObject(text);
             user = new User(
+                    jsonObjectData.getInt("id"),
                     jsonObjectData.getString("firstname"),
                     jsonObjectData.getString("lastname"),
                     jsonObjectData.getString("email"),

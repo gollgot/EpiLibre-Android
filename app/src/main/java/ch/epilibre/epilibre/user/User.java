@@ -2,6 +2,7 @@ package ch.epilibre.epilibre.user;
 
 public class User {
 
+    private int id;
     private String firstname;
     private String lastname;
     private String email;
@@ -10,7 +11,8 @@ public class User {
     /**
      * Empty constructor
      */
-    public User(String firstname, String lastname, String email, Role role) {
+    public User(int id, String firstname, String lastname, String email, Role role) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -18,6 +20,9 @@ public class User {
     }
 
     /**** GETTERS ****/
+    public int getId() {
+        return id;
+    }
     public String getFirstname() {
         return firstname;
     }

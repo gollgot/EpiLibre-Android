@@ -61,7 +61,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(notEmptyFields() && checkFieldsValidity()){
-                    // todo: Send POST request (with sha256 password hash)
                     register();
                 }
             }

@@ -1,7 +1,6 @@
 package ch.epilibre.epilibre.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -29,6 +28,8 @@ import ch.epilibre.epilibre.RecyclerViewAdapter;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
+import ch.epilibre.epilibre.user.Role;
+import ch.epilibre.epilibre.user.User;
 
 public class UsersPendingActivity extends AppCompatActivity {
 
@@ -73,10 +74,7 @@ public class UsersPendingActivity extends AppCompatActivity {
         if(withCustomLoader)
             loader.setVisibility(View.VISIBLE);
 
-        final ArrayList<String> emails = new ArrayList<>();
-        final ArrayList<String> firstnames = new ArrayList<>();
-        final ArrayList<String> lastnames = new ArrayList<>();
-        final ArrayList<Integer> ids = new ArrayList<>();
+        final ArrayList<User> users = new ArrayList<>();
 
         final RelativeLayout layout = findViewById(R.id.usersPendingLayout);
         final HttpRequest httpUsersPendingRequest = new HttpRequest(UsersPendingActivity.this, layout,Config.API_BASE_URL + Config.API_USERS_PENDING, Request.Method.GET);
@@ -89,23 +87,27 @@ public class UsersPendingActivity extends AppCompatActivity {
                 for(int i = 0; i < jsonArrayResource.length(); ++i){
                     try {
                         JSONObject jsonObject = jsonArrayResource.getJSONObject(i);
-                        ids.add(jsonObject.getInt("id"));
-                        emails.add(jsonObject.getString("email"));
-                        firstnames.add(jsonObject.getString("firstname"));
-                        lastnames.add(jsonObject.getString("lastname"));
+                        User user = new User(
+                                jsonObject.getInt("id"),
+                                jsonObject.getString("firstname"),
+                                jsonObject.getString("lastname"),
+                                jsonObject.getString("email"),
+                                Role.SELLER // Pending user can only be a Seller
+                        );
+                        users.add(user);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
                 // user pending title (singular or plural)
-                String usersPendingTitle = emails.size() > 1
+                String usersPendingTitle = users.size() > 1
                         ? getResources().getString(R.string.users_pending_title_plural)
                         : getResources().getString(R.string.users_pending_title_singular);
-                tvTitle.setText(emails.size() + " " + usersPendingTitle);
+                tvTitle.setText(users.size() + " " + usersPendingTitle);
 
                 // If no pending user -> display right text views
-                if(emails.size() == 0){
+                if(users.size() == 0){
                     tvTitle.setText(getResources().getString(R.string.users_pending_main_title));
                     tvNoData.setText(getResources().getString(R.string.users_pending_no_data));
                     tvNoData.setVisibility(View.VISIBLE);
@@ -119,7 +121,7 @@ public class UsersPendingActivity extends AppCompatActivity {
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.usersPendingRecycler);
                 recyclerView.setVisibility(View.VISIBLE);
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(UsersPendingActivity.this, layout, emails, firstnames, lastnames, ids, tvTitle, tvNoData);
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(UsersPendingActivity.this, layout, users, tvTitle, tvNoData);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(UsersPendingActivity.this));
             }
