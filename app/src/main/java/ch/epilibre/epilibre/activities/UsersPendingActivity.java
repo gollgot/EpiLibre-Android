@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.R;
-import ch.epilibre.epilibre.RecyclerViewAdapter;
+import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterUsersPending;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
@@ -122,7 +122,7 @@ public class UsersPendingActivity extends AppCompatActivity {
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.usersPendingRecycler);
                 recyclerView.setVisibility(View.VISIBLE);
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(UsersPendingActivity.this, layout, users, tvTitle, tvNoData);
+                RecyclerViewAdapterUsersPending adapter = new RecyclerViewAdapterUsersPending(UsersPendingActivity.this, layout, users, tvTitle, tvNoData);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(UsersPendingActivity.this));
             }

@@ -1,4 +1,4 @@
-package ch.epilibre.epilibre;
+package ch.epilibre.epilibre.recyclers;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,11 +22,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import ch.epilibre.epilibre.Config;
+import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.user.User;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapterUsersPending extends RecyclerView.Adapter<RecyclerViewAdapterUsersPending.ViewHolder> {
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -57,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private TextView tvTitle;
     private TextView tvNoData;
 
-    public RecyclerViewAdapter(Context context, ViewGroup layout, ArrayList<User> users, TextView tvTitle, TextView tvNoData) {
+    public RecyclerViewAdapterUsersPending(Context context, ViewGroup layout, ArrayList<User> users, TextView tvTitle, TextView tvNoData) {
         this.context = context;
         this.layout = layout;
         this.users = users;

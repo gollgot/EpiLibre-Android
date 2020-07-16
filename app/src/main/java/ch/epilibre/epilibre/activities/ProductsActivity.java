@@ -1,57 +1,62 @@
 package ch.epilibre.epilibre.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toolbar;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.CustomNavigationCallback;
+import ch.epilibre.epilibre.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
+import ch.epilibre.epilibre.http.HttpRequest;
+import ch.epilibre.epilibre.http.RequestCallback;
+import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProducts;
+import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterUsersPending;
+import ch.epilibre.epilibre.user.Role;
+import ch.epilibre.epilibre.user.User;
 
 public class ProductsActivity extends AppCompatActivity {
 
-    private Button btnProduct1;
-    private Button btnProduct2;
-    private Button btnProduct3;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerViewProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
 
+        recyclerViewProducts = findViewById(R.id.productsRecycler);
+        swipeRefreshLayout = findViewById(R.id.productsSwipeRefreshLayout);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initRecyclerView();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
         setupCustomToolbar();
-
-        btnProduct1 = (Button) findViewById(R.id.products_btn1);
-        btnProduct2 = (Button) findViewById(R.id.products_btn2);
-        btnProduct3 = (Button) findViewById(R.id.products_btn3);
-
-        btnProduct1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                returnData(ProductsActivity.this.btnProduct1);
-            }
-        });
-
-        btnProduct2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                returnData(ProductsActivity.this.btnProduct2);
-            }
-        });
-
-        btnProduct3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                returnData(ProductsActivity.this.btnProduct3);
-            }
-        });
-
-
+        initRecyclerView();
     }
 
     /**
@@ -74,14 +79,48 @@ public class ProductsActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Return data to the MainActivity
-     * @param button The called Button
-     */
-    private void returnData(Button button){
-        Intent intent = new Intent();
-        intent.putExtra("product",button.getText().toString());
-        setResult(Activity.RESULT_OK,intent);
-        finish();
+    private void initRecyclerView() {
+
+        final ArrayList<Product> products = new ArrayList<>();
+
+        final RelativeLayout layout = findViewById(R.id.productsLayout);
+        final HttpRequest httpUsersProductsRequest = new HttpRequest(ProductsActivity.this, layout, Config.API_BASE_URL + Config.API_PRODUCTS_INDEX, Request.Method.GET);
+        httpUsersProductsRequest.addBearerToken();
+        httpUsersProductsRequest.executeRequest(new RequestCallback() {
+            @Override
+            public void getResponse(String response) {
+                JSONArray jsonArrayResource = httpUsersProductsRequest.getJSONArrayResource(response);
+                // Parse all json users and fill all array lists
+                for(int i = 0; i < jsonArrayResource.length(); ++i){
+                    try {
+                        JSONObject jsonObject = jsonArrayResource.getJSONObject(i);
+                        Product product = new Product(
+                                jsonObject.getInt("id"),
+                                jsonObject.getString("name"),
+                                jsonObject.getDouble("price"),
+                                jsonObject.getDouble("stock"),
+                                jsonObject.getString("image"),
+                                jsonObject.getString("category"),
+                                jsonObject.getString("unit")
+                        );
+                        products.add(product);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Create the recycler view
+                RecyclerView recyclerView = findViewById(R.id.productsRecycler);
+                RecyclerViewAdapterProducts adapter = new RecyclerViewAdapterProducts(ProductsActivity.this, layout, products);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(ProductsActivity.this));
+            }
+
+            @Override
+            public void getError400(NetworkResponse networkResponse) {}
+
+            @Override
+            public void getErrorNoInternet() { }
+        });
     }
 }
