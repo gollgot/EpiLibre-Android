@@ -1,7 +1,7 @@
 package ch.epilibre.epilibre;
 
 import android.view.View;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

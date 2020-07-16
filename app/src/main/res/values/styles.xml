@@ -7,5 +7,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Theme use for activity with custom toolbar -->
+    <style name="AppThemeNoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Theme use to customiue the searchView in toolbar-->
+    <style name="AppTheme.Toolbar" parent="AppThemeNoActionBar">
+        <!--This line changes the color of text in Toolbar-->
+        <item name="android:textColorPrimary">@color/white</item>
+        <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
 
 </resources>

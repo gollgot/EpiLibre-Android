@@ -1,16 +1,22 @@
 package ch.epilibre.epilibre.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toolbar;
+import android.widget.SearchView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -29,9 +35,6 @@ import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProducts;
-import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterUsersPending;
-import ch.epilibre.epilibre.user.Role;
-import ch.epilibre.epilibre.user.User;
 
 public class ProductsActivity extends AppCompatActivity {
 
@@ -65,9 +68,8 @@ public class ProductsActivity extends AppCompatActivity {
      * its own custom onClick listener to comeback to the mainActivity with no result
      */
     private void setupCustomToolbar() {
-        // Hide the AppTheme ActionBar
-        getSupportActionBar().hide();
         Toolbar toolbar = findViewById(R.id.productsToolbar);
+        setSupportActionBar(toolbar);
         Utils.setUpCustomAppBar(toolbar, new CustomNavigationCallback() {
             @Override
             public void onBackArrowPressed() {
@@ -78,6 +80,7 @@ public class ProductsActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void initRecyclerView() {
 
@@ -122,5 +125,11 @@ public class ProductsActivity extends AppCompatActivity {
             @Override
             public void getErrorNoInternet() { }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_menu, menu);
+        return true;
     }
 }

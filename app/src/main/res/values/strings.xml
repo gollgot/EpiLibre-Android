@@ -28,4 +28,5 @@
     <string name="users_pending_title_singular">utilisateur en attente</string>
     <string name="users_pending_no_connection">Impossible de récupérer les utilisateurs en attentes, veuillez vérifier votre connexion internet</string>
     <string name="users_pending_no_data">Aucun utilisateur en attente</string>
+    <string name="menu_search_search_item">Rechercher</string>
 </resources>

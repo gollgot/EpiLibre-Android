@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -149,8 +149,6 @@ public class UsersPendingActivity extends AppCompatActivity {
      * its own custom onClick listener to comeback to the mainActivity without call OnCreate again
      */
     private void setupCustomToolbar() {
-        // Hide the AppTheme ActionBar
-        getSupportActionBar().hide();
         Toolbar toolbar = findViewById(R.id.usersPendingToolbar);
         Utils.setUpCustomAppBar(toolbar, new CustomNavigationCallback() {
             @Override

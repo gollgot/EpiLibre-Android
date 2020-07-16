@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.R;
@@ -60,8 +60,6 @@ public class ProductsActivityOld extends AppCompatActivity {
      * its own custom onClick listener to comeback to the mainActivity with no result
      */
     private void setupCustomToolbar() {
-        // Hide the AppTheme ActionBar
-        getSupportActionBar().hide();
         Toolbar toolbar = findViewById(R.id.productsToolbar);
         Utils.setUpCustomAppBar(toolbar, new CustomNavigationCallback() {
             @Override
