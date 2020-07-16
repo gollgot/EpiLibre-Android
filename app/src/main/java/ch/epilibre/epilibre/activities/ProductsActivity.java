@@ -1,6 +1,7 @@
 package ch.epilibre.epilibre.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.SearchView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -40,6 +40,7 @@ public class ProductsActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewProducts;
+    private RecyclerViewAdapterProducts adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +115,7 @@ public class ProductsActivity extends AppCompatActivity {
 
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.productsRecycler);
-                RecyclerViewAdapterProducts adapter = new RecyclerViewAdapterProducts(ProductsActivity.this, layout, products);
+                adapter = new RecyclerViewAdapterProducts(ProductsActivity.this, layout, products);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(ProductsActivity.this));
             }
@@ -130,6 +131,22 @@ public class ProductsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.menuSearchSearchItem);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.menu_search_search_item));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
         return true;
     }
 }

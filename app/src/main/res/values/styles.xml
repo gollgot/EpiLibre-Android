@@ -21,6 +21,8 @@
         <item name="android:textColorPrimary">@color/white</item>
         <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
         <item name="android:textColorSecondary">@color/white</item>
+        <!--This line changes the color of the searchView edit text hint -->
+        <item name="android:textColorHint">@color/grayLight</item>
     </style>
 
 </resources>
