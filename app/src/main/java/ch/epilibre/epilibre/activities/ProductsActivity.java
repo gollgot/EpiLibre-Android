@@ -11,12 +11,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -41,6 +44,7 @@ public class ProductsActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewProducts;
     private RecyclerViewAdapterProducts adapter;
+    private TextView tvSearchNoResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,7 @@ public class ProductsActivity extends AppCompatActivity {
 
         recyclerViewProducts = findViewById(R.id.productsRecycler);
         swipeRefreshLayout = findViewById(R.id.productsSwipeRefreshLayout);
+        tvSearchNoResults = findViewById(R.id.productsTvNoResults);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -131,8 +136,8 @@ public class ProductsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search_menu, menu);
-        MenuItem menuItem = menu.findItem(R.id.menuSearchSearchItem);
-        SearchView searchView = (SearchView) menuItem.getActionView();
+        MenuItem searchItem = menu.findItem(R.id.menuSearchSearchItem);
+        SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setQueryHint(getResources().getString(R.string.menu_search_search_item));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -142,8 +147,21 @@ public class ProductsActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+            public boolean onQueryTextChange(final String newText) {
+                Filter.FilterListener listener = new Filter.FilterListener() {
+                    @Override
+                    public void onFilterComplete(int i) {
+                        if(adapter.getItemCount() > 0){
+                            tvSearchNoResults.setVisibility(View.GONE);
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                        }else{
+                            swipeRefreshLayout.setVisibility(View.GONE);
+                            tvSearchNoResults.setText(getResources().getString(R.string.products_search_no_results) + " \"" + newText + "\"");
+                            tvSearchNoResults.setVisibility(View.VISIBLE);
+                        }
+                    }
+                };
+                adapter.getFilter().filter(newText, listener);
                 return false;
             }
         });

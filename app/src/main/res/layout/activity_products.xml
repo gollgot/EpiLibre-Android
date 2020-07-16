@@ -16,6 +16,20 @@
         android:background="@color/colorPrimary"
         app:theme="@style/AppTheme.Toolbar"/>
 
+    <TextView
+        android:id="@+id/productsTvNoResults"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        tools:text='Aucun résultat pour "xyz"'
+        android:layout_below="@id/productsToolbar"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/productsSwipeRefreshLayout"
         android:layout_width="match_parent"
