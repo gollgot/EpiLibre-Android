@@ -3,12 +3,6 @@ package ch.epilibre.epilibre;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Base64;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.nio.charset.StandardCharsets;
 
 import ch.epilibre.epilibre.user.Role;
 import ch.epilibre.epilibre.user.User;
@@ -24,7 +18,12 @@ public class SessionManager {
 
     // SharedPref data
     private static final String IS_LOGIN = "isLoggedIn";
-    private static final String JWT = "jwt";
+    private static final String ID = "id";
+    private static final String FIRSTNAME = "firstname";
+    private static final String LASTNAME = "lastname";
+    private static final String EMAIL = "email";
+    private static final String ROLE = "role";
+    private static final String TOKEN_API = "tokenAPI";
 
     /**
      * Constructor
@@ -38,9 +37,15 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String jwt){
+    public void createLoginSession(User user){
         editor.putBoolean(IS_LOGIN, true);
-        editor.putString(JWT, jwt);
+
+        editor.putInt(ID, user.getId());
+        editor.putString(FIRSTNAME, user.getFirstname());
+        editor.putString(LASTNAME, user.getLastname());
+        editor.putString(EMAIL, user.getEmail());
+        editor.putString(ROLE, user.getRole().toString());
+        editor.putString(TOKEN_API, user.getTokenAPI());
 
         // commit changes
         editor.commit();
@@ -52,11 +57,22 @@ public class SessionManager {
      * @return The connected User or null if not logged in
      */
     public User getUser(){
-        return tokenToUser(pref.getString(JWT, null));
+        return new User(
+                pref.getInt(ID, 0),
+                pref.getString(FIRSTNAME, null),
+                pref.getString(LASTNAME, null),
+                pref.getString(EMAIL, null),
+                Role.valueOf(pref.getString(ROLE, null)),
+                pref.getString(TOKEN_API, null)
+        );
     }
 
+    /**
+     * Get the user's tokenAPI
+     * @return the user's tokenAPI
+     */
     public String getToken(){
-        return pref.getString(JWT, null);
+        return pref.getString(TOKEN_API, null);
     }
 
     /**
@@ -76,33 +92,6 @@ public class SessionManager {
     // Get Login State
     public boolean isLoggedIn(){
         return pref.getBoolean(IS_LOGIN, false);
-    }
-
-    /**
-     * Extract User object from the JWT token
-     * @param token The JWT token
-     * @return The User stored into the JWT token
-     */
-    private User tokenToUser(String token){
-        String tokenData = token.split("\\.")[1];
-        byte[] data = Base64.decode(tokenData, Base64.DEFAULT);
-        String text = new String(data, StandardCharsets.UTF_8);
-
-        User user = null;
-        try {
-            JSONObject jsonObjectData = new JSONObject(text);
-            user = new User(
-                    jsonObjectData.getInt("id"),
-                    jsonObjectData.getString("firstname"),
-                    jsonObjectData.getString("lastname"),
-                    jsonObjectData.getString("email"),
-                    Role.valueOf(jsonObjectData.getString("role"))
-            );
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return user;
     }
 
 }

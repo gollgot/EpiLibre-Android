@@ -1,7 +1,9 @@
 package ch.epilibre.epilibre.http;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.ViewGroup;
 
 import com.android.volley.NetworkResponse;
@@ -23,6 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epilibre.epilibre.SessionManager;
+import ch.epilibre.epilibre.activities.LoginActivity;
+import ch.epilibre.epilibre.activities.MainActivity;
 
 public class HttpRequest {
 
@@ -102,6 +106,36 @@ public class HttpRequest {
                     // Error 400 Bad request
                     if (networkResponse != null && networkResponse.statusCode == 400) {
                         callback.getError400(networkResponse);
+                    }
+                    // Error 401 Unauthorized (e.g if we change a user's role, he will have a 401 error
+                    // if he'll try to access content for which he have not the role anymore.
+                    else if(networkResponse != null && networkResponse.statusCode == 401){
+                        // Logout the user
+                        SessionManager sessionManager = new SessionManager(context);
+                        sessionManager.logoutUser();
+                        // Show a non cancelable dialog to re-login the user
+                        new MaterialAlertDialogBuilder(context)
+                                .setCancelable(false)
+                                .setTitle("Action non autorisée")
+                                .setMessage("Veuillez vous reconnecter")
+                                .setPositiveButton("Reconnexion", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intentLogin = new Intent(context, LoginActivity.class);
+                                        // Remove all activities in the stack
+                                        intentLogin.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        ((Activity)context).finish();
+                                        context.startActivity(intentLogin);
+                                    }
+                                })
+                                .setNegativeButton("Quitter", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        ((Activity)context).finishAffinity();
+                                        System.exit(0);
+                                    }
+                                })
+                                .show();
                     }
                     // Other error
                     else{

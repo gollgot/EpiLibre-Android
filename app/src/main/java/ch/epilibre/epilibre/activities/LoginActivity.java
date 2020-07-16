@@ -43,6 +43,8 @@ import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
+import ch.epilibre.epilibre.user.Role;
+import ch.epilibre.epilibre.user.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -153,9 +155,17 @@ public class LoginActivity extends AppCompatActivity {
                 removeLoader();
                 try {
                     JSONObject jsonObjectResource = httpLoginRequest.getJSONObjectResource(response);
-                    String token = jsonObjectResource.getString("token");
+                    User user = new User(
+                            jsonObjectResource.getInt("id"),
+                            jsonObjectResource.getString("firstname"),
+                            jsonObjectResource.getString("lastname"),
+                            jsonObjectResource.getString("email"),
+                            Role.valueOf(jsonObjectResource.getString("role")),
+                            jsonObjectResource.getString("tokenAPI")
+                    );
+
                     // Store the user JWT into session manager and start the MainActivity
-                    sessionManager.createLoginSession(token);
+                    sessionManager.createLoginSession(user);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     finish();
                     startActivity(intent);
@@ -198,4 +208,5 @@ public class LoginActivity extends AppCompatActivity {
         // get user interaction with screen back
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
+
 }

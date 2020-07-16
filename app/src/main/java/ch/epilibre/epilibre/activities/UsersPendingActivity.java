@@ -92,7 +92,8 @@ public class UsersPendingActivity extends AppCompatActivity {
                                 jsonObject.getString("firstname"),
                                 jsonObject.getString("lastname"),
                                 jsonObject.getString("email"),
-                                Role.SELLER // Pending user can only be a Seller
+                                Role.SELLER, // Pending user can only be a Seller
+                                null
                         );
                         users.add(user);
                     } catch (JSONException e) {

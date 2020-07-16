@@ -7,16 +7,18 @@ public class User {
     private String lastname;
     private String email;
     private Role role;
+    private String tokenAPI;
 
     /**
      * Empty constructor
      */
-    public User(int id, String firstname, String lastname, String email, Role role) {
+    public User(int id, String firstname, String lastname, String email, Role role, String tokenAPI) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.role = role;
+        this.tokenAPI = tokenAPI;
     }
 
     /**** GETTERS ****/
@@ -34,6 +36,9 @@ public class User {
     }
     public Role getRole() {
         return role;
+    }
+    public String getTokenAPI() {
+        return tokenAPI;
     }
 
 }
