@@ -16,33 +16,61 @@
         android:background="@color/colorPrimary"
         app:theme="@style/AppTheme.Toolbar"/>
 
-    <TextView
-        android:id="@+id/productsTvNoResults"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginTop="40dp"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        tools:text='Aucun résultat pour "xyz"'
-        android:layout_below="@id/productsToolbar"/>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/productsSwipeRefreshLayout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/grayLight"
+        android:orientation="vertical"
         android:layout_below="@id/productsToolbar">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:background="@color/grayLight"
-            android:id="@+id/productsRecycler"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:padding="6dp"
+            android:background="@drawable/recycler_list_item_shape"
+            android:layout_gravity="center_horizontal">
+            <Spinner
+                android:id="@+id/productsSpinnerCategories"
+                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/productsTvNoResults"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            tools:text='Aucun résultat pour "xyz"'/>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/productsSwipeRefreshLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/productsToolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@color/grayLight"
+                android:id="@+id/productsRecycler">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

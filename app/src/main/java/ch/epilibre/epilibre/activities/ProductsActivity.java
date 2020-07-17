@@ -1,25 +1,24 @@
 package ch.epilibre.epilibre.activities;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -41,30 +40,35 @@ import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProducts;
 
 public class ProductsActivity extends AppCompatActivity {
 
+    private RelativeLayout layout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewProducts;
     private RecyclerViewAdapterProducts adapter;
     private TextView tvSearchNoResults;
+    private ArrayList<Product> productsAll;
+    private Spinner spinnerCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
 
+        spinnerCategories = findViewById(R.id.productsSpinnerCategories);
+        layout = findViewById(R.id.productsLayout);
         recyclerViewProducts = findViewById(R.id.productsRecycler);
         swipeRefreshLayout = findViewById(R.id.productsSwipeRefreshLayout);
         tvSearchNoResults = findViewById(R.id.productsTvNoResults);
 
+        // Pull to refresh management -> will init again the recyclerview with new products from the API
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 initRecyclerView();
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
-
         setupCustomToolbar();
+        initSpinner(spinnerCategories);
         initRecyclerView();
     }
 
@@ -87,12 +91,58 @@ public class ProductsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Categories spinner initialisation
+     * @param spinner The spinner
+     */
+    private void initSpinner(Spinner spinner){
 
+        swipeRefreshLayout.setRefreshing(true);
+
+        final ArrayList<String> categories = new ArrayList<>();
+        categories.add("Toutes");
+        categories.add("Graines");
+        categories.add("Produits ménagers");
+        categories.add("Légumineuse");
+        categories.add("Pâtes");
+        categories.add("Autres");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                // If all products selected -> just update the recycler with all products
+                if(i == 0){
+                    updateRecyclerView(productsAll);
+                }
+                // Else, category chose -> get from all products only those correspond to the selected category
+                else{
+                    ArrayList<Product> productsFilteredByCategory = new ArrayList<>();
+                    for(Product product : productsAll){
+                        if(product.getCategory().equals(categories.get(i))){
+                            productsFilteredByCategory.add(product);
+                        }
+                    }
+                    updateRecyclerView(productsFilteredByCategory);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    /**
+     * Products recycler view initialisation.
+     * It will fetch on the API all the products and update the recycler view with those products
+     */
     private void initRecyclerView() {
+        productsAll = new ArrayList<>();
 
-        final ArrayList<Product> products = new ArrayList<>();
-
-        final RelativeLayout layout = findViewById(R.id.productsLayout);
         final HttpRequest httpUsersProductsRequest = new HttpRequest(ProductsActivity.this, layout, Config.API_BASE_URL + Config.API_PRODUCTS_INDEX, Request.Method.GET);
         httpUsersProductsRequest.addBearerToken();
         httpUsersProductsRequest.executeRequest(new RequestCallback() {
@@ -112,25 +162,35 @@ public class ProductsActivity extends AppCompatActivity {
                                 jsonObject.getString("category"),
                                 jsonObject.getString("unit")
                         );
-                        products.add(product);
+                        productsAll.add(product);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
 
-                // Create the recycler view
-                RecyclerView recyclerView = findViewById(R.id.productsRecycler);
-                adapter = new RecyclerViewAdapterProducts(ProductsActivity.this, layout, products);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(ProductsActivity.this));
+                spinnerCategories.setSelection(0); // Each initialisation, come back to the initial state of the spinner
+                updateRecyclerView(productsAll);
             }
 
             @Override
             public void getError400(NetworkResponse networkResponse) {}
 
             @Override
-            public void getErrorNoInternet() { }
+            public void getErrorNoInternet() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
         });
+    }
+
+    /**
+     * Update the recyclerview with products
+     * @param products Products that will be shown by the recyclerview
+     */
+    private void updateRecyclerView(ArrayList<Product> products){
+        adapter = new RecyclerViewAdapterProducts(ProductsActivity.this, layout, products);
+        recyclerViewProducts.setAdapter(adapter);
+        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(ProductsActivity.this));
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
