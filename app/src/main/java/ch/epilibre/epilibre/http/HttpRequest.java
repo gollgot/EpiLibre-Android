@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.activities.LoginActivity;
 import ch.epilibre.epilibre.activities.MainActivity;
@@ -97,7 +98,7 @@ public class HttpRequest {
 
                 // No internet connection error
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Snackbar.make(layout, "Aucune connexion, veuillez vérifier votre connexion internet.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(layout, context.getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
                     callback.getErrorNoInternet();
                 }
                 // Other error

@@ -1,5 +1,8 @@
 package ch.epilibre.epilibre;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.View;
 import androidx.appcompat.widget.Toolbar;
 
@@ -58,4 +61,15 @@ public class Utils {
         });
     }
 
+    /**
+     * Check if the device is connected to internet
+     * @param context The Context
+     * @return True if there is an internet connection, false otherwise
+     */
+    public static boolean isConnectedToInternet(Context context){
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+    
 }

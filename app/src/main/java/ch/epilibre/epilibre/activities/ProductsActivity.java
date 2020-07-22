@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +64,12 @@ public class ProductsActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initRecyclerView();
+                if(Utils.isConnectedToInternet(ProductsActivity.this)){
+                    initRecyclerView();
+                }else{
+                    swipeRefreshLayout.setRefreshing(false);
+                    Snackbar.make(layout, getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
 

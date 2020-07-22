@@ -30,4 +30,5 @@
     <string name="users_pending_no_data">Aucun utilisateur en attente</string>
     <string name="menu_search_search_item">Rechercher</string>
     <string name="products_search_no_results">Aucun résultat pour</string>
+    <string name="no_internet_connection">Aucune connexion, veuillez vérifier votre connexion internet.</string>
 </resources>
