@@ -60,6 +60,9 @@ public class ProductsActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.productsSwipeRefreshLayout);
         tvSearchNoResults = findViewById(R.id.productsTvNoResults);
 
+        // Active the loader
+        swipeRefreshLayout.setRefreshing(true);
+
         // Pull to refresh management -> will init again the recyclerview with new products from the API
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -102,9 +105,6 @@ public class ProductsActivity extends AppCompatActivity {
      * @param spinner The spinner
      */
     private void initSpinner(Spinner spinner){
-
-        swipeRefreshLayout.setRefreshing(true);
-
         final ArrayList<String> categories = new ArrayList<>();
         categories.add("Toutes");
         categories.add("Graines");

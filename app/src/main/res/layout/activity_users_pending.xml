@@ -63,14 +63,4 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/usersPendingLoader"
-        android:layout_centerInParent="true"
-        android:indeterminateTint="@color/colorPrimary"
-        style="@android:style/Widget.Holo.Light.ProgressBar.Large"
-        android:visibility="gone"/>
-
-
 </RelativeLayout>

@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +35,6 @@ import ch.epilibre.epilibre.user.User;
 public class UsersPendingActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ProgressBar loader;
     private TextView tvTitle;
     private TextView tvNoData;
 
@@ -43,37 +43,38 @@ public class UsersPendingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_pending);
 
-        loader = findViewById(R.id.usersPendingLoader);
         tvTitle = findViewById(R.id.usersPendingTvTitle);
         tvNoData = findViewById(R.id.usersPendingTvNoData);
 
         setupCustomToolbar();
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.usersPendingSwipeRefreshLayout);
+        swipeRefreshLayout = findViewById(R.id.usersPendingSwipeRefreshLayout);
+        // Active the loader
+        swipeRefreshLayout.setRefreshing(true);
+
+        // Pull to refresh management -> will init again the recyclerview with new users pending from the API
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initRecyclerView(false);
-                swipeRefreshLayout.setRefreshing(false);
+                if(Utils.isConnectedToInternet(UsersPendingActivity.this)){
+                    initRecyclerView();
+                }else{
+                    swipeRefreshLayout.setRefreshing(false);
+                    Snackbar.make(findViewById(R.id.usersPendingLayout), getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                }
+
             }
         });
 
-        // Init recycler view on resume, this way when we came back to this activity we update the recycler view
-        // And first time, onResume are called after onCreate
+        initRecyclerView();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        initRecyclerView(true);
     }
 
-    private void initRecyclerView(boolean withCustomLoader) {
-        // This way we can pull to refresh and keep only the pull to refresh loader
-        if(withCustomLoader)
-            loader.setVisibility(View.VISIBLE);
-
+    private void initRecyclerView() {
         final ArrayList<User> users = new ArrayList<>();
 
         final RelativeLayout layout = findViewById(R.id.usersPendingLayout);
@@ -116,7 +117,6 @@ public class UsersPendingActivity extends AppCompatActivity {
                     tvNoData.setVisibility(View.GONE);
                 }
 
-                loader.setVisibility(View.GONE);
                 tvTitle.setVisibility(View.VISIBLE);
 
                 // Create the recycler view
@@ -125,6 +125,7 @@ public class UsersPendingActivity extends AppCompatActivity {
                 RecyclerViewAdapterUsersPending adapter = new RecyclerViewAdapterUsersPending(UsersPendingActivity.this, layout, users, tvTitle, tvNoData);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(UsersPendingActivity.this));
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -132,7 +133,7 @@ public class UsersPendingActivity extends AppCompatActivity {
 
             @Override
             public void getErrorNoInternet() {
-                loader.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
                 RecyclerView recyclerView = findViewById(R.id.usersPendingRecycler);
                 recyclerView.setVisibility(View.GONE);
                 tvTitle.setText(getResources().getString(R.string.users_pending_main_title));
