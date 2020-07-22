@@ -13,7 +13,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +33,6 @@ import ch.epilibre.epilibre.user.User;
 public class UsersPendingActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView tvTitle;
     private TextView tvNoData;
 
     @Override
@@ -42,7 +40,6 @@ public class UsersPendingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_pending);
 
-        tvTitle = findViewById(R.id.usersPendingTvTitle);
         tvNoData = findViewById(R.id.usersPendingTvNoData);
 
         setupCustomToolbar();
@@ -59,7 +56,7 @@ public class UsersPendingActivity extends AppCompatActivity {
                     initRecyclerView();
                 }else{
                     swipeRefreshLayout.setRefreshing(false);
-                    Snackbar.make(findViewById(R.id.usersPendingLayout), getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                    Utils.NoInternetSnackBar(UsersPendingActivity.this, findViewById(R.id.usersPendingLayout));
                 }
 
             }
@@ -101,27 +98,19 @@ public class UsersPendingActivity extends AppCompatActivity {
                     }
                 }
 
-                // user pending title (singular or plural)
-                String usersPendingTitle = users.size() > 1
-                        ? getResources().getString(R.string.users_pending_title_plural)
-                        : getResources().getString(R.string.users_pending_title_singular);
-                tvTitle.setText(users.size() + " " + usersPendingTitle);
-
                 // If no pending user -> display right text views
                 if(users.size() == 0){
-                    tvTitle.setText(getResources().getString(R.string.users_pending_main_title));
                     tvNoData.setText(getResources().getString(R.string.users_pending_no_data));
                     tvNoData.setVisibility(View.VISIBLE);
                 }else{
                     tvNoData.setVisibility(View.GONE);
                 }
 
-                tvTitle.setVisibility(View.VISIBLE);
 
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.usersPendingRecycler);
                 recyclerView.setVisibility(View.VISIBLE);
-                RecyclerViewAdapterUsersPending adapter = new RecyclerViewAdapterUsersPending(UsersPendingActivity.this, layout, users, tvTitle, tvNoData);
+                RecyclerViewAdapterUsersPending adapter = new RecyclerViewAdapterUsersPending(UsersPendingActivity.this, layout, users);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(UsersPendingActivity.this));
                 swipeRefreshLayout.setRefreshing(false);
@@ -135,10 +124,6 @@ public class UsersPendingActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(false);
                 RecyclerView recyclerView = findViewById(R.id.usersPendingRecycler);
                 recyclerView.setVisibility(View.GONE);
-                tvTitle.setText(getResources().getString(R.string.users_pending_main_title));
-                tvNoData.setText(getResources().getString(R.string.users_pending_no_connection));
-                tvTitle.setVisibility(View.VISIBLE);
-                tvNoData.setVisibility(View.VISIBLE);
             }
         });
     }

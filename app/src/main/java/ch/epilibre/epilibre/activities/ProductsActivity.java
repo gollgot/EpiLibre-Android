@@ -48,12 +48,14 @@ public class ProductsActivity extends AppCompatActivity {
     private TextView tvSearchNoResults;
     private ArrayList<Product> productsAll;
     private Spinner spinnerCategories;
+    private RelativeLayout productsSpinnerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
 
+        productsSpinnerLayout = findViewById(R.id.productsSpinnerLayout);
         spinnerCategories = findViewById(R.id.productsSpinnerCategories);
         layout = findViewById(R.id.productsLayout);
         recyclerViewProducts = findViewById(R.id.productsRecycler);
@@ -71,7 +73,7 @@ public class ProductsActivity extends AppCompatActivity {
                     initRecyclerView();
                 }else{
                     swipeRefreshLayout.setRefreshing(false);
-                    Snackbar.make(layout, getResources().getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
+                    Utils.NoInternetSnackBar(ProductsActivity.this, layout);
                 }
             }
         });
@@ -106,39 +108,68 @@ public class ProductsActivity extends AppCompatActivity {
      * Categories spinner initialisation
      * @param spinner The spinner
      */
-    private void initSpinner(Spinner spinner){
-        final ArrayList<String> categories = new ArrayList<>();
-        categories.add("Toutes");
-        categories.add("Graines");
-        categories.add("Produits ménagers");
-        categories.add("Légumineuse");
-        categories.add("Pâtes");
-        categories.add("Autres");
+    private void initSpinner(final Spinner spinner){
+        productsSpinnerLayout.setVisibility(View.GONE);
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        final HttpRequest httpCategoriesRequest = new HttpRequest(ProductsActivity.this, layout, Config.API_BASE_URL + Config.API_CATEGORIES_INDEX, Request.Method.GET);
+        httpCategoriesRequest.addBearerToken();
+        httpCategoriesRequest.executeRequest(new RequestCallback() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                // If all products selected -> just update the recycler with all products
-                if(i == 0){
-                    updateRecyclerView(productsAll);
+            public void getResponse(String response) {
+                // Categories array -> first add the "All" category
+                final ArrayList<String> categories = new ArrayList<>();
+                categories.add(getString(R.string.all_categories));
+
+                // Fetch all categories names from the json response
+                JSONArray jsonArrayResource = httpCategoriesRequest.getJSONArrayResource(response);
+                // Parse all json users and fill all array lists
+                for(int i = 0; i < jsonArrayResource.length(); ++i){
+                    try {
+                        JSONObject jsonObject = jsonArrayResource.getJSONObject(i);
+                        categories.add(jsonObject.getString("name"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-                // Else, category chose -> get from all products only those correspond to the selected category
-                else{
-                    ArrayList<Product> productsFilteredByCategory = new ArrayList<>();
-                    for(Product product : productsAll){
-                        if(product.getCategory().equals(categories.get(i))){
-                            productsFilteredByCategory.add(product);
+
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(ProductsActivity.this, android.R.layout.simple_spinner_item, categories);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(dataAdapter);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        // If all products selected -> just update the recycler with all products
+                        if(i == 0){
+                            updateRecyclerView(productsAll);
+                        }
+                        // Else, category chose -> get from all products only those correspond to the selected category
+                        else{
+                            ArrayList<Product> productsFilteredByCategory = new ArrayList<>();
+                            for(Product product : productsAll){
+                                if(product.getCategory().equals(categories.get(i))){
+                                    productsFilteredByCategory.add(product);
+                                }
+                            }
+                            updateRecyclerView(productsFilteredByCategory);
                         }
                     }
-                    updateRecyclerView(productsFilteredByCategory);
-                }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+
+                productsSpinnerLayout.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void getError400(NetworkResponse networkResponse) {
+
+            }
+
+            @Override
+            public void getErrorNoInternet() {
 
             }
         });

@@ -56,15 +56,10 @@ public class RecyclerViewAdapterUsersPending extends RecyclerView.Adapter<Recycl
     private ViewGroup layout;
     private ArrayList<User> users = new ArrayList<>();
 
-    private TextView tvTitle;
-    private TextView tvNoData;
-
-    public RecyclerViewAdapterUsersPending(Context context, ViewGroup layout, ArrayList<User> users, TextView tvTitle, TextView tvNoData) {
+    public RecyclerViewAdapterUsersPending(Context context, ViewGroup layout, ArrayList<User> users) {
         this.context = context;
         this.layout = layout;
         this.users = users;
-        this.tvTitle = tvTitle;
-        this.tvNoData = tvNoData;
     }
 
     @NonNull
@@ -139,18 +134,6 @@ public class RecyclerViewAdapterUsersPending extends RecyclerView.Adapter<Recycl
 
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, users.size());
-
-        String usersPendingTitle = users.size() > 1
-                ? context.getResources().getString(R.string.users_pending_title_plural)
-                : context.getResources().getString(R.string.users_pending_title_singular);
-
-        tvTitle.setText(users.size() + " " + usersPendingTitle);
-        if(users.size() >= 1){
-            tvNoData.setVisibility(View.GONE);
-        }else{
-            tvTitle.setText(context.getResources().getString(R.string.users_pending_main_title));
-            tvNoData.setVisibility(View.VISIBLE);
-        }
     }
 
     /**

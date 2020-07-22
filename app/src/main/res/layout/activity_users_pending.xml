@@ -23,19 +23,6 @@
         android:layout_below="@id/usersPendingToolbar">
 
         <TextView
-            android:id="@+id/usersPendingTvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:paddingBottom="10dp"
-            android:text="@string/users_pending_main_title"
-            android:background="@color/grayLight"
-            android:textStyle="bold"
-            android:textSize="24sp"
-            android:gravity="center_horizontal"
-            android:visibility="gone"/>
-
-        <TextView
             android:id="@+id/usersPendingTvNoData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

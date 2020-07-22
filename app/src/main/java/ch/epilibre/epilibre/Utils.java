@@ -4,7 +4,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -71,6 +75,10 @@ public class Utils {
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    public static void NoInternetSnackBar(Context context, View layout){
+        Snackbar.make(layout, context.getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
     }
     
 }

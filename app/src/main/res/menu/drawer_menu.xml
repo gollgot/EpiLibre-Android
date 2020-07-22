@@ -22,7 +22,7 @@
             <!-- Pending user validation -->
             <item android:id="@+id/drawer_menu__item_users_pending"
                 android:icon="@drawable/ic_person_add"
-                android:title="@string/drawer_item_users_pending"
+                android:title="@string/users_pending_main_title"
                 app:actionLayout="@layout/menu_counter"/>
             <!-- All Users -->
             <item android:id="@+id/drawer_menu__item_users"

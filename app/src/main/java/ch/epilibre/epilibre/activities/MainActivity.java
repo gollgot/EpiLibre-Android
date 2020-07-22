@@ -21,6 +21,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ch.epilibre.epilibre.Config;
+import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
@@ -70,8 +72,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
-                startActivityForResult(intent, LAUNCH_PRODUCTS_ACTIVITY);
+                if(Utils.isConnectedToInternet(MainActivity.this)){
+                    Intent intent = new Intent(MainActivity.this, ProductsActivity.class);
+                    startActivityForResult(intent, LAUNCH_PRODUCTS_ACTIVITY);
+                }else{
+                    Utils.NoInternetSnackBar(MainActivity.this, findViewById(R.id.mainLayout));
+                }
             }
         });
 
@@ -251,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        //Handle item selection
+        //Handle item selection for the menu
         switch (item.getItemId()) {
             case R.id.itemGuestMenuSignOut:
                 //invalidateOptionsMenu();
@@ -267,13 +273,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle drawer navigation on item selected
-        switch (item.getItemId()) {
-            case R.id.drawer_menu__item_users_pending:
-                Intent intentUsersPending = new Intent(MainActivity.this, UsersPendingActivity.class);
-                startActivity(intentUsersPending);
-                break;
+        // If no internet -> display snack bar and do nothing
+        if(!Utils.isConnectedToInternet(MainActivity.this)){
+            Utils.NoInternetSnackBar(MainActivity.this, findViewById(R.id.mainLayout));
         }
+        // Internet connection OK -> go to the activity
+        else {
+            // Handle drawer navigation on item selected
+            switch (item.getItemId()) {
+                case R.id.drawer_menu__item_users_pending:
+                    Intent intentUsersPending = new Intent(MainActivity.this, UsersPendingActivity.class);
+                    startActivity(intentUsersPending);
+                    break;
+            }
+        }
+
         //close navigation drawer
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

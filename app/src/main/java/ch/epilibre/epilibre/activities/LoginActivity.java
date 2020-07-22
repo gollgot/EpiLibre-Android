@@ -182,7 +182,9 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void getErrorNoInternet() {}
+            public void getErrorNoInternet() {
+                removeLoader();
+            }
         });
     }
 
