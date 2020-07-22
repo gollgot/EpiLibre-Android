@@ -61,7 +61,7 @@ public class ProductsActivityOld extends AppCompatActivity {
      */
     private void setupCustomToolbar() {
         Toolbar toolbar = findViewById(R.id.productsToolbar);
-        Utils.setUpCustomAppBar(toolbar, new CustomNavigationCallback() {
+        Utils.setUpCustomAppBar(toolbar, null , new CustomNavigationCallback() {
             @Override
             public void onBackArrowPressed() {
                 // Return to the MainActivity without result

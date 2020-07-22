@@ -2,7 +2,6 @@ package ch.epilibre.epilibre.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
@@ -151,7 +150,7 @@ public class UsersPendingActivity extends AppCompatActivity {
      */
     private void setupCustomToolbar() {
         Toolbar toolbar = findViewById(R.id.usersPendingToolbar);
-        Utils.setUpCustomAppBar(toolbar, new CustomNavigationCallback() {
+        Utils.setUpCustomAppBar(toolbar, getResources().getString(R.string.users_pending_main_title), new CustomNavigationCallback() {
             @Override
             public void onBackArrowPressed() {
                 finish();

@@ -88,8 +88,8 @@ public class ProductsActivity extends AppCompatActivity {
      */
     private void setupCustomToolbar() {
         Toolbar toolbar = findViewById(R.id.productsToolbar);
-        setSupportActionBar(toolbar);
-        Utils.setUpCustomAppBar(toolbar, new CustomNavigationCallback() {
+        setSupportActionBar(toolbar); // To be able to have a menu like a normal actionBar
+        Utils.setUpCustomAppBar(toolbar, null, new CustomNavigationCallback() {
             @Override
             public void onBackArrowPressed() {
                 // Return to the MainActivity without result
@@ -98,6 +98,8 @@ public class ProductsActivity extends AppCompatActivity {
                 finish();
             }
         });
+        // Specific for supported action bar, to display custom title
+        getSupportActionBar().setTitle(getResources().getString(R.string.products_title));
     }
 
     /**

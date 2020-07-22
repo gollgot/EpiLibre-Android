@@ -50,8 +50,9 @@ public class Utils {
      * @param toolbar The custom Toolbar
      * @param callback The CustomNavigationCallback when we'll press the back arrow
      */
-    public static void setUpCustomAppBar(Toolbar toolbar, final CustomNavigationCallback callback){
-        toolbar.setTitle(Utils.APP_NAME);
+    public static void setUpCustomAppBar(Toolbar toolbar, String title, final CustomNavigationCallback callback){
+        title = title == null ? Utils.APP_NAME : title;
+        toolbar.setTitle(title);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
