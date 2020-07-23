@@ -9,11 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.Collection;
 
 import ch.epilibre.epilibre.Product;
 import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.dialogs.AddToBasketDialog;
 
 public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerViewAdapterProducts.ViewHolder> implements Filterable {
 
@@ -32,6 +35,7 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
         TextView tvCategory;
         TextView tvPrice;
         TextView tvStock;
+        ImageButton btnAdd;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -41,6 +45,7 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
             tvCategory = itemView.findViewById(R.id.recyclerProductsTvCategory);
             tvPrice= itemView.findViewById(R.id.recyclerProductsTvPrice);
             tvStock= itemView.findViewById(R.id.recyclerProductsTvStock);
+            btnAdd = itemView.findViewById(R.id.recyclerProductsBtnAdd);
         }
     }
 
@@ -66,7 +71,7 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         String unit = products.get(position).getUnit();
 
         byte[] imageBytes = Base64.decode(products.get(position).getImage(), Base64.DEFAULT);
@@ -76,6 +81,13 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
         holder.tvCategory.setText(products.get(position).getCategory());
         holder.tvPrice.setText(products.get(position).getPrice() + " CHF / " + unit);
         holder.tvStock.setText(products.get(position).getStock() + " " + unit + " en stock");
+        holder.btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AddToBasketDialog addToBasketDialog = new AddToBasketDialog(products.get(position));
+                addToBasketDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "product_add_dialog");
+            }
+        });
     }
 
     @Override

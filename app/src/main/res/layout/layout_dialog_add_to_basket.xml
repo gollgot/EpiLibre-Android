@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <Switch
+        android:id="@+id/dialogAddProductSwitchContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:textColor="#808080"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:theme="@style/SwitchBtnStyle"
+        android:text="@string/product_dialog_container" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dialogAddProductEtWeight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/product_dialog_weight"
+        app:endIconMode="clear_text"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/dialogAddProductTvProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Patate - 1 chf / g " />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dialogAddProductEtQuantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/product_dialog_quantity"
+        app:startIconDrawable="@drawable/ic_shopping_basket"
+        app:endIconMode="clear_text"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

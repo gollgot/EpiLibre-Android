@@ -4,9 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -77,8 +78,23 @@ public class Utils {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
+    /**
+     * Create a SnackBar for no internet warning
+     * @param context The Context
+     * @param layout The root layout View
+     */
     public static void NoInternetSnackBar(Context context, View layout){
         Snackbar.make(layout, context.getString(R.string.no_internet_connection), Snackbar.LENGTH_SHORT).show();
     }
-    
+
+    /**
+     * Set to our button a default dialog button look and feel (no background and colorPrimary text color)
+     * @param context The Context
+     * @param button the Button
+     */
+    public static void setDefaultDialogButtonTheme(Context context, Button button){
+        button.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+        button.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+    }
+
 }

@@ -22,7 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,11 +35,12 @@ import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
+import ch.epilibre.epilibre.dialogs.CustomDialogButtonListener;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProducts;
 
-public class ProductsActivity extends AppCompatActivity {
+public class ProductsActivity extends AppCompatActivity implements CustomDialogButtonListener {
 
     private RelativeLayout layout;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -265,5 +266,13 @@ public class ProductsActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    @Override
+    public void addToBasket(Product product, boolean hasContainer, TextInputLayout etWeight, TextInputLayout etQuantity) {
+        Intent intent = new Intent();
+        intent.putExtra("product", product.getName());
+        setResult(Activity.RESULT_OK,intent);
+        finish();
     }
 }

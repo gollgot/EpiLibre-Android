@@ -37,7 +37,7 @@ import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.user.Role;
 import ch.epilibre.epilibre.user.User;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
