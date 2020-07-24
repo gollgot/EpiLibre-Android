@@ -6,6 +6,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -15,25 +17,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.epilibre.epilibre.BasketLine;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.http.RequestCallback;
+import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterBasketLine;
+import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProducts;
 import ch.epilibre.epilibre.user.Role;
 import ch.epilibre.epilibre.user.User;
 
@@ -46,10 +56,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private final static int LAUNCH_PRODUCTS_ACTIVITY = 1;
 
-    private Map<String, Integer> shoppingList;
-    private TextView tv;
-
     private DrawerLayout drawerLayout;
+
+    private ArrayList<BasketLine> basketLines;
+    private TextView tvTotalPrice;
+    private RelativeLayout layout;
+    private RecyclerViewAdapterBasketLine adapter;
+    private RecyclerView recyclerViewBasketLines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +77,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.mainDrawer);
         loadNavigationDrawer();
 
-        // Shopping list stuff
-        shoppingList = new HashMap<>();
-        tv = (TextView) findViewById(R.id.main_tv);
-        Button btnAddProduct = (Button) findViewById(R.id.mainBtnAddProduct);
+        ExtendedFloatingActionButton fabAddProduct = findViewById(R.id.mainFabAddProduct);
+        tvTotalPrice = findViewById(R.id.mainTvTotalPrice);
 
-        btnAddProduct.setOnClickListener(new View.OnClickListener() {
+        fabAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(Utils.isConnectedToInternet(MainActivity.this)){
@@ -81,6 +92,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+
+        initRecyclerView();
+    }
+
+    /**
+     * Initialisation of the recycler view
+     */
+    private void initRecyclerView() {
+        layout = findViewById(R.id.recyclerBasketLinesLayout);
+        recyclerViewBasketLines = findViewById(R.id.mainRecycler);
+        basketLines = new ArrayList<>();
+        updateBasket(basketLines);
+    }
+
+    /**
+     * Update the recycler view with basket lines
+     * @param basketLines ArrayList of BasketLine
+     */
+    private void updateBasket(ArrayList<BasketLine> basketLines) {
+        adapter = new RecyclerViewAdapterBasketLine(MainActivity.this, layout, basketLines, tvTotalPrice);
+        recyclerViewBasketLines.setAdapter(adapter);
+        recyclerViewBasketLines.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+        // Update total price
+        Utils.updateTotalPrice(basketLines, tvTotalPrice);
     }
 
 
@@ -173,16 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    /**
-     * Update the whole shopping list displaying
-     */
-    private void updateShoppingList(){
-        tv.setText("");
-        for(Map.Entry<String, Integer> product : shoppingList.entrySet()){
-            tv.append("\n" + product.getKey() + "\t" + product.getValue() + "x");
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -192,15 +218,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case LAUNCH_PRODUCTS_ACTIVITY:
                 // Result OK
                 if(resultCode == Activity.RESULT_OK){
-                    String productName = data.getStringExtra("product");
-                    // Add to the hashmap the product and the quantity
-                    if(shoppingList.containsKey(productName)){
-                        shoppingList.put(productName, shoppingList.get(productName) + 1);
-                    }else{
-                        shoppingList.put(productName, 1);
-                    }
-
-                    updateShoppingList();
+                    BasketLine basketLine = (BasketLine) data.getSerializableExtra("basketLine");
+                    basketLines.add(basketLine);
+                    updateBasket(basketLines);
                 }
                 break;
         }
@@ -212,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Shopping list not empty -> display dialog box to be sure to quit the app
         // Because back button will stop the app and call again OnCreate() at comeback,
         // so we'll lost the shopping list
-        if(!shoppingList.isEmpty()){
+        if(!basketLines.isEmpty()){
             new MaterialAlertDialogBuilder(MainActivity.this)
                 .setTitle("Liste d'achats en cours")
                 .setMessage("Voulez-vous vraiment quitter l'application ?")

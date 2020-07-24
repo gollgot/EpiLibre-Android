@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -13,10 +14,13 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Utils {
 
     public static final String APP_NAME = "EpiLibre";
+    public static  final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
 
     /**
      * Hash a string with SHA-256 algorithm
@@ -95,6 +99,14 @@ public class Utils {
     public static void setDefaultDialogButtonTheme(Context context, Button button){
         button.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
         button.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+    }
+
+    public static void updateTotalPrice(ArrayList<BasketLine> basketLines, TextView tvTotalPrice){
+        double totalPrice = 0;
+        for(BasketLine basketLine : basketLines){
+            totalPrice += basketLine.getPrice();
+        }
+        tvTotalPrice.setText("Total: " + Utils.decimalFormat.format(totalPrice) + " CHF");
     }
 
 }

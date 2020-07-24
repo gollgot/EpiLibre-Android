@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import ch.epilibre.epilibre.Product;
 import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.dialogs.AddToBasketDialog;
 
 public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerViewAdapterProducts.ViewHolder> implements Filterable {
@@ -79,7 +80,7 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
         holder.image.setImageBitmap(decodedImage);
         holder.tvName.setText(products.get(position).getName());
         holder.tvCategory.setText(products.get(position).getCategory());
-        holder.tvPrice.setText(products.get(position).getPrice() + " CHF / " + unit);
+        holder.tvPrice.setText(Utils.decimalFormat.format(products.get(position).getPrice()) + " CHF / " + unit);
         holder.tvStock.setText(products.get(position).getStock() + " " + unit + " en stock");
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override

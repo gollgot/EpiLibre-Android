@@ -74,7 +74,7 @@ public class AddToBasketDialog extends AppCompatDialogFragment {
             etWeight.setVisibility(View.GONE);
             switchBtnContainer.setChecked(false);
         }
-        
+
         // Set the product textView
         tvProduct.setText(product.getName() + " - " + product.getPrice() + " CHF / " + product.getUnit());
 

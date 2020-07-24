@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import ch.epilibre.epilibre.BasketLine;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.Product;
@@ -270,8 +271,14 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
 
     @Override
     public void addToBasket(Product product, boolean hasContainer, TextInputLayout etWeight, TextInputLayout etQuantity) {
+        // Price calculation and create the BasketLine
+        double quantity = Double.parseDouble(etQuantity.getEditText().getText().toString());
+        double price = quantity * product.getPrice();
+        BasketLine basketLine = new BasketLine(product, quantity, price);
+
+        // Return to the MainActivity and pass the BasketLine (Serializable) with OK result
         Intent intent = new Intent();
-        intent.putExtra("product", product.getName());
+        intent.putExtra("basketLine", basketLine);
         setResult(Activity.RESULT_OK,intent);
         finish();
     }
