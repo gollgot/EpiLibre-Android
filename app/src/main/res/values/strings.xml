@@ -30,7 +30,7 @@
     <string name="products_title">Produits</string>
     <string name="no_internet_connection">Aucune connexion, veuillez vérifier votre connexion internet.</string>
     <string name="all_categories">Toutes les catégories</string>
-    <string name="product_dialog_container">Conteneur</string>
-    <string name="product_dialog_weight">Poids</string>
+    <string name="product_dialog_container">Contenant</string>
+    <string name="product_dialog_weight">Poids du contenant</string>
     <string name="product_dialog_quantity">Quantité</string>
 </resources>

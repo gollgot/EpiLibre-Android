@@ -81,7 +81,6 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
 
         setupCustomToolbar();
         initSpinner(spinnerCategories);
-        initRecyclerView();
     }
 
     /**
@@ -162,6 +161,7 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
                 });
 
                 productsSpinnerLayout.setVisibility(View.VISIBLE);
+                initRecyclerView();
             }
 
             @Override

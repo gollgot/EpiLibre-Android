@@ -67,6 +67,14 @@ public class AddToBasketDialog extends AppCompatDialogFragment {
         tvProduct = view.findViewById(R.id.dialogAddProductTvProduct);
         etQuantity = view.findViewById(R.id.dialogAddProductEtQuantity);
 
+        // For product buyable by piece, do not display the switch button and weight edit text, because
+        // the client will not bring a container
+        if(product.getUnit().equals("pc")){
+            switchBtnContainer.setVisibility(View.GONE);
+            etWeight.setVisibility(View.GONE);
+            switchBtnContainer.setChecked(false);
+        }
+        
         // Set the product textView
         tvProduct.setText(product.getName() + " - " + product.getPrice() + " CHF / " + product.getUnit());
 
