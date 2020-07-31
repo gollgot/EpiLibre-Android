@@ -3,6 +3,7 @@ package ch.epilibre.epilibre.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import ch.epilibre.epilibre.BasketLine;
@@ -272,9 +274,17 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
     @Override
     public void addToBasket(Product product, boolean hasContainer, TextInputLayout etWeight, TextInputLayout etQuantity) {
         // Price calculation and create the BasketLine
-        double quantity = Double.parseDouble(etQuantity.getEditText().getText().toString());
-        double price = quantity * product.getPrice();
-        BasketLine basketLine = new BasketLine(product, quantity, price);
+
+        // Use Big decimal to avoid floating precision with double e.g : 1 - 1.229 in double = 0.2290000000000001
+        // In big decimal it will be 0.229
+        BigDecimal quantity = hasContainer ?
+                BigDecimal.valueOf(Double.parseDouble(etQuantity.getEditText().getText().toString())).subtract(BigDecimal.valueOf(Double.parseDouble(etWeight.getEditText().getText().toString()))):
+                BigDecimal.valueOf(Double.parseDouble(etQuantity.getEditText().getText().toString()));
+
+        // Price rounded to the highest 0.05 e.g: 0.91 -> 0.95 
+        double price = Math.ceil(quantity.doubleValue() * product.getPrice() * 20.0) / 20.0;
+
+        BasketLine basketLine = new BasketLine(product, quantity.doubleValue(), price);
 
         // Return to the MainActivity and pass the BasketLine (Serializable) with OK result
         Intent intent = new Intent();
