@@ -24,7 +24,6 @@
             android:name=".activities.RegisterActivity"
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".activities.LoginActivity" />
-        <activity android:name=".activities.ProductsActivityOld" />
         <activity
             android:name=".activities.MainActivity"
             android:configChanges="orientation|screenSize" />
