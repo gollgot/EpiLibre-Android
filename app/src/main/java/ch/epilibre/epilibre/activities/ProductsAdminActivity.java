@@ -3,7 +3,6 @@ package ch.epilibre.epilibre.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -23,13 +23,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import ch.epilibre.epilibre.BasketLine;
@@ -38,21 +37,22 @@ import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
-import ch.epilibre.epilibre.dialogs.CustomDialogButtonListener;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
-import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProducts;
+import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProductsAdmin;
 
-public class ProductsActivity extends AppCompatActivity implements CustomDialogButtonListener {
+public class ProductsAdminActivity extends AppCompatActivity {
 
     private RelativeLayout layout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewProducts;
-    private RecyclerViewAdapterProducts adapter;
+    private RecyclerViewAdapterProductsAdmin adapter;
     private TextView tvSearchNoResults;
     private ArrayList<Product> productsAll;
     private Spinner spinnerCategories;
     private RelativeLayout productsSpinnerLayout;
+
+    private final static int LAUNCH_PRODUCT_EDIT_ACTIVITY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +73,11 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(Utils.isConnectedToInternet(ProductsActivity.this)){
+                if(Utils.isConnectedToInternet(ProductsAdminActivity.this)){
                     initRecyclerView();
                 }else{
                     swipeRefreshLayout.setRefreshing(false);
-                    Utils.NoInternetSnackBar(ProductsActivity.this, layout);
+                    Utils.NoInternetSnackBar(ProductsAdminActivity.this, layout);
                 }
             }
         });
@@ -114,7 +114,7 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
     private void initSpinner(final Spinner spinner){
         productsSpinnerLayout.setVisibility(View.GONE);
 
-        final HttpRequest httpCategoriesRequest = new HttpRequest(ProductsActivity.this, layout, Config.API_BASE_URL + Config.API_CATEGORIES_INDEX, Request.Method.GET);
+        final HttpRequest httpCategoriesRequest = new HttpRequest(ProductsAdminActivity.this, layout, Config.API_BASE_URL + Config.API_CATEGORIES_INDEX, Request.Method.GET);
         httpCategoriesRequest.addBearerToken();
         httpCategoriesRequest.executeRequest(new RequestCallback() {
             @Override
@@ -135,7 +135,7 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
                     }
                 }
 
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(ProductsActivity.this, android.R.layout.simple_spinner_item, categories);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(ProductsAdminActivity.this, android.R.layout.simple_spinner_item, categories);
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinner.setAdapter(dataAdapter);
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -162,7 +162,6 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
 
                     }
                 });
-
                 initRecyclerView();
             }
 
@@ -185,7 +184,7 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
     private void initRecyclerView() {
         productsAll = new ArrayList<>();
 
-        final HttpRequest httpUsersProductsRequest = new HttpRequest(ProductsActivity.this, layout, Config.API_BASE_URL + Config.API_PRODUCTS_INDEX, Request.Method.GET);
+        final HttpRequest httpUsersProductsRequest = new HttpRequest(ProductsAdminActivity.this, layout, Config.API_BASE_URL + Config.API_PRODUCTS_INDEX, Request.Method.GET);
         httpUsersProductsRequest.addBearerToken();
         httpUsersProductsRequest.executeRequest(new RequestCallback() {
             @Override
@@ -232,10 +231,32 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
      * @param products Products that will be shown by the recyclerview
      */
     private void updateRecyclerView(ArrayList<Product> products){
-        adapter = new RecyclerViewAdapterProducts(ProductsActivity.this, layout, products);
+        adapter = new RecyclerViewAdapterProductsAdmin(ProductsAdminActivity.this, layout, products, this);
         recyclerViewProducts.setAdapter(adapter);
-        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(ProductsActivity.this));
+        recyclerViewProducts.setLayoutManager(new LinearLayoutManager(ProductsAdminActivity.this));
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void startEditActivity(Product product){
+        Intent intent = new Intent(ProductsAdminActivity.this, ProductEditActivity.class);
+        intent.putExtra("product", product);
+        startActivityForResult(intent, LAUNCH_PRODUCT_EDIT_ACTIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode){
+            // Came back from ProductActivity
+            case LAUNCH_PRODUCT_EDIT_ACTIVITY:
+                // Result OK
+                if(resultCode == Activity.RESULT_OK){
+                    Snackbar.make(layout, getString(R.string.products_admin_edit_successful), Snackbar.LENGTH_SHORT).show();
+                    initRecyclerView();
+                }
+                break;
+        }
     }
 
     @Override
@@ -273,25 +294,4 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
         return true;
     }
 
-    @Override
-    public void addToBasket(Product product, boolean hasContainer, TextInputLayout etWeight, TextInputLayout etQuantity) {
-        // Price calculation and create the BasketLine
-
-        // Use Big decimal to avoid floating precision with double e.g : 1 - 1.229 in double = 0.2290000000000001
-        // In big decimal it will be 0.229
-        BigDecimal quantity = hasContainer ?
-                BigDecimal.valueOf(Double.parseDouble(etQuantity.getEditText().getText().toString())).subtract(BigDecimal.valueOf(Double.parseDouble(etWeight.getEditText().getText().toString()))):
-                BigDecimal.valueOf(Double.parseDouble(etQuantity.getEditText().getText().toString()));
-
-        // Price rounded to the highest 0.05 e.g: 0.91 -> 0.95 
-        double price = Math.ceil(quantity.doubleValue() * product.getPrice() * 20.0) / 20.0;
-
-        BasketLine basketLine = new BasketLine(product, quantity.doubleValue(), price);
-
-        // Return to the MainActivity and pass the BasketLine (Serializable) with OK result
-        Intent intent = new Intent();
-        intent.putExtra("basketLine", basketLine);
-        setResult(Activity.RESULT_OK,intent);
-        finish();
-    }
 }

@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -304,6 +305,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.drawer_menu__item_users_pending:
                     Intent intentUsersPending = new Intent(MainActivity.this, UsersPendingActivity.class);
                     startActivity(intentUsersPending);
+                    break;
+                case R.id.drawer_menu__item_products:
+                    Intent intentAdminProducts = new Intent(MainActivity.this, ProductsAdminActivity.class);
+                    startActivity(intentAdminProducts);
                     break;
             }
         }

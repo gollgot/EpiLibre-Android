@@ -63,6 +63,14 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
         this.productsAll = new ArrayList<>(this.products);
     }
 
+    public ArrayList<Product> getProducts() {
+        return products;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
