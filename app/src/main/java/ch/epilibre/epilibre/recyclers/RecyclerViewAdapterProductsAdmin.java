@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Product;
 import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.Utils;
+import ch.epilibre.epilibre.activities.MainActivity;
 import ch.epilibre.epilibre.activities.ProductsAdminActivity;
 
 /**
@@ -43,7 +45,11 @@ public class RecyclerViewAdapterProductsAdmin extends RecyclerViewAdapterProduct
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                productsAdminActivity.startEditActivity(products.get(position));
+                if(Utils.isConnectedToInternet(RecyclerViewAdapterProductsAdmin.this.getContext())){
+                    productsAdminActivity.startEditActivity(products.get(position));
+                }else{
+                    Utils.NoInternetSnackBar(RecyclerViewAdapterProductsAdmin.this.getContext(), RecyclerViewAdapterProductsAdmin.this.getLayout());
+                }
             }
         });
     }

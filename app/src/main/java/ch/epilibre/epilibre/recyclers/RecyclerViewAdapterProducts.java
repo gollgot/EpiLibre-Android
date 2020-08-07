@@ -71,6 +71,10 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
         return context;
     }
 
+    public ViewGroup getLayout() {
+        return layout;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -8,6 +8,7 @@ public class ConfigExample {
     public final static String API_USERS_PENDING = "";
     public final static String API_PRODUCTS_INDEX= "";
     public final static String API_CATEGORIES_INDEX= "";
+    public final static String API_UNITS_INDEX= "/units";
     public static String API_USERS_CONFIRM(int user_id){
         return "";
     }
