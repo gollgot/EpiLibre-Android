@@ -50,7 +50,6 @@ public class ProductEditActivity extends AppCompatActivity {
     private static final int LAUNCH_IMAGE_PICKER = 1;
 
     private Product product;
-    private String oldImage;
     private LinearLayout layout;
     private ProgressBar loader;
     private Spinner spinnerCategories;
@@ -65,7 +64,6 @@ public class ProductEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_edit);
 
         product = (Product) getIntent().getSerializableExtra("product");
-        oldImage = product.getImage();
         layout = findViewById(R.id.productEditLayout);
         loader = findViewById(R.id.productEditLoader);
         spinnerCategories = findViewById(R.id.productEditSpinnerCategories);
@@ -114,7 +112,7 @@ public class ProductEditActivity extends AppCompatActivity {
             public void onClick(View view) {
                 image.setImageResource(R.drawable.no_image);
                 imageDelete.setVisibility(View.GONE);
-                if(oldImage != null){
+                if(product.getImage() != null){
                     // We can comeback to original image if we want
                     imageRedo.setVisibility(View.VISIBLE);
                 }
@@ -142,8 +140,11 @@ public class ProductEditActivity extends AppCompatActivity {
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Fields of -> set data into the product object and update it into DB
                 if(fieldsAreValid(etName, etPrice)){
 
+                    // Image management -> if there already was an image (btn delete visible)
+                    // we extract the base64 from the image to store it, otherwise image will be null
                     String encodedImage = null;
                     if(imageDelete.getVisibility() == View.VISIBLE){
                         image.buildDrawingCache();
@@ -153,9 +154,6 @@ public class ProductEditActivity extends AppCompatActivity {
                         byte[] b = baos.toByteArray();
                         encodedImage = Base64.encodeToString(b , Base64.DEFAULT);
                     }
-
-
-
 
                     product.setName(etName.getEditText().getText().toString());
                     product.setImage(encodedImage);
@@ -390,13 +388,11 @@ public class ProductEditActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 image.setImageBitmap(bitmap);
 
-                // No old image
-                if(oldImage == null){
-                    // We can only delete the new image
-                    imageDelete.setVisibility(View.VISIBLE);
-                }
-                // There is an old image
-                else {
+                // Enable to delete the current image
+                imageDelete.setVisibility(View.VISIBLE);
+
+                // If there already was an old image, enable to comeback
+                if(product.getImage() != null){
                     // We can comeback to original image if we want
                     imageRedo.setVisibility(View.VISIBLE);
                 }
