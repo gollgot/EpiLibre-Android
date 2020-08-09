@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import ch.epilibre.epilibre.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
-import ch.epilibre.epilibre.activities.MainActivity;
 import ch.epilibre.epilibre.activities.ProductsAdminActivity;
 
 /**

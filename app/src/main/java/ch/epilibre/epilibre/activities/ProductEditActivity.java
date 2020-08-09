@@ -145,9 +145,14 @@ public class ProductEditActivity extends AppCompatActivity {
      * Load the current product image from base64 to bitmap
      */
     private void loadProductImage(){
+        if(product.getImage() == null){
+            image.setImageResource(R.drawable.no_image);
+            imageDelete.setVisibility(View.GONE);
+        }else {
             byte[] imageBytes = Base64.decode(product.getImage(), Base64.DEFAULT);
             Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             image.setImageBitmap(decodedImage);
+        }
     }
 
     /**
@@ -281,14 +286,21 @@ public class ProductEditActivity extends AppCompatActivity {
                 return;
             }
 
-
             try {
                 InputStream inputStream = getContentResolver().openInputStream(data.getData());
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                 image.setImageBitmap(bitmap);
 
-                // We can comeback to original image if we want
-                imageRedo.setVisibility(View.VISIBLE);
+                // No old image
+                if(oldImage == null){
+                    // We can only delete the new image
+                    imageDelete.setVisibility(View.VISIBLE);
+                }
+                // There is an old image
+                else {
+                    // We can comeback to original image if we want
+                    imageRedo.setVisibility(View.VISIBLE);
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

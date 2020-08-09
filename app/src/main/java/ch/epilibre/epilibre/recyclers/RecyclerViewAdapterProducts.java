@@ -86,10 +86,13 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         String unit = products.get(position).getUnit();
-
-        byte[] imageBytes = Base64.decode(products.get(position).getImage(), Base64.DEFAULT);
-        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        holder.image.setImageBitmap(decodedImage);
+        if(products.get(position).getImage() == null){
+            holder.image.setImageResource(R.drawable.no_image);
+        }else {
+            byte[] imageBytes = Base64.decode(products.get(position).getImage(), Base64.DEFAULT);
+            Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            holder.image.setImageBitmap(decodedImage);
+        }
         holder.tvName.setText(products.get(position).getName());
         holder.tvCategory.setText(products.get(position).getCategory());
         holder.tvPrice.setText(Utils.decimalFormat.format(products.get(position).getPrice()) + " CHF / " + unit);

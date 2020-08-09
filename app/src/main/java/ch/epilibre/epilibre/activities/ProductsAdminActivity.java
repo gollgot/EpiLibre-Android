@@ -194,12 +194,13 @@ public class ProductsAdminActivity extends AppCompatActivity {
                 for(int i = 0; i < jsonArrayResource.length(); ++i){
                     try {
                         JSONObject jsonObject = jsonArrayResource.getJSONObject(i);
+                        String productImage = jsonObject.isNull("image") ? null : jsonObject.getString("image");
                         Product product = new Product(
                                 jsonObject.getInt("id"),
                                 jsonObject.getString("name"),
                                 jsonObject.getDouble("price"),
                                 jsonObject.getDouble("stock"),
-                                jsonObject.getString("image"),
+                                productImage,
                                 jsonObject.getString("category"),
                                 jsonObject.getString("unit")
                         );
