@@ -59,14 +59,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/product_edit_category"
                 android:textSize="18sp"/>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="6dp"
-                android:background="@drawable/recycler_list_item_shape">
+                android:padding="12dp"
+                android:background="@drawable/spinner_layout_shape">
                 <Spinner
                     android:id="@+id/productEditSpinnerCategories"
                     style="@style/Widget.AppCompat.DropDownItem.Spinner"
@@ -78,14 +78,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/product_edit_unit"
                 android:textSize="18sp"/>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="6dp"
-                android:background="@drawable/recycler_list_item_shape">
+                android:padding="12dp"
+                android:background="@drawable/spinner_layout_shape">
                 <Spinner
                     android:id="@+id/productEditSpinnerUnits"
                     style="@style/Widget.AppCompat.DropDownItem.Spinner"
@@ -114,7 +114,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:text="@string/product_edit_image"
                 android:textSize="18sp"/>
