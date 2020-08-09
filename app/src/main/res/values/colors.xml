@@ -8,5 +8,6 @@
     <color name="red">#FF0000</color>
     <color name="grayLight">#EFEFEF</color>
     <color name="grayDark">#D4D4D4</color>
+    <color name="grayDarker">#717171</color>
     <color name="redDelete">#F07468</color>
 </resources>
