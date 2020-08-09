@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.channels.NonReadableChannelException;
@@ -75,7 +76,7 @@ public class ProductEditActivity extends AppCompatActivity {
         Button btnChooseImage = findViewById(R.id.productEditBtnImage);
         imageRedo = findViewById(R.id.productEditImageRedo);
         imageDelete = findViewById(R.id.productEditImageDelete);
-        Button btnDelete = findViewById(R.id.productEditBtnDelete);
+        final Button btnDelete = findViewById(R.id.productEditBtnDelete);
         Button btnEdit = findViewById(R.id.productEditBtnEdit);
 
         // Image back appear only when new image is loaded
@@ -143,6 +144,26 @@ public class ProductEditActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(fieldsAreValid(etName, etPrice)){
 
+                    String encodedImage = null;
+                    if(imageDelete.getVisibility() == View.VISIBLE){
+                        image.buildDrawingCache();
+                        Bitmap bm = image.getDrawingCache();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+                        byte[] b = baos.toByteArray();
+                        encodedImage = Base64.encodeToString(b , Base64.DEFAULT);
+                    }
+
+
+
+
+                    product.setName(etName.getEditText().getText().toString());
+                    product.setImage(encodedImage);
+                    product.setPrice(Double.parseDouble(etPrice.getEditText().getText().toString()));
+                    product.setCategory(spinnerCategories.getSelectedItem().toString());
+                    product.setUnit(spinnerUnits.getSelectedItem().toString());
+
+                    updateProduct();
                 }
             }
         });
@@ -152,42 +173,6 @@ public class ProductEditActivity extends AppCompatActivity {
 
         // Load categories and after load units
         loadCategories();
-    }
-
-    /**
-     * Check if all fields are correct
-     * @param etName The product name layout edit text
-     * @param etPrice The product price layout edit text
-     * @return True if all fields are correct, false otherwise
-     */
-    private boolean fieldsAreValid(TextInputLayout etName, TextInputLayout etPrice) {
-        boolean result = true;
-
-        // Reset errors
-        etName.setError(null);
-        etPrice.setError(null);
-
-        // Name mandatory
-        if(TextUtils.isEmpty(etName.getEditText().getText().toString())){
-            result = false;
-            etName.setError("Nom du produit obligatoire");
-        }
-
-        // Price mandatory
-        if(TextUtils.isEmpty(etPrice.getEditText().getText().toString())){
-            result = false;
-            etPrice.setError("Prix du produit obligatoire");
-        }
-        // Price must be > 0
-        else{
-            double price = Double.parseDouble(etPrice.getEditText().getText().toString());
-            if(price <= 0){
-                result = false;
-                etPrice.setError("Le prix doit être supérieur à zéro");
-            }
-        }
-
-        return result;
     }
 
     /**
@@ -302,6 +287,71 @@ public class ProductEditActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * Check if all fields are correct
+     * @param etName The product name layout edit text
+     * @param etPrice The product price layout edit text
+     * @return True if all fields are correct, false otherwise
+     */
+    private boolean fieldsAreValid(TextInputLayout etName, TextInputLayout etPrice) {
+        boolean result = true;
+
+        // Reset errors
+        etName.setError(null);
+        etPrice.setError(null);
+
+        // Name mandatory
+        if(TextUtils.isEmpty(etName.getEditText().getText().toString())){
+            result = false;
+            etName.setError("Nom du produit obligatoire");
+        }
+
+        // Price mandatory
+        if(TextUtils.isEmpty(etPrice.getEditText().getText().toString())){
+            result = false;
+            etPrice.setError("Prix du produit obligatoire");
+        }
+        // Price must be > 0
+        else{
+            double price = Double.parseDouble(etPrice.getEditText().getText().toString());
+            if(price <= 0){
+                result = false;
+                etPrice.setError("Le prix doit être supérieur à zéro");
+            }
+        }
+
+        return result;
+    }
+
+    private void updateProduct() {
+        final HttpRequest httpUpdateProductRequest = new HttpRequest(ProductEditActivity.this, layout, Config.API_BASE_URL + Config.API_PRODUCTS_UPDATE(product.getId()), Request.Method.PUT);
+        httpUpdateProductRequest.addBearerToken();
+        httpUpdateProductRequest.addParam("name", product.getName());
+        // Don't send image if it's null
+        if(product.getImage() != null){
+            httpUpdateProductRequest.addParam("image", product.getImage());
+        }
+        httpUpdateProductRequest.addParam("price", String.valueOf(product.getPrice()));
+        httpUpdateProductRequest.addParam("category", product.getCategory());
+        httpUpdateProductRequest.addParam("unit", product.getUnit());
+        httpUpdateProductRequest.executeRequest(new RequestCallback() {
+            @Override
+            public void getResponse(String response) {
+                
+            }
+
+            @Override
+            public void getError400(NetworkResponse networkResponse) {
+
+            }
+
+            @Override
+            public void getErrorNoInternet() {
+
+            }
+        });
     }
 
     /**
