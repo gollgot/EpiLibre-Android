@@ -23,6 +23,7 @@ public class SessionManager {
     private static final String LASTNAME = "lastname";
     private static final String EMAIL = "email";
     private static final String ROLE = "role";
+    private static final String ROLE_PRETTY = "rolePretty";
     private static final String TOKEN_API = "tokenAPI";
 
     /**
@@ -45,6 +46,7 @@ public class SessionManager {
         editor.putString(LASTNAME, user.getLastname());
         editor.putString(EMAIL, user.getEmail());
         editor.putString(ROLE, user.getRole().toString());
+        editor.putString(ROLE_PRETTY, user.getRolePretty());
         editor.putString(TOKEN_API, user.getTokenAPI());
 
         // commit changes
@@ -63,6 +65,7 @@ public class SessionManager {
                 pref.getString(LASTNAME, null),
                 pref.getString(EMAIL, null),
                 Role.valueOf(pref.getString(ROLE, null)),
+                pref.getString(ROLE_PRETTY, null),
                 pref.getString(TOKEN_API, null)
         );
     }

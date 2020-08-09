@@ -15,6 +15,7 @@
         app:itemTextColor="@color/grayDarker"
         app:itemIconTint="@color/grayDarker"
         app:menu="@menu/drawer_menu"
+        app:headerLayout="@layout/nav_drawer_header"
         android:layout_gravity="left"
         >
 

@@ -154,10 +154,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             actionBarDrawerToggle.syncState();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-            // Disable some menu items depends on your role
+            // NavigationView management
             NavigationView navigationView = findViewById(R.id.mainNavigationView);
             navigationView.bringToFront(); // Mandatory
             navigationView.setNavigationItemSelectedListener(this);
+
+            // Navigation header user name, email, role management
+            View headerView = navigationView.getHeaderView(0);
+            TextView tvUserName = headerView.findViewById(R.id.navDrawerUserName);
+            TextView tvUserEmail = headerView.findViewById(R.id.navDrawerUserEmail);
+            tvUserName.setText(user.getFirstname() + " " + user.getLastname() + " - " + user.getRolePretty());
+            tvUserEmail.setText(user.getEmail());
+
+            // Disable some menu items depends on your role
             Menu menuNav = navigationView.getMenu();
             MenuItem itemUsers = menuNav.findItem(R.id.drawer_menu__item_users);
             MenuItem itemUsersPending = menuNav.findItem(R.id.drawer_menu__item_users_pending);

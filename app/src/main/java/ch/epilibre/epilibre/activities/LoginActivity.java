@@ -161,6 +161,7 @@ public class LoginActivity extends AppCompatActivity {
                             jsonObjectResource.getString("lastname"),
                             jsonObjectResource.getString("email"),
                             Role.valueOf(jsonObjectResource.getString("role")),
+                            jsonObjectResource.getString("rolePretty"),
                             jsonObjectResource.getString("tokenAPI")
                     );
 
