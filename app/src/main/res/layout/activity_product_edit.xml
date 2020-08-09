@@ -129,7 +129,7 @@
                     android:layout_height="90dp"
                     android:scaleType="centerCrop"
                     android:layout_marginEnd="20dp"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    tools:srcCompat="@drawable/no_image" />
 
                 <Button
                     android:id="@+id/productEditBtnImage"
@@ -139,10 +139,20 @@
                     android:layout_gravity="center_vertical"/>
 
                 <ImageView
-                    android:id="@+id/productEditImageBack"
+                    android:id="@+id/productEditImageRedo"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/ic_refresh"
+                    android:src="@drawable/ic_redo"
+                    android:scaleType="fitXY"
+                    android:scaleX="-1"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center_vertical" />
+
+                <ImageView
+                    android:id="@+id/productEditImageDelete"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_trash"
                     android:scaleType="fitXY"
                     android:layout_marginStart="20dp"
                     android:layout_gravity="center_vertical" />

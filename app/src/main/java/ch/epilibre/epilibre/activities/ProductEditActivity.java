@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
@@ -29,6 +31,7 @@ import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.channels.NonReadableChannelException;
 import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Config;
@@ -44,12 +47,14 @@ public class ProductEditActivity extends AppCompatActivity {
     private static final int LAUNCH_IMAGE_PICKER = 1;
 
     private Product product;
+    private String oldImage;
     private LinearLayout layout;
     private ProgressBar loader;
     private Spinner spinnerCategories;
     private Spinner spinnerUnits;
     private ImageView image;
-    private ImageView imageBack;
+    private ImageView imageRedo;
+    private ImageView imageDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,7 @@ public class ProductEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_product_edit);
 
         product = (Product) getIntent().getSerializableExtra("product");
+        oldImage = product.getImage();
         layout = findViewById(R.id.productEditLayout);
         loader = findViewById(R.id.productEditLoader);
         spinnerCategories = findViewById(R.id.productEditSpinnerCategories);
@@ -65,10 +71,12 @@ public class ProductEditActivity extends AppCompatActivity {
         TextInputLayout etPrice = findViewById(R.id.productEditEtPrice);
         image = findViewById(R.id.productEditImage);
         Button btnChooseImage = findViewById(R.id.productEditBtnImage);
-        imageBack = findViewById(R.id.productEditImageBack);
+        imageRedo = findViewById(R.id.productEditImageRedo);
+        imageDelete = findViewById(R.id.productEditImageDelete);
+        Button btnDelete = findViewById(R.id.productEditBtnDelete);
 
         // Image back appear only when new image is loaded
-        imageBack.setVisibility(View.GONE);
+        imageRedo.setVisibility(View.GONE);
 
         // Fill fields
         etName.getEditText().setText(product.getName());
@@ -76,6 +84,7 @@ public class ProductEditActivity extends AppCompatActivity {
         loadProductImage();
 
 
+        // Choose an image from the device
         btnChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,17 +95,49 @@ public class ProductEditActivity extends AppCompatActivity {
         });
 
         // Come back to initial image
-        imageBack.setOnClickListener(new View.OnClickListener() {
+        imageRedo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadProductImage();
-                imageBack.setVisibility(View.GONE);
+                imageRedo.setVisibility(View.GONE);
+                imageDelete.setVisibility(View.VISIBLE);
             }
         });
 
+        imageDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                image.setImageResource(R.drawable.no_image);
+                imageDelete.setVisibility(View.GONE);
+                if(oldImage != null){
+                    // We can comeback to original image if we want
+                    imageRedo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MaterialAlertDialogBuilder(ProductEditActivity.this)
+                        .setTitle("Confirmation")
+                        .setMessage("Voulez-vous vraiment supprimer le produit " + product.getName() + " ?")
+                        .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        })
+                        .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        })
+                        .show();
+            }
+        });
+
+        // Setup the toolbar
         setupCustomToolbar();
 
+        // Load categories and after load units
         loadCategories();
     }
 
@@ -104,9 +145,9 @@ public class ProductEditActivity extends AppCompatActivity {
      * Load the current product image from base64 to bitmap
      */
     private void loadProductImage(){
-        byte[] imageBytes = Base64.decode(product.getImage(), Base64.DEFAULT);
-        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-        image.setImageBitmap(decodedImage);
+            byte[] imageBytes = Base64.decode(product.getImage(), Base64.DEFAULT);
+            Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            image.setImageBitmap(decodedImage);
     }
 
     /**
@@ -247,7 +288,7 @@ public class ProductEditActivity extends AppCompatActivity {
                 image.setImageBitmap(bitmap);
 
                 // We can comeback to original image if we want
-                imageBack.setVisibility(View.VISIBLE);
+                imageRedo.setVisibility(View.VISIBLE);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

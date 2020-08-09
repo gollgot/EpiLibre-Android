@@ -22,6 +22,7 @@ public class Product implements Serializable {
         this.unit = unit;
     }
 
+    // GETTERS
     public int getId() {
         return id;
     }
@@ -48,5 +49,30 @@ public class Product implements Serializable {
 
     public String getUnit() {
         return unit;
+    }
+
+    // SETTERS
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setStock(double stock) {
+        this.stock = stock;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }
