@@ -323,6 +323,9 @@ public class ProductEditActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Update the product, update all it's data into the DB
+     */
     private void updateProduct() {
         final HttpRequest httpUpdateProductRequest = new HttpRequest(ProductEditActivity.this, layout, Config.API_BASE_URL + Config.API_PRODUCTS_UPDATE(product.getId()), Request.Method.PUT);
         httpUpdateProductRequest.addBearerToken();
@@ -337,7 +340,11 @@ public class ProductEditActivity extends AppCompatActivity {
         httpUpdateProductRequest.executeRequest(new RequestCallback() {
             @Override
             public void getResponse(String response) {
-                
+                // Return to the previous activity (ProductsAdminActivity) with OK result
+                Intent intent = new Intent();
+                intent.putExtra("productName", product.getName());
+                setResult(Activity.RESULT_OK,intent);
+                finish();
             }
 
             @Override

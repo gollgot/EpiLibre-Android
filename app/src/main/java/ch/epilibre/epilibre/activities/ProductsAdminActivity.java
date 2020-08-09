@@ -249,11 +249,12 @@ public class ProductsAdminActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch(requestCode){
-            // Came back from ProductActivity
+            // Came back from ProductEditActivity
             case LAUNCH_PRODUCT_EDIT_ACTIVITY:
                 // Result OK
                 if(resultCode == Activity.RESULT_OK){
-                    Snackbar.make(layout, getString(R.string.products_admin_edit_successful), Snackbar.LENGTH_SHORT).show();
+                    String productName = data.getStringExtra("productName");
+                    Snackbar.make(layout, productName + " " + getString(R.string.products_admin_edit_successful), Snackbar.LENGTH_SHORT).show();
                     initRecyclerView();
                 }
                 break;
