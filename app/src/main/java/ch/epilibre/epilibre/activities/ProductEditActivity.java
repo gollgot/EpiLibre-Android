@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -67,13 +69,14 @@ public class ProductEditActivity extends AppCompatActivity {
         loader = findViewById(R.id.productEditLoader);
         spinnerCategories = findViewById(R.id.productEditSpinnerCategories);
         spinnerUnits = findViewById(R.id.productEditSpinnerUnits);
-        TextInputLayout etName = findViewById(R.id.productEditEtName);
-        TextInputLayout etPrice = findViewById(R.id.productEditEtPrice);
+        final TextInputLayout etName = findViewById(R.id.productEditEtName);
+        final TextInputLayout etPrice = findViewById(R.id.productEditEtPrice);
         image = findViewById(R.id.productEditImage);
         Button btnChooseImage = findViewById(R.id.productEditBtnImage);
         imageRedo = findViewById(R.id.productEditImageRedo);
         imageDelete = findViewById(R.id.productEditImageDelete);
         Button btnDelete = findViewById(R.id.productEditBtnDelete);
+        Button btnEdit = findViewById(R.id.productEditBtnEdit);
 
         // Image back appear only when new image is loaded
         imageRedo.setVisibility(View.GONE);
@@ -104,6 +107,7 @@ public class ProductEditActivity extends AppCompatActivity {
             }
         });
 
+        // Delete the current image (default no image will be used)
         imageDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,11 +138,56 @@ public class ProductEditActivity extends AppCompatActivity {
             }
         });
 
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(fieldsAreValid(etName, etPrice)){
+
+                }
+            }
+        });
+
         // Setup the toolbar
         setupCustomToolbar();
 
         // Load categories and after load units
         loadCategories();
+    }
+
+    /**
+     * Check if all fields are correct
+     * @param etName The product name layout edit text
+     * @param etPrice The product price layout edit text
+     * @return True if all fields are correct, false otherwise
+     */
+    private boolean fieldsAreValid(TextInputLayout etName, TextInputLayout etPrice) {
+        boolean result = true;
+
+        // Reset errors
+        etName.setError(null);
+        etPrice.setError(null);
+
+        // Name mandatory
+        if(TextUtils.isEmpty(etName.getEditText().getText().toString())){
+            result = false;
+            etName.setError("Nom du produit obligatoire");
+        }
+
+        // Price mandatory
+        if(TextUtils.isEmpty(etPrice.getEditText().getText().toString())){
+            result = false;
+            etPrice.setError("Prix du produit obligatoire");
+        }
+        // Price must be > 0
+        else{
+            double price = Double.parseDouble(etPrice.getEditText().getText().toString());
+            if(price <= 0){
+                result = false;
+                etPrice.setError("Le prix doit être supérieur à zéro");
+            }
+        }
+
+        return result;
     }
 
     /**
