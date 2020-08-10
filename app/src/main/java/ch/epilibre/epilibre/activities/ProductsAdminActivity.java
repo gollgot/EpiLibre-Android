@@ -54,6 +54,7 @@ public class ProductsAdminActivity extends AppCompatActivity {
     private RelativeLayout productsSpinnerLayout;
 
     private final static int LAUNCH_PRODUCT_EDIT_ACTIVITY = 1;
+    private final static int LAUNCH_PRODUCT_NEW_ACTIVITY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +82,15 @@ public class ProductsAdminActivity extends AppCompatActivity {
                     swipeRefreshLayout.setRefreshing(false);
                     Utils.NoInternetSnackBar(ProductsAdminActivity.this, layout);
                 }
+            }
+        });
+
+        // New product click
+        fabAddProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProductsAdminActivity.this, ProductNewActivity.class);
+                startActivityForResult(intent, LAUNCH_PRODUCT_NEW_ACTIVITY);
             }
         });
 
@@ -259,6 +269,15 @@ public class ProductsAdminActivity extends AppCompatActivity {
                 if(resultCode == Activity.RESULT_OK){
                     String productName = data.getStringExtra("productName");
                     Snackbar.make(layout, productName + " " + getString(R.string.products_admin_edit_successful), Snackbar.LENGTH_SHORT).show();
+                    initRecyclerView();
+                }
+                break;
+            // Came back from ProductNewActivity
+            case LAUNCH_PRODUCT_NEW_ACTIVITY:
+                // Result OK
+                if(resultCode == Activity.RESULT_OK){
+                    String productName = data.getStringExtra("productName");
+                    Snackbar.make(layout, productName + " " + getString(R.string.products_admin_new_created), Snackbar.LENGTH_SHORT).show();
                     initRecyclerView();
                 }
                 break;

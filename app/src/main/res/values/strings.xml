@@ -34,6 +34,7 @@
     <string name="product_dialog_weight">Poids du contenant</string>
     <string name="product_dialog_quantity">Quantité</string>
     <string name="products_admin_edit_successful">a bien été édité</string>
+    <string name="products_admin_new_created">a bien été ajouté</string>
     <string name="product_edit_main_title">"Edition : "</string>
     <string name="product_edit_delete">Supprimer</string>
     <string name="product_hint_name">Nom</string>
@@ -43,4 +44,6 @@
     <string name="product_edit_edit">Editer</string>
     <string name="product_edit_image">Image</string>
     <string name="product_edit_last_update">Derniere modification</string>
+    <string name="product_new_add">Ajouter</string>
+    <string name="product_new_main_title">Ajouter un produit</string>
 </resources>

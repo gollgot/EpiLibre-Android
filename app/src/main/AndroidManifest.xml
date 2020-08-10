@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.ProductNewActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppThemeNoActionBar" />
+        <activity
             android:name=".activities.ProductEditActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppThemeNoActionBar" />
