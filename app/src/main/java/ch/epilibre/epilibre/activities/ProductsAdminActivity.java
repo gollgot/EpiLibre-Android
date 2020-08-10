@@ -23,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -65,6 +66,7 @@ public class ProductsAdminActivity extends AppCompatActivity {
         recyclerViewProducts = findViewById(R.id.productsRecycler);
         swipeRefreshLayout = findViewById(R.id.productsSwipeRefreshLayout);
         tvSearchNoResults = findViewById(R.id.productsTvNoResults);
+        ExtendedFloatingActionButton fabAddProduct = findViewById(R.id.productsFabNew);
 
         // Active the loader
         swipeRefreshLayout.setRefreshing(true);

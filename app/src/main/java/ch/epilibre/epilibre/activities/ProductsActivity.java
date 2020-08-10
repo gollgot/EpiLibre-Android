@@ -66,7 +66,7 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
         recyclerViewProducts = findViewById(R.id.productsRecycler);
         swipeRefreshLayout = findViewById(R.id.productsSwipeRefreshLayout);
         tvSearchNoResults = findViewById(R.id.productsTvNoResults);
-        ExtendedFloatingActionButton fabAddProduct = findViewById(R.id.mainFabAddProduct);
+        ExtendedFloatingActionButton fabAddProduct = findViewById(R.id.productsFabNew);
 
         // Products visible for shopping, we disable the floating action button
         fabAddProduct.setVisibility(View.GONE);
