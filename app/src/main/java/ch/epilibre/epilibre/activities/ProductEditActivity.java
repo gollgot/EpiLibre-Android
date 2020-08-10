@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -76,6 +77,7 @@ public class ProductEditActivity extends AppCompatActivity {
         imageDelete = findViewById(R.id.productEditImageDelete);
         final Button btnDelete = findViewById(R.id.productEditBtnDelete);
         Button btnEdit = findViewById(R.id.productEditBtnEdit);
+        TextView tvLastUpdate = findViewById(R.id.productEditTvLastUpdate);
 
         // Image back appear only when new image is loaded
         imageRedo.setVisibility(View.GONE);
@@ -83,6 +85,7 @@ public class ProductEditActivity extends AppCompatActivity {
         // Fill fields
         etName.getEditText().setText(product.getName());
         etPrice.getEditText().setText(String.valueOf(product.getPrice()));
+        tvLastUpdate.setText(product.getUpdatedBy() + ", le " + product.getUpdatedAt());
         loadProductImage();
 
 

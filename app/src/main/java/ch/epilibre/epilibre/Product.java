@@ -11,8 +11,10 @@ public class Product implements Serializable {
     private String image;
     private String category;
     private String unit;
+    private String updatedAt;
+    private String updatedBy;
 
-    public Product(int id, String name, double price, double stock, String image, String category, String unit) {
+    public Product(int id, String name, double price, double stock, String image, String category, String unit, String updatedAt, String updatedBy) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -20,6 +22,8 @@ public class Product implements Serializable {
         this.image = image;
         this.category = category;
         this.unit = unit;
+        this.updatedAt = updatedAt;
+        this.updatedBy = updatedBy;
     }
 
     // GETTERS
@@ -49,6 +53,14 @@ public class Product implements Serializable {
 
     public String getUnit() {
         return unit;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
     // SETTERS

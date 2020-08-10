@@ -202,7 +202,9 @@ public class ProductsAdminActivity extends AppCompatActivity {
                                 jsonObject.getDouble("stock"),
                                 productImage,
                                 jsonObject.getString("category"),
-                                jsonObject.getString("unit")
+                                jsonObject.getString("unit"),
+                                jsonObject.getString("updatedAt"),
+                                jsonObject.getString("updatedBy")
                         );
                         productsAll.add(product);
                     } catch (JSONException e) {

@@ -42,4 +42,5 @@
     <string name="product_edit_unit">Unité</string>
     <string name="product_edit_edit">Editer</string>
     <string name="product_edit_image">Image</string>
+    <string name="product_edit_last_update">Derniere modification</string>
 </resources>
