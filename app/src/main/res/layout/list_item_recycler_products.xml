@@ -72,7 +72,7 @@
             android:padding="10dp"
             android:scaleType="fitXY"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/btn_primary_color"
+            android:background="@drawable/btn_light_salmon"
             app:srcCompat="@drawable/ic_add_shopping" />
 
 

@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
                 android:gravity="center_horizontal"
-                android:text="Total : 35.50 CHF"
+                tools:text="Total : 35.50 CHF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 

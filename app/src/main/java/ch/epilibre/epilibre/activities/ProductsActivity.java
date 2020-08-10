@@ -23,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
@@ -65,6 +66,10 @@ public class ProductsActivity extends AppCompatActivity implements CustomDialogB
         recyclerViewProducts = findViewById(R.id.productsRecycler);
         swipeRefreshLayout = findViewById(R.id.productsSwipeRefreshLayout);
         tvSearchNoResults = findViewById(R.id.productsTvNoResults);
+        ExtendedFloatingActionButton fabAddProduct = findViewById(R.id.mainFabAddProduct);
+
+        // Products visible for shopping, we disable the floating action button
+        fabAddProduct.setVisibility(View.GONE);
 
         // Active the loader
         swipeRefreshLayout.setRefreshing(true);
