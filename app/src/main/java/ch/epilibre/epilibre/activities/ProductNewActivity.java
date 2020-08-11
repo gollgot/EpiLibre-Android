@@ -262,10 +262,10 @@ public class ProductNewActivity extends AppCompatActivity {
      */
     private void addProduct() {
 
-        final HttpRequest httpAddProductRequest = new HttpRequest(ProductNewActivity.this, layout, Config.API_BASE_URL + Config.API_PRODUCTS_INDEX, Request.Method.PUT);
+        final HttpRequest httpAddProductRequest = new HttpRequest(ProductNewActivity.this, layout, Config.API_BASE_URL + Config.API_PRODUCTS_INDEX, Request.Method.POST);
         httpAddProductRequest.addBearerToken();
         httpAddProductRequest.addParam("name", etName.getEditText().getText().toString());
-        httpAddProductRequest.addParam("price", etName.getEditText().getText().toString());
+        httpAddProductRequest.addParam("price", etPrice.getEditText().getText().toString());
         httpAddProductRequest.addParam("category", spinnerCategories.getSelectedItem().toString());
         httpAddProductRequest.addParam("unit", spinnerUnits.getSelectedItem().toString());
 
