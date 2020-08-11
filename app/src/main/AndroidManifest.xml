@@ -42,6 +42,10 @@
         <activity
             android:name=".activities.LoginActivity"
             android:configChanges="orientation|screenSize">
+        </activity>
+        <activity
+            android:name=".activities.SplashScreenActivity"
+            android:theme="@style/SplashScreenTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
