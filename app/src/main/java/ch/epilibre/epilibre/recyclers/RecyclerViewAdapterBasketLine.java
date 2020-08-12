@@ -7,6 +7,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
@@ -53,12 +54,14 @@ public class RecyclerViewAdapterBasketLine extends RecyclerView.Adapter<Recycler
     private ViewGroup layout;
     private ArrayList<BasketLine> basketLines;
     private TextView tvTotalPrice;
+    private Button btnCheckout;
 
-    public RecyclerViewAdapterBasketLine(Context context, ViewGroup layout, ArrayList<BasketLine> basketLines, TextView tvTotalPrice) {
+    public RecyclerViewAdapterBasketLine(Context context, ViewGroup layout, ArrayList<BasketLine> basketLines, TextView tvTotalPrice, Button btnCheckout) {
         this.context = context;
         this.layout = layout;
         this.basketLines = basketLines;
         this.tvTotalPrice = tvTotalPrice;
+        this.btnCheckout = btnCheckout;
     }
 
     @NonNull
@@ -88,6 +91,11 @@ public class RecyclerViewAdapterBasketLine extends RecyclerView.Adapter<Recycler
 
                 // Update total price
                 Utils.updateTotalPrice(basketLines, tvTotalPrice);
+
+                // Hide the checkout button if the basket is empty
+                if(basketLines.size() == 0){
+                    btnCheckout.setVisibility(View.GONE);
+                }
             }
         });
     }

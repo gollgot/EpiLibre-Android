@@ -46,4 +46,8 @@
     <string name="product_edit_last_update">Derniere modification</string>
     <string name="product_new_add">Ajouter</string>
     <string name="product_new_main_title">Ajouter un produit</string>
+    <string name="main_checkout_btn_text">Valider</string>
+    <string name="main_backet_add_btn_text">Ajouter</string>
+    <string name="main_items_plurial">articles</string>
+    <string name="main_items_singular">article</string>
 </resources>

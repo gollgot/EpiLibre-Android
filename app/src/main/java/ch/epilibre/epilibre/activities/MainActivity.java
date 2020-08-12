@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RelativeLayout layout;
     private RecyclerViewAdapterBasketLine adapter;
     private RecyclerView recyclerViewBasketLines;
+    private Button btnCheckout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +79,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.mainDrawer);
         loadNavigationDrawer();
 
-        ExtendedFloatingActionButton fabAddProduct = findViewById(R.id.mainFabAddProduct);
+        Button btnAddProduct = findViewById(R.id.mainBtnAddProduct);
+        btnCheckout = findViewById(R.id.mainBtnCheckout);
         tvTotalPrice = findViewById(R.id.mainTvTotalPrice);
 
-        fabAddProduct.setOnClickListener(new View.OnClickListener() {
+        // Add new product to the basket
+        btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(Utils.isConnectedToInternet(MainActivity.this)){
@@ -90,6 +93,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }else{
                     Utils.NoInternetSnackBar(MainActivity.this, findViewById(R.id.mainLayout));
                 }
+            }
+        });
+
+        // Checkout process
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String itemsOrtho = basketLines.size() > 1 ? getString(R.string.main_items_plurial) : getString(R.string.main_items_singular);
+                double totalPrice = 0;
+                for(BasketLine basketLine : basketLines){
+                    totalPrice += basketLine.getPrice();
+                }
+
+                new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setTitle("Validation")
+                        .setMessage("Voulez vous vraiment valider le payement de "
+                                + basketLines.size() + " " + itemsOrtho + " pour un total de "
+                                + Utils.decimalFormat.format(totalPrice) + " CHF ?")
+                        .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                checkout();
+                            }
+                        })
+                        .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        })
+                        .show();
             }
         });
 
@@ -112,12 +145,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param basketLines ArrayList of BasketLine
      */
     private void updateBasket(ArrayList<BasketLine> basketLines) {
-        adapter = new RecyclerViewAdapterBasketLine(MainActivity.this, layout, basketLines, tvTotalPrice);
+        adapter = new RecyclerViewAdapterBasketLine(MainActivity.this, layout, basketLines, tvTotalPrice, btnCheckout);
         recyclerViewBasketLines.setAdapter(adapter);
         recyclerViewBasketLines.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         // Update total price
         Utils.updateTotalPrice(basketLines, tvTotalPrice);
+
+        if(basketLines.size() > 0){
+            btnCheckout.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -264,10 +301,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    /**
+     * Send http request to checkout
+     */
+    private void checkout() {
+        final HttpRequest httpRequest = new HttpRequest(MainActivity.this, drawerLayout, Config.API_BASE_URL + Config.API_USERS_PENDING, Request.Method.GET);
+        httpRequest.addBearerToken();
+        httpRequest.executeRequest(new RequestCallback() {
+            @Override
+            public void getResponse(String response) { }
+            @Override
+            public void getError400(NetworkResponse networkResponse) { }
+            @Override
+            public void getErrorNoInternet(){ }
+        });
+    }
+
 
 
     /********* MENU MANAGEMENT *********/
-
 
 
     @Override
