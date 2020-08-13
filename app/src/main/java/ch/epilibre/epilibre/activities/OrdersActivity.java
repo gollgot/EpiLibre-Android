@@ -59,7 +59,6 @@ public class OrdersActivity extends AppCompatActivity {
                     swipeRefreshLayout.setRefreshing(false);
                     Utils.NoInternetSnackBar(OrdersActivity.this, mainLayout);
                 }
-
             }
         });
 

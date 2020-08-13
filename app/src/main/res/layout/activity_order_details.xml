@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.OrderDetails"
+    android:id="@+id/orderDetailsLayout">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/ordersDetailsToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        app:titleTextColor="@color/white"
+        android:background="@color/colorPrimary" />
+
+    <LinearLayout
+        android:layout_below="@id/ordersDetailsToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/ordersDetailsTvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="20.07.2020 21:00"/>
+
+        <TextView
+            android:id="@+id/ordersDetailsTvSeller"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Vendeur: Dessaules Loïc"/>
+
+        <TextView
+            android:id="@+id/ordersDetailsTvTotalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
+            android:gravity="center_horizontal"
+            tools:text="Total : 35.50 CHF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ordersDetailsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

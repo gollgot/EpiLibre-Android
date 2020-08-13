@@ -1,34 +1,22 @@
 package ch.epilibre.epilibre.recyclers;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
-import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.Models.Order;
-import ch.epilibre.epilibre.Models.User;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
-import ch.epilibre.epilibre.http.HttpRequest;
-import ch.epilibre.epilibre.http.RequestCallback;
+import ch.epilibre.epilibre.activities.OrderDetails;
 
 public class RecyclerViewAdapterOrders extends RecyclerView.Adapter<RecyclerViewAdapterOrders.ViewHolder> {
 
@@ -77,6 +65,14 @@ public class RecyclerViewAdapterOrders extends RecyclerView.Adapter<RecyclerView
         holder.tvSeller.setText(orders.get(position).getSeller());
         holder.tvTotalPrice.setText(Utils.decimalFormat.format(orders.get(position).getTotalPrice()) + " CHF");
         holder.tvNbProducts.setText(orders.get(position).getBasketLines().size() + " " + itemsOrtho);
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent orderDetailIntent = new Intent(context, OrderDetails.class);
+                orderDetailIntent.putExtra("order", orders.get(position));
+                context.startActivity(orderDetailIntent);
+            }
+        });
     }
 
     @Override
