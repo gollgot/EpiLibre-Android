@@ -30,7 +30,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
-import ch.epilibre.epilibre.BasketLine;
+import ch.epilibre.epilibre.Models.BasketLine;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
@@ -38,8 +38,8 @@ import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterBasketLine;
-import ch.epilibre.epilibre.user.Role;
-import ch.epilibre.epilibre.user.User;
+import ch.epilibre.epilibre.Models.Role;
+import ch.epilibre.epilibre.Models.User;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 

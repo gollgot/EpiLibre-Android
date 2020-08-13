@@ -26,7 +26,7 @@ import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
-import ch.epilibre.epilibre.user.User;
+import ch.epilibre.epilibre.Models.User;
 
 public class RecyclerViewAdapterUsersPending extends RecyclerView.Adapter<RecyclerViewAdapterUsersPending.ViewHolder> {
 

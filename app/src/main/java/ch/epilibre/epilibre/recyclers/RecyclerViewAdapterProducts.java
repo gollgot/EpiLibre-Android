@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import ch.epilibre.epilibre.Product;
+import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.dialogs.AddToBasketDialog;

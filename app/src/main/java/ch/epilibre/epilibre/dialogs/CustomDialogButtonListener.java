@@ -2,7 +2,7 @@ package ch.epilibre.epilibre.dialogs;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import ch.epilibre.epilibre.Product;
+import ch.epilibre.epilibre.Models.Product;
 
 public interface CustomDialogButtonListener {
     /**

@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import ch.epilibre.epilibre.user.Role;
-import ch.epilibre.epilibre.user.User;
+import ch.epilibre.epilibre.Models.Role;
+import ch.epilibre.epilibre.Models.User;
 
 
 public class SessionManager {

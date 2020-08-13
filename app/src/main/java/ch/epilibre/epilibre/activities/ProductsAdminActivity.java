@@ -32,10 +32,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import ch.epilibre.epilibre.BasketLine;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.CustomNavigationCallback;
-import ch.epilibre.epilibre.Product;
+import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;

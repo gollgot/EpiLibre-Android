@@ -27,8 +27,8 @@ import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterUsersPending;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
-import ch.epilibre.epilibre.user.Role;
-import ch.epilibre.epilibre.user.User;
+import ch.epilibre.epilibre.Models.Role;
+import ch.epilibre.epilibre.Models.User;
 
 public class UsersPendingActivity extends AppCompatActivity {
 

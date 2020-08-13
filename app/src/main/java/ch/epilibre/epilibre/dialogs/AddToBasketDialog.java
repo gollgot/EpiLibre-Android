@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import ch.epilibre.epilibre.Product;
+import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
 

@@ -1,4 +1,4 @@
-package ch.epilibre.epilibre;
+package ch.epilibre.epilibre.Models;
 
 import java.io.Serializable;
 

@@ -17,6 +17,8 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import ch.epilibre.epilibre.Models.BasketLine;
+
 public class Utils {
 
     public static final String APP_NAME = "EpiLibre";
