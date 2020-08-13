@@ -50,4 +50,6 @@
     <string name="main_backet_add_btn_text">Ajouter</string>
     <string name="main_items_plurial">articles</string>
     <string name="main_items_singular">article</string>
+    <string name="product_edit_choose_text">Choisir</string>
+    <string name="main_buy_successful">L\'achat a bien été enregistré, merci !</string>
 </resources>

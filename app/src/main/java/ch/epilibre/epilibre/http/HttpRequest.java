@@ -15,7 +15,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,11 +23,9 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.activities.LoginActivity;
-import ch.epilibre.epilibre.activities.MainActivity;
 
 public class HttpRequest {
 

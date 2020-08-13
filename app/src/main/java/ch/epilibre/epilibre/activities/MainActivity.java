@@ -13,29 +13,23 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import ch.epilibre.epilibre.BasketLine;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.Utils;
@@ -44,7 +38,6 @@ import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterBasketLine;
-import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProducts;
 import ch.epilibre.epilibre.user.Role;
 import ch.epilibre.epilibre.user.User;
 
@@ -61,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ArrayList<BasketLine> basketLines;
     private TextView tvTotalPrice;
-    private RelativeLayout layout;
+    private RelativeLayout recyclerBasketLayout;
+    private LinearLayout mainLayout;
     private RecyclerViewAdapterBasketLine adapter;
     private RecyclerView recyclerViewBasketLines;
     private Button btnCheckout;
@@ -82,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Button btnAddProduct = findViewById(R.id.mainBtnAddProduct);
         btnCheckout = findViewById(R.id.mainBtnCheckout);
         tvTotalPrice = findViewById(R.id.mainTvTotalPrice);
+        mainLayout = findViewById(R.id.mainLayout);
 
         // Add new product to the basket
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     totalPrice += basketLine.getPrice();
                 }
 
+                final double finalTotalPrice = totalPrice;
                 new MaterialAlertDialogBuilder(MainActivity.this)
                         .setTitle("Validation")
                         .setMessage("Voulez vous vraiment valider le payement de "
@@ -115,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                checkout();
+                                checkout(finalTotalPrice);
                             }
                         })
                         .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
@@ -134,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Initialisation of the recycler view
      */
     private void initRecyclerView() {
-        layout = findViewById(R.id.recyclerBasketLinesLayout);
+        recyclerBasketLayout = findViewById(R.id.recyclerBasketLinesLayout);
         recyclerViewBasketLines = findViewById(R.id.mainRecycler);
         basketLines = new ArrayList<>();
         updateBasket(basketLines);
@@ -145,15 +141,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param basketLines ArrayList of BasketLine
      */
     private void updateBasket(ArrayList<BasketLine> basketLines) {
-        adapter = new RecyclerViewAdapterBasketLine(MainActivity.this, layout, basketLines, tvTotalPrice, btnCheckout);
+        adapter = new RecyclerViewAdapterBasketLine(MainActivity.this, recyclerBasketLayout, basketLines, tvTotalPrice, btnCheckout);
         recyclerViewBasketLines.setAdapter(adapter);
         recyclerViewBasketLines.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         // Update total price
         Utils.updateTotalPrice(basketLines, tvTotalPrice);
 
+        // Hide or show the checkout button
         if(basketLines.size() > 0){
             btnCheckout.setVisibility(View.VISIBLE);
+        }else{
+            btnCheckout.setVisibility(View.GONE);
         }
     }
 
@@ -302,14 +301,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * Send http request to checkout
+     * Send http request to checkout and reset the basket if successful
+     * @param totalPrice The total price of the order
      */
-    private void checkout() {
-        final HttpRequest httpRequest = new HttpRequest(MainActivity.this, drawerLayout, Config.API_BASE_URL + Config.API_USERS_PENDING, Request.Method.GET);
-        httpRequest.addBearerToken();
-        httpRequest.executeRequest(new RequestCallback() {
+    private void checkout(double totalPrice) {
+        // Create our 2 string for represent productsId and quantities => e.g: 1,2,3
+        StringBuilder productsId = new StringBuilder();
+        StringBuilder quantities = new StringBuilder();
+
+        for(int i = 0; i < basketLines.size(); ++i){
+            // First element don't display the semicolon
+            if(i > 0){
+                productsId.append(";");
+                quantities.append(";");
+            }
+
+            productsId.append(basketLines.get(i).getProduct().getId());
+            quantities.append(basketLines.get(i).getQuantity());
+        }
+
+        final HttpRequest httpCheckoutRequest = new HttpRequest(MainActivity.this, mainLayout, Config.API_BASE_URL + Config.API_ORDERS_INDEX, Request.Method.POST);
+        httpCheckoutRequest.addBearerToken();
+        httpCheckoutRequest.addParam("totalPrice", String.valueOf(totalPrice));
+        httpCheckoutRequest.addParam("productsId", productsId.toString());
+        httpCheckoutRequest.addParam("quantities", quantities.toString());
+        httpCheckoutRequest.executeRequest(new RequestCallback() {
             @Override
-            public void getResponse(String response) { }
+            public void getResponse(String response) {
+                Snackbar.make(mainLayout, getString(R.string.main_buy_successful), Snackbar.LENGTH_LONG).show();
+                basketLines.clear();
+                updateBasket(basketLines);
+            }
             @Override
             public void getError400(NetworkResponse networkResponse) { }
             @Override

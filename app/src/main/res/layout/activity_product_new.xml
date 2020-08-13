@@ -123,8 +123,8 @@
                     android:id="@+id/productNewBtnImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Choisir"
-                    android:backgroundTint="@color/lightSalmon"
+                    android:text="@string/product_edit_choose_text"
+                    android:backgroundTint="@color/colorPrimary"
                     android:layout_gravity="center_vertical"/>
 
                 <ImageView
