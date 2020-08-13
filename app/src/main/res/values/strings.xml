@@ -57,4 +57,6 @@
     <string name="order_details_main_title">Détail de vente</string>
     <string name="order_details_seller">Vendeur: </string>
     <string name="order_details_total_price">Total: </string>
+    <string name="menu_send_send_item">Envoyer</string>
+    <string name="order_details_no_email_client_found">Aucun client mail installé</string>
 </resources>

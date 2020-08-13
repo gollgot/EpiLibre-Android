@@ -1,14 +1,23 @@
 package ch.epilibre.epilibre.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.Models.Order;
@@ -51,11 +60,44 @@ public class OrderDetails extends AppCompatActivity {
      */
     private void setupCustomToolbar() {
         Toolbar toolbar = findViewById(R.id.ordersDetailsToolbar);
+        setSupportActionBar(toolbar); // To be able to have a menu like a normal actionBar
         Utils.setUpCustomAppBar(toolbar, getResources().getString(R.string.order_details_main_title), new CustomNavigationCallback() {
             @Override
             public void onBackArrowPressed() {
                 finish();
             }
         });
+        // Specific for supported action bar, to display custom title
+        getSupportActionBar().setTitle(getResources().getString(R.string.order_details_main_title));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.send_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menuSendSendItem:
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("message/rfc822");
+                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"recipient@example.com"});
+                i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
+                i.putExtra(Intent.EXTRA_TEXT   , "body of email");
+                try {
+                    startActivity(Intent.createChooser(i, "Send mail..."));
+                } catch (android.content.ActivityNotFoundException ex) {
+                    RelativeLayout mainLayout = findViewById(R.id.orderDetailsLayout);
+                    Snackbar.make(mainLayout, R.string.order_details_no_email_client_found, Snackbar.LENGTH_SHORT).show();
+                }
+                break;
+                
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
     }
 }
