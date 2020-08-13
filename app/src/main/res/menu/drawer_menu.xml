@@ -10,6 +10,10 @@
             <item android:id="@+id/drawer_menu__item_products"
                 android:icon="@drawable/ic_products"
                 android:title="@string/drawer_item_products" />
+            <!-- Orders -->
+            <item android:id="@+id/drawer_menu__item_orders"
+                android:icon="@drawable/ic_money"
+                android:title="@string/drawer_item_orders" />
             <!-- Categories -->
             <item android:id="@+id/drawer_menu__item_categories"
                 android:icon="@drawable/ic_categories"

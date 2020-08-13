@@ -393,6 +393,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intentAdminProducts = new Intent(MainActivity.this, ProductsAdminActivity.class);
                     startActivity(intentAdminProducts);
                     break;
+                case R.id.drawer_menu__item_orders:
+                    Intent intentOrders = new Intent(MainActivity.this, OrdersActivity.class);
+                    startActivity(intentOrders);
             }
         }
 
