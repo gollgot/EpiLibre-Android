@@ -1,28 +1,23 @@
 package ch.epilibre.epilibre.Models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Order implements Serializable {
 
-    private int id;
     private String date;
     private String seller;
     private double totalPrice;
-    private int nbProducts;
+    private ArrayList<BasketLine> basketLines;
 
-    public Order(int id, String date, String seller, double totalPrice, int nbProducts) {
-        this.id = id;
+    public Order(String date, String seller, double totalPrice, ArrayList<BasketLine> basketLines) {
         this.date = date;
         this.seller = seller;
         this.totalPrice = totalPrice;
-        this.nbProducts = nbProducts;
+        this.basketLines = basketLines;
     }
 
     /* GETTERS */
-
-    public int getId() {
-        return id;
-    }
 
     public String getDate() {
         return date;
@@ -36,7 +31,7 @@ public class Order implements Serializable {
         return totalPrice;
     }
 
-    public int getNbProducts() {
-        return nbProducts;
+    public ArrayList<BasketLine> getBasketLines() {
+        return basketLines;
     }
 }

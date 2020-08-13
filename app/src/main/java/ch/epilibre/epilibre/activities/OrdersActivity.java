@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -21,7 +22,9 @@ import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.CustomNavigationCallback;
+import ch.epilibre.epilibre.Models.BasketLine;
 import ch.epilibre.epilibre.Models.Order;
+import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
@@ -88,23 +91,30 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void getResponse(String response) {
                 JSONArray jsonArrayResource = httpUsersPendingRequest.getJSONArrayResource(response);
-                // Parse all json users and fill all array lists
+
+                // Parse all json data related to Orders
                 for(int i = 0; i < jsonArrayResource.length(); ++i){
                     try {
-                        JSONObject jsonObject = jsonArrayResource.getJSONObject(i);
-                        Order order = new Order(
-                                jsonObject.getInt("id"),
-                                jsonObject.getString("created_at"),
-                                jsonObject.getString("seller"),
-                                jsonObject.getDouble("totalPrice"),
-                                jsonObject.getInt("nbProducts")
-                        );
-                        orders.add(order);
+                        // Extract order info
+                        JSONObject jsonObjectResource = jsonArrayResource.getJSONObject(i);
+                        String date = jsonObjectResource.getString("created_at");
+                        String seller = jsonObjectResource.getString("seller");
+                        double totalPrice = jsonObjectResource.getDouble("totalPrice");
+
+                        // Extract basketLine / product info
+                        ArrayList<BasketLine> basketLines = new ArrayList<>();
+                        JSONArray jsonArrayProducts = jsonObjectResource.getJSONArray("products");
+                        for(int j = 0; j < jsonArrayProducts.length(); ++j){
+                            JSONObject jsonObjectProduct = jsonArrayProducts.getJSONObject(j);
+                            Product product = new Product(-1, jsonObjectProduct.getString("name"), -1, -1, null, jsonObjectProduct.getString("category"), jsonObjectProduct.getString("unit"), null, null);
+                            basketLines.add(new BasketLine(product, jsonObjectProduct.getDouble("quantity"), jsonObjectProduct.getDouble("price")));
+                        }
+
+                        orders.add(new Order(date, seller, totalPrice, basketLines));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
 
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.ordersRecycler);

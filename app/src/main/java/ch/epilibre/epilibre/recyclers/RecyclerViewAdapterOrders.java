@@ -54,7 +54,7 @@ public class RecyclerViewAdapterOrders extends RecyclerView.Adapter<RecyclerView
 
     private Context context;
     private ViewGroup layout;
-    private ArrayList<Order> orders = new ArrayList<>();
+    private ArrayList<Order> orders;
 
     public RecyclerViewAdapterOrders(Context context, ViewGroup layout, ArrayList<Order> orders) {
         this.context = context;
@@ -71,12 +71,12 @@ public class RecyclerViewAdapterOrders extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        String itemsOrtho = orders.get(position).getNbProducts() > 1 ? context.getString(R.string.main_items_plurial) : context.getString(R.string.main_items_singular);
+        String itemsOrtho = orders.get(position).getBasketLines().size() > 1 ? context.getString(R.string.main_items_plurial) : context.getString(R.string.main_items_singular);
 
         holder.tvDate.setText(orders.get(position).getDate());
         holder.tvSeller.setText(orders.get(position).getSeller());
         holder.tvTotalPrice.setText(Utils.decimalFormat.format(orders.get(position).getTotalPrice()) + " CHF");
-        holder.tvNbProducts.setText(orders.get(position).getNbProducts() + " " + itemsOrtho);
+        holder.tvNbProducts.setText(orders.get(position).getBasketLines().size() + " " + itemsOrtho);
     }
 
     @Override
