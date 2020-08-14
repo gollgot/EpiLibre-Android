@@ -315,16 +315,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Create our 2 string for represent productsId and quantities => e.g: 1,2,3
         StringBuilder productsId = new StringBuilder();
         StringBuilder quantities = new StringBuilder();
+        StringBuilder prices = new StringBuilder();
 
         for(int i = 0; i < basketLines.size(); ++i){
             // First element don't display the semicolon
             if(i > 0){
                 productsId.append(";");
                 quantities.append(";");
+                prices.append(";");
             }
 
             productsId.append(basketLines.get(i).getProduct().getId());
             quantities.append(basketLines.get(i).getQuantity());
+            prices.append(basketLines.get(i).getPrice());
         }
 
         final HttpRequest httpCheckoutRequest = new HttpRequest(MainActivity.this, mainLayout, Config.API_BASE_URL + Config.API_ORDERS_INDEX, Request.Method.POST);
@@ -332,14 +335,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         httpCheckoutRequest.addParam("totalPrice", String.valueOf(totalPrice));
         httpCheckoutRequest.addParam("productsId", productsId.toString());
         httpCheckoutRequest.addParam("quantities", quantities.toString());
+        httpCheckoutRequest.addParam("prices", prices.toString());
         httpCheckoutRequest.executeRequest(new RequestCallback() {
             @Override
             public void getResponse(String response) {
                 ArrayList<BasketLine> basketLinesBackup = new ArrayList<>(basketLines);
 
+                // Clear the basket
                 basketLines.clear();
                 updateBasket(basketLines);
 
+                // Fetch the response Order from API to go to the OrderDetail Activity
                 JSONObject jsonObjectResource = httpCheckoutRequest.getJSONObjectResource(response);
                 try {
                     String date = jsonObjectResource.getString("created_at");
