@@ -19,7 +19,10 @@ import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.text.Normalizer;
+
 import ch.epilibre.epilibre.CustomNavigationCallback;
+import ch.epilibre.epilibre.Models.BasketLine;
 import ch.epilibre.epilibre.Models.Order;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
@@ -28,6 +31,8 @@ import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterOrders;
 
 public class OrderDetails extends AppCompatActivity {
 
+    private Order order;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +40,7 @@ public class OrderDetails extends AppCompatActivity {
 
         setupCustomToolbar();
 
-        Order order = (Order) getIntent().getSerializableExtra("order");
+        order = (Order) getIntent().getSerializableExtra("order");
         TextView tvDate = findViewById(R.id.ordersDetailsTvDate);
         TextView tvSeller = findViewById(R.id.ordersDetailsTvSeller);
         TextView tvTotalPrice = findViewById(R.id.ordersDetailsTvTotalPrice);
@@ -80,17 +85,34 @@ public class OrderDetails extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            // Send order detail
             case R.id.menuSendSendItem:
+                // Create the products string
+                StringBuilder sbProducts = new StringBuilder();
+                for(BasketLine basketLine : order.getBasketLines()){
+                    sbProducts.append(basketLine.getProduct().getName()).append("\n")
+                            .append("x ").append(basketLine.getQuantity()).append(" ").append(basketLine.getProduct().getUnit())
+                            .append("\n")
+                            .append(Utils.decimalFormat.format(basketLine.getPrice())).append(" CHF")
+                            .append("\n\n");
+                }
+
+                // Create Intent for send text/plain (like whatsap, messenger, message, email, ...)
                 Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("message/rfc822");
-                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"recipient@example.com"});
-                i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-                i.putExtra(Intent.EXTRA_TEXT   , "body of email");
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "EpiLibre - Détail de vente"); // Case of email
+                i.putExtra(Intent.EXTRA_TEXT   ,
+                              "Epilibre \n" +
+                                    "Date de vente: " + order.getDate() + "\n" +
+                                    "Vendeur: " + order.getSeller() + "\n" +
+                                    "Total: " + Utils.decimalFormat.format(order.getTotalPrice()) + " CHF \n\n" +
+                                    sbProducts.toString()
+                                );
                 try {
-                    startActivity(Intent.createChooser(i, "Send mail..."));
+                    startActivity(Intent.createChooser(i, "Epilibre - Envoi détail de vente"));
                 } catch (android.content.ActivityNotFoundException ex) {
                     RelativeLayout mainLayout = findViewById(R.id.orderDetailsLayout);
-                    Snackbar.make(mainLayout, R.string.order_details_no_email_client_found, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mainLayout, R.string.order_details_no_message_client_found, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
                 

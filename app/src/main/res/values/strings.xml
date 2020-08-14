@@ -58,5 +58,5 @@
     <string name="order_details_seller">Vendeur: </string>
     <string name="order_details_total_price">Total: </string>
     <string name="menu_send_send_item">Envoyer</string>
-    <string name="order_details_no_email_client_found">Aucun client mail installé</string>
+    <string name="order_details_no_message_client_found">Aucune application ne supporte l\'envoi de message</string>
 </resources>
