@@ -51,7 +51,7 @@
     <string name="main_items_plurial">articles</string>
     <string name="main_items_singular">article</string>
     <string name="product_edit_choose_text">Choisir</string>
-    <string name="main_buy_successful">L\'achat a bien été enregistré, merci !</string>
+    <string name="main_buy_successful">L\'achat a bien été enregistré</string>
     <string name="drawer_item_orders">Ventes</string>
     <string name="orders_main_title">Ventes</string>
     <string name="order_details_main_title">Détail de vente</string>

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,14 @@ public class OrderDetails extends AppCompatActivity {
         setupCustomToolbar();
 
         order = (Order) getIntent().getSerializableExtra("order");
+        boolean fromCheckout = getIntent().getBooleanExtra("fromCheckout", false);
+        RelativeLayout mainLayout = findViewById(R.id.orderDetailsLayout);
+
+        // Display a snackbar if we come from checkout (MainActivity)
+        if(fromCheckout){
+            Snackbar.make(mainLayout, getString(R.string.main_buy_successful), Snackbar.LENGTH_LONG).show();
+        }
+
         TextView tvDate = findViewById(R.id.ordersDetailsTvDate);
         TextView tvSeller = findViewById(R.id.ordersDetailsTvSeller);
         TextView tvTotalPrice = findViewById(R.id.ordersDetailsTvTotalPrice);

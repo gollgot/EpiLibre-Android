@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,15 +24,21 @@ import android.widget.TextView;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import ch.epilibre.epilibre.Models.BasketLine;
 import ch.epilibre.epilibre.Config;
+import ch.epilibre.epilibre.Models.Order;
+import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.R;
@@ -328,9 +335,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         httpCheckoutRequest.executeRequest(new RequestCallback() {
             @Override
             public void getResponse(String response) {
-                Snackbar.make(mainLayout, getString(R.string.main_buy_successful), Snackbar.LENGTH_LONG).show();
+                ArrayList<BasketLine> basketLinesBackup = new ArrayList<>(basketLines);
+
                 basketLines.clear();
                 updateBasket(basketLines);
+
+                JSONObject jsonObjectResource = httpCheckoutRequest.getJSONObjectResource(response);
+                try {
+                    String date = jsonObjectResource.getString("created_at");
+                    String seller = jsonObjectResource.getString("seller");
+                    double totalPrice = jsonObjectResource.getDouble("totalPrice");
+
+                    Order order = new Order(date, seller, totalPrice, basketLinesBackup);
+                    Intent intentOrderDetails = new Intent(MainActivity.this, OrderDetails.class);
+                    intentOrderDetails.putExtra("order", order);
+                    intentOrderDetails.putExtra("fromCheckout", true);
+                    startActivity(intentOrderDetails);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             @Override
             public void getError400(NetworkResponse networkResponse) { }
