@@ -119,6 +119,13 @@ public class HistoricPricesActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(HistoricPricesActivity.this));
                 swipeRefreshLayout.setRefreshing(false);
+
+                for(HistoricPrice historicPrice : historicPrices){
+                    if(!historicPrice.isSeen()){
+                        toggleHistoricPricesSeen();
+                        break;
+                    }
+                }
             }
 
             @Override
@@ -128,6 +135,28 @@ public class HistoricPricesActivity extends AppCompatActivity {
             public void getErrorNoInternet() {
                 swipeRefreshLayout.setRefreshing(false);
             }
+        });
+    }
+
+    /**
+     * Toggle all historic price that are not seen yet (false) to seen (true)
+     * It means that we have seen the new lines
+     *
+     * We run this method as soon as we displayed the recycler and there is some new not seen historic prices,
+     * this is implicitly send (no button click needed)
+     */
+    private void toggleHistoricPricesSeen() {
+        final HttpRequest httpRequest = new HttpRequest(HistoricPricesActivity.this, mainLayout, Config.API_BASE_URL + Config.API_HISTORIC_PRICES_TOGGLE_SEEN, Request.Method.PATCH);
+        httpRequest.addBearerToken();
+        httpRequest.executeRequest(new RequestCallback() {
+            @Override
+            public void getResponse(String response) { }
+
+            @Override
+            public void getError400(NetworkResponse networkResponse) {}
+
+            @Override
+            public void getErrorNoInternet() { }
         });
     }
 }
