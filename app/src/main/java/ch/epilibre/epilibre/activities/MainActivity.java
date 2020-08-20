@@ -170,11 +170,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // SUPER_ADMIN stuff
         if(user.getRole() == Role.SUPER_ADMIN){
-            // Reload the pending user badge count in navigation drawer
+            // Reload the pending user and price historics badges count in navigation drawer
             // in onResume because all the time we came back to this activity, we update the badge
             NavigationView navigationView = findViewById(R.id.mainNavigationView);
+
             TextView tvUserPendingCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_users_pending).getActionView();
             loadPendingUserBadgeCount(tvUserPendingCount);
+
+            TextView tvPriceHistoricsCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_price_historics).getActionView();
+            loadPriceHistoricsBadgeCount(tvPriceHistoricsCount);
         }
     }
 
@@ -221,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             // SUPER_ADMIN restriction
             else if(user.getRole() == Role.SUPER_ADMIN){
-                // Load the pending users badge count into the onResume method
+                // /!\ load the pending users and price historics badges count into the onResume method
             }
         }
     }
@@ -258,6 +262,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void getErrorNoInternet() {
                 tvUserPendingCount.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    /**
+     * Send a http request to get the price historics not seed count to display it as a badge into
+     * the navigation drawer
+     * @param tvPriceHistoricsCount The badge TextView to update
+     */
+    private void loadPriceHistoricsBadgeCount(final TextView tvPriceHistoricsCount) {
+        final HttpRequest httpRequest = new HttpRequest(MainActivity.this, drawerLayout, Config.API_BASE_URL + Config.API_PRICE_HISTORICS_NOT_SEEN_COUNT, Request.Method.GET);
+        httpRequest.addBearerToken();
+        httpRequest.executeRequest(new RequestCallback() {
+            @Override
+            public void getResponse(String response) {
+                JSONObject jsonObjectResource = httpRequest.getJSONObjectResource(response);
+                try {
+                    int count = jsonObjectResource.getInt("count");
+                    tvPriceHistoricsCount.setVisibility(View.VISIBLE);
+
+                    // More than 99 price historics
+                    if(count > 99){
+                        tvPriceHistoricsCount.setText("99+");
+                    }
+                    // Between 1 and 99 price historics
+                    else if(count > 0){
+                        tvPriceHistoricsCount.setText(String.valueOf(count));
+                    }
+                    // 0 price historics
+                    else{
+                        tvPriceHistoricsCount.setVisibility(View.INVISIBLE);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void getError400(NetworkResponse networkResponse) { }
+
+            @Override
+            public void getErrorNoInternet() {
+                tvPriceHistoricsCount.setVisibility(View.INVISIBLE);
             }
         });
     }
