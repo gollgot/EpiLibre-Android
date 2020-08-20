@@ -18,10 +18,10 @@
             <item android:id="@+id/drawer_menu__item_orders"
                 android:icon="@drawable/ic_receipts"
                 android:title="@string/drawer_item_orders" />
-            <!-- Price Historics -->
-            <item android:id="@+id/drawer_menu__item_price_historics"
+            <!-- Historic prices -->
+            <item android:id="@+id/drawer_menu__item_historic_prices"
                 android:icon="@drawable/ic_money"
-                android:title="@string/drawer_item_price_historics"
+                android:title="@string/drawer_item_historic_prices"
                 app:actionLayout="@layout/menu_counter"/>
         </menu>
     </item>

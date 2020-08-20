@@ -3,22 +3,24 @@
     package="ch.epilibre.epilibre">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- For CSV orders download (super_admin) -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- For CSV orders download (super_admin) -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.HistoricPricesActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppThemeNoActionBar" />
         <activity
             android:name=".activities.OrderDetails"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/AppThemeNoActionBar"/>
+            android:theme="@style/AppThemeNoActionBar" />
         <activity
             android:name=".activities.OrdersActivity"
             android:configChanges="orientation|screenSize"

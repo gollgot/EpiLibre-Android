@@ -177,8 +177,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             TextView tvUserPendingCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_users_pending).getActionView();
             loadPendingUserBadgeCount(tvUserPendingCount);
 
-            TextView tvPriceHistoricsCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_price_historics).getActionView();
-            loadPriceHistoricsBadgeCount(tvPriceHistoricsCount);
+            TextView tvHistoricPricesCount = (TextView) navigationView.getMenu().findItem(R.id.drawer_menu__item_historic_prices).getActionView();
+            loadHistoricPricesBadgeCount(tvHistoricPricesCount);
         }
     }
 
@@ -267,11 +267,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * Send a http request to get the price historics not seed count to display it as a badge into
+     * Send a http request to get the historic prices not seen count to display it as a badge into
      * the navigation drawer
-     * @param tvPriceHistoricsCount The badge TextView to update
+     * @param tvHistoricPricesCount The badge TextView to update
      */
-    private void loadPriceHistoricsBadgeCount(final TextView tvPriceHistoricsCount) {
+    private void loadHistoricPricesBadgeCount(final TextView tvHistoricPricesCount) {
         final HttpRequest httpRequest = new HttpRequest(MainActivity.this, drawerLayout, Config.API_BASE_URL + Config.API_PRICE_HISTORICS_NOT_SEEN_COUNT, Request.Method.GET);
         httpRequest.addBearerToken();
         httpRequest.executeRequest(new RequestCallback() {
@@ -280,19 +280,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 JSONObject jsonObjectResource = httpRequest.getJSONObjectResource(response);
                 try {
                     int count = jsonObjectResource.getInt("count");
-                    tvPriceHistoricsCount.setVisibility(View.VISIBLE);
+                    tvHistoricPricesCount.setVisibility(View.VISIBLE);
 
                     // More than 99 price historics
                     if(count > 99){
-                        tvPriceHistoricsCount.setText("99+");
+                        tvHistoricPricesCount.setText("99+");
                     }
                     // Between 1 and 99 price historics
                     else if(count > 0){
-                        tvPriceHistoricsCount.setText(String.valueOf(count));
+                        tvHistoricPricesCount.setText(String.valueOf(count));
                     }
                     // 0 price historics
                     else{
-                        tvPriceHistoricsCount.setVisibility(View.INVISIBLE);
+                        tvHistoricPricesCount.setVisibility(View.INVISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void getErrorNoInternet() {
-                tvPriceHistoricsCount.setVisibility(View.INVISIBLE);
+                tvHistoricPricesCount.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -471,6 +471,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.drawer_menu__item_orders:
                     Intent intentOrders = new Intent(MainActivity.this, OrdersActivity.class);
                     startActivity(intentOrders);
+                    break;
+                case R.id.drawer_menu__item_historic_prices:
+                    Intent intentHistoricPrices = new Intent(MainActivity.this, HistoricPricesActivity.class);
+                    startActivity(intentHistoricPrices);
+                    break;
             }
         }
 
