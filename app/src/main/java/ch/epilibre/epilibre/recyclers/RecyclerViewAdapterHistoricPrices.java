@@ -69,9 +69,10 @@ public class RecyclerViewAdapterHistoricPrices extends RecyclerView.Adapter<Recy
         holder.tvDate.setText(historicPrice.getCreatedAt());
         holder.tvProductName.setText(historicPrice.getProductName());
         holder.tvCreatedBy.setText(historicPrice.getCreatedBy());
-        holder.tvOldPrice.setText(historicPrice.getOldPrice() + " CHF");
-        holder.tvNewPrice.setText(historicPrice.getNewPrice() + " CHF");
+        holder.tvOldPrice.setText(Utils.decimalFormat.format(historicPrice.getOldPrice()) + " CHF");
+        holder.tvNewPrice.setText(Utils.decimalFormat.format(historicPrice.getNewPrice()) + " CHF");
 
+        // Diplay image "new" for historic price not seen yet
         if(historicPrice.isSeen()){
             holder.imgNew.setVisibility(View.GONE);
         }

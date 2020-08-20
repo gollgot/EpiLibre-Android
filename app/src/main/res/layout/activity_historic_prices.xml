@@ -15,6 +15,17 @@
         app:titleTextColor="@color/white"
         android:background="@color/colorPrimary" />
 
+    <TextView
+        android:id="@+id/historicPricesTvNoResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/historicPricesToolbar"
+        android:text="@string/no_result"
+        android:textSize="16sp"
+        android:gravity="center_horizontal"
+        android:visibility="gone"/>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/historicPricesSwipeRefreshLayout"
         android:layout_below="@id/historicPricesToolbar"

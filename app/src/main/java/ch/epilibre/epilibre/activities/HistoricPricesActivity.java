@@ -1,15 +1,15 @@
 package ch.epilibre.epilibre.activities;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -22,21 +22,18 @@ import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.CustomNavigationCallback;
-import ch.epilibre.epilibre.Models.BasketLine;
 import ch.epilibre.epilibre.Models.HistoricPrice;
-import ch.epilibre.epilibre.Models.Order;
-import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterHistoricPrices;
-import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterOrders;
 
 public class HistoricPricesActivity extends AppCompatActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private RelativeLayout mainLayout;
+    private TextView tvNoResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +44,7 @@ public class HistoricPricesActivity extends AppCompatActivity {
 
         mainLayout = findViewById(R.id.historicPricesLayout);
         swipeRefreshLayout = findViewById(R.id.historicPricesSwipeRefreshLayout);
+        tvNoResult = findViewById(R.id.historicPricesTvNoResult);
 
         // Active the loader
         swipeRefreshLayout.setRefreshing(true);
@@ -94,42 +92,58 @@ public class HistoricPricesActivity extends AppCompatActivity {
             public void getResponse(String response) {
                 JSONArray jsonArrayResource = httpHistoricPricesRequest.getJSONArrayResource(response);
 
-                // Parse all json data related to Historic Prices
-                for(int i = 0; i < jsonArrayResource.length(); ++i){
-                    try {
-                        // Extract historic price info
-                        JSONObject jsonObjectResource = jsonArrayResource.getJSONObject(i);
-                        String productName = jsonObjectResource.getString("productName");
-                        String createdAt = jsonObjectResource.getString("createdAt");
-                        String createdBy = jsonObjectResource.getString("createdBy");
-                        double oldPrice = jsonObjectResource.getDouble("oldPrice");
-                        double newPrice = jsonObjectResource.getDouble("newPrice");
-                        boolean seen = jsonObjectResource.getInt("seen") != 0;
-
-                        historicPrices.add(new HistoricPrice(productName, oldPrice, newPrice, seen, createdAt, createdBy));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.historicPricesRecycler);
-                RelativeLayout recyclerItemLayout = findViewById(R.id.recyclerHistoricPricesLayout);
-                RecyclerViewAdapterHistoricPrices adapter = new RecyclerViewAdapterHistoricPrices(HistoricPricesActivity.this, recyclerItemLayout, historicPrices);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(HistoricPricesActivity.this));
-                swipeRefreshLayout.setRefreshing(false);
 
-                for(HistoricPrice historicPrice : historicPrices){
-                    if(!historicPrice.isSeen()){
-                        toggleHistoricPricesSeen();
-                        break;
+                // No result
+                if(jsonArrayResource.length() == 0){
+                    swipeRefreshLayout.setRefreshing(false);
+                    tvNoResult.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+                // Result found
+                else{
+                    tvNoResult.setVisibility(View.GONE);
+
+                    // Parse all json data related to Historic Prices
+                    for (int i = 0; i < jsonArrayResource.length(); ++i) {
+                        try {
+                            // Extract historic price info
+                            JSONObject jsonObjectResource = jsonArrayResource.getJSONObject(i);
+                            String productName = jsonObjectResource.getString("productName");
+                            String createdAt = jsonObjectResource.getString("createdAt");
+                            String createdBy = jsonObjectResource.getString("createdBy");
+                            double oldPrice = jsonObjectResource.getDouble("oldPrice");
+                            double newPrice = jsonObjectResource.getDouble("newPrice");
+                            boolean seen = jsonObjectResource.getInt("seen") != 0;
+
+                            historicPrices.add(new HistoricPrice(productName, oldPrice, newPrice, seen, createdAt, createdBy));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // Create the recycler view
+                    RelativeLayout recyclerItemLayout = findViewById(R.id.recyclerHistoricPricesLayout);
+                    RecyclerViewAdapterHistoricPrices adapter = new RecyclerViewAdapterHistoricPrices(HistoricPricesActivity.this, recyclerItemLayout, historicPrices);
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(HistoricPricesActivity.this));
+                    swipeRefreshLayout.setRefreshing(false);
+
+                    recyclerView.setVisibility(View.VISIBLE);
+
+                    for (HistoricPrice historicPrice : historicPrices) {
+                        if (!historicPrice.isSeen()) {
+                            toggleHistoricPricesSeen();
+                            break;
+                        }
                     }
                 }
             }
 
             @Override
-            public void getError400(NetworkResponse networkResponse) {}
+            public void getError400(NetworkResponse networkResponse) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
 
             @Override
             public void getErrorNoInternet() {
