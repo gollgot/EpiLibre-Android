@@ -74,7 +74,7 @@ public class OrdersActivity extends AppCompatActivity {
         // Active the loader
         swipeRefreshLayout.setRefreshing(true);
 
-        // Pull to refresh management -> will init again the recyclerview with new users pending from the API
+        // Pull to refresh management -> will init again the recyclerview with new orders from the API
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -109,6 +109,9 @@ public class OrdersActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getResources().getString(R.string.orders_main_title));
     }
 
+    /**
+     * Init the recycler view with new orders from API
+     */
     private void initRecyclerView() {
         // Reload menu
         downloadOrdersEnable = false;

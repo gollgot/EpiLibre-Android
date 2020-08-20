@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param tvHistoricPricesCount The badge TextView to update
      */
     private void loadHistoricPricesBadgeCount(final TextView tvHistoricPricesCount) {
-        final HttpRequest httpRequest = new HttpRequest(MainActivity.this, drawerLayout, Config.API_BASE_URL + Config.API_PRICE_HISTORICS_NOT_SEEN_COUNT, Request.Method.GET);
+        final HttpRequest httpRequest = new HttpRequest(MainActivity.this, drawerLayout, Config.API_BASE_URL + Config.API_HISTORIC_PRICES_NOT_SEEN_COUNT, Request.Method.GET);
         httpRequest.addBearerToken();
         httpRequest.executeRequest(new RequestCallback() {
             @Override

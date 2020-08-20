@@ -10,8 +10,8 @@ public class ConfigExample {
     public final static String API_CATEGORIES_INDEX= "";
     public final static String API_UNITS_INDEX= "";
     public final static String API_ORDERS_INDEX= "";
-    public final static String API_PRICE_HISTORICS_INDEX= "";
-    public final static String API_PRICE_HISTORICS_NOT_SEEN_COUNT= "";
+    public final static String API_HISTORIC_PRICES_INDEX= "";
+    public final static String API_HISTORIC_PRICES_NOT_SEEN_COUNT= "";
     public static String API_USERS_CONFIRM(int user_id){
         return "";
     }
