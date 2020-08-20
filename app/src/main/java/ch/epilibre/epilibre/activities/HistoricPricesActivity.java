@@ -112,8 +112,6 @@ public class HistoricPricesActivity extends AppCompatActivity {
                     }
                 }
 
-                Log.d("DEDE", "nb : " + historicPrices.size());
-
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.historicPricesRecycler);
                 RelativeLayout recyclerItemLayout = findViewById(R.id.recyclerHistoricPricesLayout);
