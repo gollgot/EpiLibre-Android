@@ -35,7 +35,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.prefs.Preferences;
 
 import ch.epilibre.epilibre.Config;
@@ -234,16 +238,29 @@ public class OrdersActivity extends AppCompatActivity {
      * Download all orders in CSV into the download folder
      */
     private void downloadOrdersCSV() {
-        final String FILE_NAME = "EpiLibre_Orders.csv";
+        long sec = System.currentTimeMillis() / 1000L;
+        final String FILE_NAME = "EpiLibre_Orders_" + sec + ".csv";
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(path, FILE_NAME);
 
         try {
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            FileOutputStream out = new FileOutputStream(file);
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 
+            // CSV generation
+            out.write("# vente,Date,Vendeur,Produit,Quantité,Unité,Prix de vente\n");
+            int i = 1;
             for(Order order : orders){
-                out.write(String.valueOf(order.getDate()).getBytes());
+                for(BasketLine basketLine : order.getBasketLines()){
+                    out.write(i + ","
+                            + order.getDate() + ","
+                            + order.getSeller() + ","
+                            + basketLine.getProduct().getName() + ","
+                            + basketLine.getQuantity() + ","
+                            + basketLine.getProduct().getUnit() + ","
+                            + basketLine.getPrice() + "\n");
+                }
+                ++i;
             }
 
             out.close();
