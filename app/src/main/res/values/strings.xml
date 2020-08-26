@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">EpiLibre</string>
-    <string name="menu_guest_sign_in">Connexion</string>
-    <string name="menu_guest_sign_out">Déconnexion</string>
+    <string name="menu_main_sign_in">Connexion</string>
+    <string name="menu_main_sign_out">Déconnexion</string>
     <string name="login_tv_connection">Connexion</string>
     <string name="login_hint_email">Email</string>
     <string name="login_hint_password">Mot de passe</string>
@@ -65,4 +65,12 @@
     <string name="orders_permission_refused_msg">Impossible de télécharger les ventes sans autorisation</string>
     <string name="drawer_item_historic_prices">Historique des prix</string>
     <string name="no_result">Aucun résultat</string>
+    <string name="menu_main_profile">Mon profil</string>
+    <string name="profile_main_title">Mon profil</string>
+    <string name="product_hint_firstname">Prénom</string>
+    <string name="profile_hint_email">Email</string>
+    <string name="profile_role">Role</string>
+    <string name="profile_hint_role">Role</string>
+    <string name="profileBtnChangePassword">Changer le mot de passe</string>
+    <string name="profileBtnValid">Valider</string>
 </resources>

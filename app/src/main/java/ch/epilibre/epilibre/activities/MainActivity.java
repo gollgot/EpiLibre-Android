@@ -438,12 +438,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Handle item selection for the menu
         switch (item.getItemId()) {
-            case R.id.itemGuestMenuSignOut:
+            case R.id.itemMainMenuSignOut:
                 //invalidateOptionsMenu();
                 sessionManager.logoutUser();
                 Intent intentLogin = new Intent(MainActivity.this, LoginActivity.class);
                 finish();
                 startActivity(intentLogin);
+                return true;
+            case R.id.itemMainMenuProfile:
+                Intent intentProfile = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intentProfile);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

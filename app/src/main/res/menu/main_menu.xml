@@ -3,9 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="@string/menu_guest_sign_out"
+        android:title="@string/menu_main_sign_out"
         android:icon="@drawable/ic_sign_out"
-        android:id="@+id/itemGuestMenuSignOut"
+        android:id="@+id/itemMainMenuSignOut"
         app:showAsAction="ifRoom"
         />
+
+    <item
+        android:title="@string/menu_main_profile"
+        android:id="@+id/itemMainMenuProfile"
+        app:showAsAction="never"
+        />
+
 </menu>
