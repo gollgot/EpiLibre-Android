@@ -239,7 +239,7 @@ public class OrdersActivity extends AppCompatActivity {
      */
     private void downloadOrdersCSV() {
         long sec = System.currentTimeMillis() / 1000L;
-        final String FILE_NAME = "EpiLibre_Orders_" + sec + ".csv";
+        final String FILE_NAME = "EpiLibre_Ventes_" + sec + ".csv";
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(path, FILE_NAME);
 
