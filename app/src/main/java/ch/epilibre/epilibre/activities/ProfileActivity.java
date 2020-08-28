@@ -37,6 +37,10 @@ public class ProfileActivity extends AppCompatActivity {
     private RelativeLayout loaderBackground;
     private boolean hasBeenUpdated = false;
 
+    private String oldFirstName;
+    private String oldLastName;
+    private String oldEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,9 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
         etRole.getEditText().setEnabled(false);
 
         // Fetch all old values
-        final String oldFirstName = etFirstName.getEditText().getText().toString();
-        final String oldLastName = etLastName.getEditText().getText().toString();
-        final String oldEmail = etEmail.getEditText().getText().toString();
+        fetchOldValues(etFirstName, etLastName, etEmail);
 
         // Button edit click
         btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +104,18 @@ public class ProfileActivity extends AppCompatActivity {
                 returnResultToPreviousActivity();
             }
         });
+    }
+
+    /**
+     * Fetch old values from edit text
+     * @param etFirstName The first name layout edit text
+     * @param etLastName The last name layout edit text
+     * @param etEmail The email layout edit text
+     */
+    private void fetchOldValues(TextInputLayout etFirstName, TextInputLayout etLastName, TextInputLayout etEmail) {
+        oldFirstName = etFirstName.getEditText().getText().toString();
+        oldLastName = etLastName.getEditText().getText().toString();
+        oldEmail = etEmail.getEditText().getText().toString();
     }
 
     /**
@@ -194,6 +208,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 removeLoader();
                 hasBeenUpdated = true; // Notify that an update has been made
+                fetchOldValues(etFirstName, etLastName, etEmail);
             }
 
             @Override
