@@ -71,6 +71,9 @@
     <string name="profile_hint_email">Email</string>
     <string name="profile_role">Role</string>
     <string name="profile_hint_role">Role</string>
-    <string name="profileBtnChangePassword">Changer le mot de passe</string>
-    <string name="profileBtnValid">Valider</string>
+    <string name="profile_btn_change_password">Changer le mot de passe</string>
+    <string name="profile_btn_edit">Editer</string>
+    <string name="profile_no_change">Aucun changement effectué</string>
+    <string name="profile_update_successful">Votre profile a bien été mis à jour</string>
+    <string name="profile_email_already_used">Cette adresse est déjà utilisée</string>
 </resources>

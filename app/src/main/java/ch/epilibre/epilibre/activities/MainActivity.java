@@ -1,5 +1,17 @@
 package ch.epilibre.epilibre.activities;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -9,44 +21,28 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import ch.epilibre.epilibre.Models.BasketLine;
+
 import ch.epilibre.epilibre.Config;
+import ch.epilibre.epilibre.Models.BasketLine;
 import ch.epilibre.epilibre.Models.Order;
-import ch.epilibre.epilibre.Models.Product;
-import ch.epilibre.epilibre.Utils;
-import ch.epilibre.epilibre.http.HttpRequest;
-import ch.epilibre.epilibre.R;
-import ch.epilibre.epilibre.SessionManager;
-import ch.epilibre.epilibre.http.RequestCallback;
-import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterBasketLine;
 import ch.epilibre.epilibre.Models.Role;
 import ch.epilibre.epilibre.Models.User;
+import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.SessionManager;
+import ch.epilibre.epilibre.Utils;
+import ch.epilibre.epilibre.http.HttpRequest;
+import ch.epilibre.epilibre.http.RequestCallback;
+import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterBasketLine;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -56,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private User user;
 
     private final static int LAUNCH_PRODUCTS_ACTIVITY = 1;
+    private final static int LAUNCH_PROFILE_ACTIVITY = 2;
 
     private DrawerLayout drawerLayout;
 
@@ -207,11 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setNavigationItemSelectedListener(this);
 
             // Navigation header user name, email, role management
-            View headerView = navigationView.getHeaderView(0);
-            TextView tvUserName = headerView.findViewById(R.id.navDrawerUserName);
-            TextView tvUserEmail = headerView.findViewById(R.id.navDrawerUserEmail);
-            tvUserName.setText(user.getFirstname() + " " + user.getLastname() + " - " + user.getRolePretty());
-            tvUserEmail.setText(user.getEmail());
+            loadNavigationDrawerHeader(navigationView);
 
             // Disable some menu items depends on your role
             Menu menuNav = navigationView.getMenu();
@@ -228,6 +221,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // /!\ load the pending users and price historics badges count into the onResume method
             }
         }
+    }
+
+    /**
+     * Load the header of the navigation drawer
+     * @param navigationView The navigation view
+     */
+    private void loadNavigationDrawerHeader(NavigationView navigationView) {
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvUserName = headerView.findViewById(R.id.navDrawerUserName);
+        TextView tvUserEmail = headerView.findViewById(R.id.navDrawerUserEmail);
+        tvUserName.setText(user.getFirstname() + " " + user.getLastname() + " - " + user.getRolePretty());
+        tvUserEmail.setText(user.getEmail());
     }
 
     /**
@@ -315,13 +320,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(requestCode){
             // Came back from ProductActivity
             case LAUNCH_PRODUCTS_ACTIVITY:
-                // Result OK
                 if(resultCode == Activity.RESULT_OK){
                     BasketLine basketLine = (BasketLine) data.getSerializableExtra("basketLine");
                     basketLines.add(basketLine);
                     updateBasket(basketLines);
                 }
                 break;
+            case LAUNCH_PROFILE_ACTIVITY:
+                if(resultCode == Activity.RESULT_OK){
+                    // A profile update has occurred
+                    user = sessionManager.getUser();
+                    // NavigationView management
+                    NavigationView navigationView = findViewById(R.id.mainNavigationView);
+                    loadNavigationDrawerHeader(navigationView);
+                }
         }
     }
 
@@ -447,7 +459,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             case R.id.itemMainMenuProfile:
                 Intent intentProfile = new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intentProfile);
+                startActivityForResult(intentProfile, LAUNCH_PROFILE_ACTIVITY);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

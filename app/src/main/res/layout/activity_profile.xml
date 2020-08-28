@@ -26,8 +26,10 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/profileBtnChangePassword"
+            android:text="@string/profile_btn_change_password"
             android:layout_gravity="center_horizontal"
+            app:iconGravity="textStart"
+            app:icon="@drawable/ic_lock"
             android:backgroundTint="@color/lightSalmon"/>
 
         <!-- Edit text first name -->
@@ -44,6 +46,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="45"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -61,6 +64,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="45"
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,6 +82,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="255"
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,12 +104,32 @@
 
         <!-- Button change password -->
         <Button
-            android:layout_width="wrap_content"
+            android:id="@+id/profileBtnEdit"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/profileBtnValid"
+            android:text="@string/profile_btn_edit"
+            app:iconGravity="textStart"
+            app:icon="@drawable/ic_check"
             android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
+
+    <!-- INFINITE PROGRESS BAR (Loader) with 80% black background -->
+    <RelativeLayout
+        android:id="@+id/profileLayoutLoaderBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:alpha="0.8"
+        android:visibility="gone"/>
+    <ProgressBar
+        android:id="@+id/profileLoader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/colorPrimary"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Large"
+        android:visibility="gone"/>
 
 </RelativeLayout>

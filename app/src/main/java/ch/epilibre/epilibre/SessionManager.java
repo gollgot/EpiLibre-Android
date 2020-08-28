@@ -97,4 +97,34 @@ public class SessionManager {
         return pref.getBoolean(IS_LOGIN, false);
     }
 
+    /**
+     * Update the first name
+     * @param firstname The new first name value
+     */
+    public void updateFirstName(String firstname){
+        editor.remove(FIRSTNAME);
+        editor.putString(FIRSTNAME, firstname);
+        editor.commit();
+    }
+
+    /**
+     * Update the last name
+     * @param lastname The new last name value
+     */
+    public void updateLastName(String lastname){
+        editor.remove(LASTNAME);
+        editor.putString(LASTNAME, lastname);
+        editor.commit();
+    }
+
+    /**
+     * Update the email
+     * @param email The new email value
+     */
+    public void updateEmail(String email){
+        editor.remove(EMAIL);
+        editor.putString(EMAIL, email);
+        editor.commit();
+    }
+
 }
