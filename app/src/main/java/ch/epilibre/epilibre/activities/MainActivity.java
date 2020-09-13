@@ -544,6 +544,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intentHistoricPrices = new Intent(MainActivity.this, HistoricPricesActivity.class);
                     startActivity(intentHistoricPrices);
                     break;
+                case R.id.drawer_menu__item_users:
+                    Intent intentUsers = new Intent(MainActivity.this, UsersActivity.class);
+                    startActivity(intentUsers);
+                    break;
             }
         }
 
