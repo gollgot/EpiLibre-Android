@@ -215,39 +215,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void loadNavigationDrawer() {
         // Set up the drawer menu and enable the toggle hamburger menu
 
-        // SELLER Restriction
+        // Init the drawer
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // NavigationView management
+        NavigationView navigationView = findViewById(R.id.mainNavigationView);
+        navigationView.bringToFront(); // Mandatory
+        navigationView.setNavigationItemSelectedListener(this);
+
+        // Navigation header user name, email, role management
+        loadNavigationDrawerHeader(navigationView);
+
+        // Disable some menu items depends on your role
+        Menu menuNav = navigationView.getMenu();
+        MenuItem itemUsers = menuNav.findItem(R.id.drawer_menu__item_users);
+        MenuItem itemUsersPending = menuNav.findItem(R.id.drawer_menu__item_users_pending);
+        MenuItem itemProducts = menuNav.findItem(R.id.drawer_menu__item_products);
+        MenuItem itemCategories = menuNav.findItem(R.id.drawer_menu__item_categories);
+        MenuItem itemHistoricPrices = menuNav.findItem(R.id.drawer_menu__item_historic_prices);
+
+        // SELLER RESTRICTION
         if(user.getRole() == Role.SELLER){
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }else {
-            // Init the drawer
-            actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
-            drawerLayout.addDrawerListener(actionBarDrawerToggle);
-            actionBarDrawerToggle.syncState();
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-            // NavigationView management
-            NavigationView navigationView = findViewById(R.id.mainNavigationView);
-            navigationView.bringToFront(); // Mandatory
-            navigationView.setNavigationItemSelectedListener(this);
-
-            // Navigation header user name, email, role management
-            loadNavigationDrawerHeader(navigationView);
-
-            // Disable some menu items depends on your role
-            Menu menuNav = navigationView.getMenu();
-            MenuItem itemUsers = menuNav.findItem(R.id.drawer_menu__item_users);
-            MenuItem itemUsersPending = menuNav.findItem(R.id.drawer_menu__item_users_pending);
-
-            // ADMIN restriction
-            if (user.getRole() == Role.ADMIN) {
-                itemUsers.setVisible(false);
-                itemUsersPending.setVisible(false);
-            }
-            // SUPER_ADMIN restriction
-            else if(user.getRole() == Role.SUPER_ADMIN){
-                // /!\ load the pending users and price historics badges count into the onResume method
-            }
+            itemProducts.setVisible(false);
+            itemCategories.setVisible(false);
+            itemHistoricPrices.setVisible(false);
+            itemUsers.setVisible(false);
+            itemUsersPending.setVisible(false);
         }
+        // ADMIN restriction
+        else if (user.getRole() == Role.ADMIN) {
+            itemUsers.setVisible(false);
+            itemUsersPending.setVisible(false);
+        }
+        // SUPER_ADMIN restriction
+        else if(user.getRole() == Role.SUPER_ADMIN){
+            // /!\ load the pending users and price historics badges count into the onResume method
+        }
+
     }
 
     /**
@@ -488,12 +495,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        // Enable the Drawer hamburger menu toggle, only for other role than SELLER
-        // Because seller doesn't have a drawer menu activated
-        if(user.getRole() != Role.SELLER){
-            if(actionBarDrawerToggle.onOptionsItemSelected(item)){
-                return true;
-            }
+        // enabling drawer toggle by clicking on the hamburger menu
+        if(actionBarDrawerToggle.onOptionsItemSelected(item)){
+            return true;
         }
 
         //Handle item selection for the menu
