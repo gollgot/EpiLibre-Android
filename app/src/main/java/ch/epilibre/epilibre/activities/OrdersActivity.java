@@ -45,6 +45,7 @@ import java.util.prefs.Preferences;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.Models.BasketLine;
+import ch.epilibre.epilibre.Models.DiscountLine;
 import ch.epilibre.epilibre.Models.Order;
 import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.R;
@@ -138,6 +139,8 @@ public class OrdersActivity extends AppCompatActivity {
                         String date = jsonObjectResource.getString("created_at");
                         String seller = jsonObjectResource.getString("seller");
                         double totalPrice = jsonObjectResource.getDouble("totalPrice");
+                        boolean hasDiscount = jsonObjectResource.getBoolean("hasDiscount");
+                        double discountPrice = jsonObjectResource.getDouble("discountPrice");
 
                         // Extract basketLine / product info
                         ArrayList<BasketLine> basketLines = new ArrayList<>();
@@ -148,7 +151,11 @@ public class OrdersActivity extends AppCompatActivity {
                             basketLines.add(new BasketLine(product, jsonObjectProduct.getDouble("quantity"), jsonObjectProduct.getDouble("price")));
                         }
 
-                        orders.add(new Order(date, seller, totalPrice, basketLines));
+                        if(hasDiscount){
+                            basketLines.add(new DiscountLine(null, 0, 10, discountPrice));
+                        }
+
+                        orders.add(new Order(date, seller, totalPrice, hasDiscount, discountPrice, basketLines));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -240,6 +247,7 @@ public class OrdersActivity extends AppCompatActivity {
     private void downloadOrdersCSV() {
         long sec = System.currentTimeMillis() / 1000L;
         final String FILE_NAME = "EpiLibre_Ventes_" + sec + ".csv";
+        final String DELIMITER = ",";
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(path, FILE_NAME);
 
@@ -251,15 +259,31 @@ public class OrdersActivity extends AppCompatActivity {
             out.write("# vente,Date,Vendeur,Produit,Quantité,Unité,Prix de vente\n");
             int i = 1;
             for(Order order : orders){
-                for(BasketLine basketLine : order.getBasketLines()){
-                    out.write(i + ","
-                            + order.getDate() + ","
-                            + order.getSeller() + ","
-                            + basketLine.getProduct().getName() + ","
-                            + basketLine.getQuantity() + ","
-                            + basketLine.getProduct().getUnit() + ","
+
+                int productsNb = order.hasDiscount() ? order.getBasketLines().size() - 1 : order.getBasketLines().size();
+
+                for(int j = 0; j < productsNb; ++j){
+                    BasketLine basketLine = order.getBasketLines().get(j);
+                    out.write(i + DELIMITER
+                            + order.getDate() + DELIMITER
+                            + order.getSeller() + DELIMITER
+                            + basketLine.getProduct().getName() + DELIMITER
+                            + basketLine.getQuantity() + DELIMITER
+                            + basketLine.getProduct().getUnit() + DELIMITER
                             + basketLine.getPrice() + "\n");
                 }
+
+                // Discount line
+                if(order.hasDiscount()){
+                    out.write(i + DELIMITER
+                            + order.getDate() + DELIMITER
+                            + order.getSeller() + DELIMITER
+                            + order.getBasketLines().get(productsNb).getMainInfo() + DELIMITER
+                            + "" + DELIMITER
+                            + "" + DELIMITER
+                            + order.getBasketLines().get(productsNb).getPrice() + "\n");
+                }
+
                 ++i;
             }
 

@@ -59,12 +59,17 @@ public class RecyclerViewAdapterOrders extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        int nbProducts = orders.get(position).getBasketLines().size();
+        if(orders.get(position).hasDiscount()){
+            --nbProducts;
+        }
+
         String itemsOrtho = orders.get(position).getBasketLines().size() > 1 ? context.getString(R.string.main_items_plurial) : context.getString(R.string.main_items_singular);
 
         holder.tvDate.setText(orders.get(position).getDate());
         holder.tvSeller.setText(orders.get(position).getSeller());
         holder.tvTotalPrice.setText(Utils.decimalFormat.format(orders.get(position).getTotalPrice()) + " CHF");
-        holder.tvNbProducts.setText(orders.get(position).getBasketLines().size() + " " + itemsOrtho);
+        holder.tvNbProducts.setText(nbProducts + " " + itemsOrtho);
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

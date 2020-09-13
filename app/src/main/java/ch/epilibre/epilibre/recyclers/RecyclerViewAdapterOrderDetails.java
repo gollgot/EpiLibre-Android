@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Models.BasketLine;
+import ch.epilibre.epilibre.Models.DiscountLine;
 import ch.epilibre.epilibre.Models.Order;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
@@ -60,9 +61,14 @@ public class RecyclerViewAdapterOrderDetails extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         BasketLine basketLine = basketLines.get(position);
 
-        holder.tvProduct.setText(basketLine.getProduct().getName());
-        holder.tvQuantity.setText("x " + basketLine.getQuantity() + " " + basketLine.getProduct().getUnit());
-        holder.tvPrice.setText(Utils.decimalFormat.format(basketLine.getPrice()) + " CHF");
+        if(position == basketLines.size()-1 && basketLines.get(position) instanceof DiscountLine){
+            holder.tvProduct.setText(basketLines.get(position).getMainInfo()); // Polymorphic liaison
+        }else{
+            holder.tvProduct.setText(basketLine.getProduct().getName());
+        }
+
+        holder.tvQuantity.setText(basketLines.get(position).getDetails());
+        holder.tvPrice.setText(Utils.decimalFormat.format(basketLines.get(position).getPrice()) + " CHF");
     }
 
     @Override

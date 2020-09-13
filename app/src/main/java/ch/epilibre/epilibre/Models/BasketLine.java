@@ -25,4 +25,12 @@ public class BasketLine implements Serializable {
     public double getPrice() {
         return price;
     }
+
+    public String getMainInfo(){
+        return product.getName() + " (" + product.getPrice() + " CHF / " + product.getUnit() + ")";
+    }
+
+    public String getDetails(){
+        return "x " + quantity + " " + product.getUnit();
+    }
 }

@@ -23,6 +23,7 @@
         android:orientation="vertical"
         android:layout_below="@id/productsToolbar">
 
+        <!-- Spinner categories -->
         <RelativeLayout
             android:id="@+id/productsSpinnerLayout"
             android:layout_width="wrap_content"

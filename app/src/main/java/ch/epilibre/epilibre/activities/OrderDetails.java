@@ -98,11 +98,26 @@ public class OrderDetails extends AppCompatActivity {
             case R.id.menuSendSendItem:
                 // Create the products string
                 StringBuilder sbProducts = new StringBuilder();
-                for(BasketLine basketLine : order.getBasketLines()){
+
+                int productNb = order.hasDiscount() ? order.getBasketLines().size() - 1 : order.getBasketLines().size();
+
+                // Add all product
+                for(int i = 0; i < productNb; ++i){
+                    BasketLine basketLine = order.getBasketLines().get(i);
+
                     sbProducts.append(basketLine.getProduct().getName()).append("\n")
                             .append("x ").append(basketLine.getQuantity()).append(" ").append(basketLine.getProduct().getUnit())
                             .append("\n")
                             .append(Utils.decimalFormat.format(basketLine.getPrice())).append(" CHF")
+                            .append("\n\n");
+                }
+
+                // Add the discount
+                if(order.hasDiscount()){
+                    sbProducts
+                            .append(order.getBasketLines().get(productNb).getMainInfo())
+                            .append("\n")
+                            .append(Utils.decimalFormat.format(order.getBasketLines().get(productNb).getPrice())).append(" CHF")
                             .append("\n\n");
                 }
 

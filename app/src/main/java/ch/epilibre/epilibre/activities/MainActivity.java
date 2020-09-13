@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.Models.BasketLine;
+import ch.epilibre.epilibre.Models.DiscountLine;
 import ch.epilibre.epilibre.Models.Order;
 import ch.epilibre.epilibre.Models.Role;
 import ch.epilibre.epilibre.Models.User;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerViewAdapterBasketLine adapter;
     private RecyclerView recyclerViewBasketLines;
     private Button btnCheckout;
+    private Button btnDiscount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadNavigationDrawer();
 
         Button btnAddProduct = findViewById(R.id.mainBtnAddProduct);
+        btnDiscount = findViewById(R.id.mainBtnDiscount);
         btnCheckout = findViewById(R.id.mainBtnCheckout);
         tvTotalPrice = findViewById(R.id.mainTvTotalPrice);
         mainLayout = findViewById(R.id.mainLayout);
@@ -100,18 +103,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                String itemsOrtho = basketLines.size() > 1 ? getString(R.string.main_items_plurial) : getString(R.string.main_items_singular);
-                double totalPrice = 0;
-                for(BasketLine basketLine : basketLines){
-                    totalPrice += basketLine.getPrice();
-                }
+                // Nb real products (without discount lines)
+                int nbProducts = basketLines.get(basketLines.size()-1) instanceof DiscountLine ? basketLines.size() - 1 : basketLines.size();
 
-                final double finalTotalPrice = totalPrice;
+                String itemsOrtho = nbProducts > 1 ? getString(R.string.main_items_plurial) : getString(R.string.main_items_singular);
+
+                final double finalTotalPrice = Utils.getTotalPrice(basketLines);
                 new MaterialAlertDialogBuilder(MainActivity.this)
                         .setTitle("Validation")
                         .setMessage("Voulez vous vraiment valider le payement de "
-                                + basketLines.size() + " " + itemsOrtho + " pour un total de "
-                                + Utils.decimalFormat.format(totalPrice) + " CHF ?")
+                                + nbProducts + " " + itemsOrtho + " pour un total de "
+                                + Utils.decimalFormat.format(finalTotalPrice) + " CHF ?")
                         .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -128,6 +130,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         initRecyclerView();
+
+        btnDiscount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addDiscount();
+            }
+        });
+
     }
 
     /**
@@ -140,12 +150,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         updateBasket(basketLines);
     }
 
+    private void addDiscount(){
+        final double totalPrice = Utils.getTotalPrice(basketLines);
+        double discountPrice = Utils.calculateDiscount(totalPrice);
+
+        DiscountLine discountLine = new DiscountLine(null, 0, Utils.DISCOUNT_PERCENT, discountPrice);
+        basketLines.add(discountLine);
+        updateBasket(basketLines);
+
+        // hide the button to prevent to add more discount
+        btnDiscount.setVisibility(View.GONE);
+    }
+
     /**
      * Update the recycler view with basket lines
      * @param basketLines ArrayList of BasketLine
      */
     private void updateBasket(ArrayList<BasketLine> basketLines) {
-        adapter = new RecyclerViewAdapterBasketLine(MainActivity.this, recyclerBasketLayout, basketLines, tvTotalPrice, btnCheckout);
+        adapter = new RecyclerViewAdapterBasketLine(recyclerViewBasketLines, MainActivity.this, recyclerBasketLayout, basketLines, tvTotalPrice, btnCheckout, btnDiscount);
         recyclerViewBasketLines.setAdapter(adapter);
         recyclerViewBasketLines.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
@@ -155,8 +177,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Hide or show the checkout button
         if(basketLines.size() > 0){
             btnCheckout.setVisibility(View.VISIBLE);
+            // There is some basketLines and no discount (discount all the time at the end of the list)
+            if(!(basketLines.get(basketLines.size()-1) instanceof DiscountLine)){
+                btnDiscount.setVisibility(View.VISIBLE);
+            }
         }else{
             btnCheckout.setVisibility(View.GONE);
+            btnDiscount.setVisibility(View.GONE);
         }
     }
 
@@ -322,7 +349,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case LAUNCH_PRODUCTS_ACTIVITY:
                 if(resultCode == Activity.RESULT_OK){
                     BasketLine basketLine = (BasketLine) data.getSerializableExtra("basketLine");
-                    basketLines.add(basketLine);
+
+                    if(basketLines.size() > 0 && basketLines.get(basketLines.size()-1) instanceof DiscountLine){
+                        DiscountLine discountLine = (DiscountLine) basketLines.get(basketLines.size()-1);
+                        basketLines.remove(basketLines.size()-1);
+                        basketLines.add(basketLine);
+                        addDiscount();
+                    }else{
+                        basketLines.add(basketLine);
+                    }
+
                     updateBasket(basketLines);
                 }
                 break;
@@ -375,7 +411,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         StringBuilder quantities = new StringBuilder();
         StringBuilder prices = new StringBuilder();
 
-        for(int i = 0; i < basketLines.size(); ++i){
+        boolean hasDiscount = false;
+        int endBasketLinesIndex = basketLines.size();
+
+        if(basketLines.get(basketLines.size()-1) instanceof DiscountLine){
+            hasDiscount = true;
+            endBasketLinesIndex = endBasketLinesIndex-1;
+        }
+
+        for(int i = 0; i < endBasketLinesIndex; ++i){
             // First element don't display the semicolon
             if(i > 0){
                 productsId.append(";");
@@ -394,6 +438,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         httpCheckoutRequest.addParam("productsId", productsId.toString());
         httpCheckoutRequest.addParam("quantities", quantities.toString());
         httpCheckoutRequest.addParam("prices", prices.toString());
+        if(hasDiscount){
+            httpCheckoutRequest.addParam("discountPrice", String.valueOf(basketLines.get(endBasketLinesIndex).getPrice()));
+        }
         httpCheckoutRequest.executeRequest(new RequestCallback() {
             @Override
             public void getResponse(String response) {
@@ -409,8 +456,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     String date = jsonObjectResource.getString("created_at");
                     String seller = jsonObjectResource.getString("seller");
                     double totalPrice = jsonObjectResource.getDouble("totalPrice");
+                    boolean hasDiscount = jsonObjectResource.getBoolean("hasDiscount");
+                    double discountPrice = jsonObjectResource.getDouble("discountPrice");
 
-                    Order order = new Order(date, seller, totalPrice, basketLinesBackup);
+                    Order order = new Order(date, seller, totalPrice, hasDiscount, discountPrice, basketLinesBackup);
                     Intent intentOrderDetails = new Intent(MainActivity.this, OrderDetails.class);
                     intentOrderDetails.putExtra("order", order);
                     intentOrderDetails.putExtra("fromCheckout", true);
@@ -425,7 +474,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void getErrorNoInternet(){ }
         });
     }
-
 
 
     /********* MENU MANAGEMENT *********/

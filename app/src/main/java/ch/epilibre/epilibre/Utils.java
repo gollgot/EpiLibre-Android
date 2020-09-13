@@ -23,6 +23,7 @@ public class Utils {
 
     public static final String APP_NAME = "EpiLibre";
     public static  final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+    public static final int DISCOUNT_PERCENT = 10;
 
     /**
      * Hash a string with SHA-256 algorithm
@@ -103,12 +104,40 @@ public class Utils {
         button.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
     }
 
-    public static void updateTotalPrice(ArrayList<BasketLine> basketLines, TextView tvTotalPrice){
+    /**
+     * Return the total price of all basketLines present in the ArrayList
+     * @param basketLines All the BasketLine
+     * @return The total price
+     */
+    public static double getTotalPrice(ArrayList<BasketLine> basketLines){
         double totalPrice = 0;
         for(BasketLine basketLine : basketLines){
             totalPrice += basketLine.getPrice();
         }
+
+        return totalPrice;
+    }
+
+    /**
+     * Update the TextView with the total price of all basket lines
+     * @param basketLines ArrayList of all BasketLines
+     * @param tvTotalPrice The textview we want to update
+     */
+    public static void updateTotalPrice(ArrayList<BasketLine> basketLines, TextView tvTotalPrice){
+        final double totalPrice = getTotalPrice(basketLines);
         tvTotalPrice.setText("Total: " + Utils.decimalFormat.format(totalPrice) + " CHF");
+    }
+
+    /**
+     * Calculate a discount price relative to the static percent value in UTILS
+     * /!\ return a negative number that represent the discount
+     * @param price The price
+     * @return A negative number that represents the discount
+     */
+    public static double calculateDiscount(double price){
+        double discountPrice = (DISCOUNT_PERCENT * price / 100) * -1; // * -1 because we want a negative number to reduce the total price
+        // Price rounded to the lowest 0.05 e.g: 0.94 -> 0.90
+        return Math.ceil(discountPrice * 20.0) / 20.0;
     }
 
 }
