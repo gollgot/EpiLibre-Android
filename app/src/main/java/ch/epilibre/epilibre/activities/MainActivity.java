@@ -249,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if (user.getRole() == Role.ADMIN) {
             itemUsers.setVisible(false);
             itemUsersPending.setVisible(false);
+            itemHistoricPrices.setVisible(false);
         }
         // SUPER_ADMIN restriction
         else if(user.getRole() == Role.SUPER_ADMIN){

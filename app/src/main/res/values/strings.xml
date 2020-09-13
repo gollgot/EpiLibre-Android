@@ -77,4 +77,5 @@
     <string name="profile_update_successful">Votre profile a bien été mis à jour</string>
     <string name="profile_email_already_used">Cette adresse est déjà utilisée</string>
     <string name="users_main_title">Utilisateurs</string>
+    <string name="users_edit_main_title">Edition d\'utilisateur</string>
 </resources>

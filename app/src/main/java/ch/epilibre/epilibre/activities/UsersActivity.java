@@ -1,9 +1,14 @@
 package ch.epilibre.epilibre.activities;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,11 +17,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Config;
@@ -31,6 +39,7 @@ import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterUsers;
 
 public class UsersActivity extends AppCompatActivity {
 
+    private static final int LAUNCH_USERS_EDIT_ACTIVITY = 1;
     private RelativeLayout mainLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -114,7 +123,7 @@ public class UsersActivity extends AppCompatActivity {
                 // Create the recycler view
                 RecyclerView recyclerView = findViewById(R.id.usersRecycler);
                 RelativeLayout recyclerLayout = findViewById(R.id.recyclerUsersLayout);
-                RecyclerViewAdapterUsers adapter = new RecyclerViewAdapterUsers(UsersActivity.this, recyclerLayout, users);
+                RecyclerViewAdapterUsers adapter = new RecyclerViewAdapterUsers(UsersActivity.this, recyclerLayout, users, UsersActivity.this);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(UsersActivity.this));
                 swipeRefreshLayout.setRefreshing(false);
@@ -131,5 +140,32 @@ public class UsersActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * Start with result the usersEditActivity (called from the RecyclerViewAdapterUsers)
+     * @param user The User to edit
+     */
+    public void startUsersEditActivity(User user){
+        Intent intent = new Intent(UsersActivity.this, UsersEditActivity.class);
+        intent.putExtra("user", user);
+        startActivityForResult(intent, LAUNCH_USERS_EDIT_ACTIVITY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode){
+            // Came back from ProductEditActivity
+            case LAUNCH_USERS_EDIT_ACTIVITY:
+                // Result OK
+                if(resultCode == Activity.RESULT_OK){
+                    String strUser = data.getStringExtra("strUser");
+                    Snackbar.make(mainLayout, strUser + " " + getString(R.string.products_admin_edit_successful), Snackbar.LENGTH_SHORT).show();
+                    initRecyclerView();
+                }
+                break;
+        }
     }
 }

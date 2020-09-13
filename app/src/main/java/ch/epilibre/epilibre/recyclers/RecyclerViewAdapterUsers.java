@@ -2,6 +2,7 @@ package ch.epilibre.epilibre.recyclers;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,9 @@ import java.util.ArrayList;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.Models.User;
 import ch.epilibre.epilibre.R;
+import ch.epilibre.epilibre.activities.OrderDetails;
+import ch.epilibre.epilibre.activities.UsersActivity;
+import ch.epilibre.epilibre.activities.UsersEditActivity;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
 
@@ -55,11 +59,13 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
     private Context context;
     private ViewGroup layout;
     private ArrayList<User> users = new ArrayList<>();
+    private UsersActivity usersActivity;
 
-    public RecyclerViewAdapterUsers(Context context, ViewGroup layout, ArrayList<User> users) {
+    public RecyclerViewAdapterUsers(Context context, ViewGroup layout, ArrayList<User> users, UsersActivity usersActivity) {
         this.context = context;
         this.layout = layout;
         this.users = users;
+        this.usersActivity = usersActivity;
     }
 
     @NonNull
@@ -76,11 +82,26 @@ public class RecyclerViewAdapterUsers extends RecyclerView.Adapter<RecyclerViewA
         holder.tvFirstname.setText(users.get(position).getFirstname());
         holder.tvLastname.setText(users.get(position).getLastname());
         holder.tvRole.setText(users.get(position).getRolePretty());
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usersActivity.startUsersEditActivity(users.get(position));
+            }
+        });
+
+        holder.btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usersActivity.startUsersEditActivity(users.get(position));
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return users.size();
     }
+
 
 }

@@ -14,7 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.UsersActivity"
+        <activity android:name=".activities.UsersEditActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppThemeNoActionBar" />
+        <activity
+            android:name=".activities.UsersActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppThemeNoActionBar" />
         <activity

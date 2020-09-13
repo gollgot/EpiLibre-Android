@@ -24,5 +24,8 @@ public class ConfigExample {
     public static String API_PRODUCTS_UPDATE(int product_id){
         return "";
     }
+    public static String API_USERS_UPDATE(int user_id){
+        return "";
+    }
 
 }
