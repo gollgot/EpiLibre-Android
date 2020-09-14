@@ -15,6 +15,7 @@ public class ConfigExample {
     public final static String API_HISTORIC_PRICES_NOT_SEEN_COUNT= "";
     public final static String API_HISTORIC_PRICES_TOGGLE_SEEN= "";
     public final static String API_PROFILE = "";
+    public final static String API_PROFILE_PASSWORD = "";
     public static String API_USERS_CONFIRM(int user_id){
         return "";
     }

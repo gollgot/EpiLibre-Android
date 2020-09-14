@@ -1,5 +1,6 @@
 package ch.epilibre.epilibre.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -31,6 +32,8 @@ import ch.epilibre.epilibre.http.RequestCallback;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private static final int LAUNCH_CHANGE_PASSWORD_ACTIVITY = 1;
+
     private RelativeLayout layout;
     private SessionManager sessionManager;
     private ProgressBar loader;
@@ -57,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
         final TextInputLayout etEmail = findViewById(R.id.profileEtEmail);
         TextInputLayout etRole = findViewById(R.id.profileEtRole);
         Button btnEdit = findViewById(R.id.profileBtnEdit);
+        Button btnChangePassword = findViewById(R.id.profileBtnChangePassword);
 
         // Fill all edit text
         etFirstName.getEditText().setText(sessionManager.getUser().getFirstname());
@@ -68,7 +72,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Fetch all old values
         fetchOldValues(etFirstName, etLastName, etEmail);
 
-        // Button edit click
+        // Button edit clicked
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,11 +88,35 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // Button change password clicked
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, ChangePasswordActivity.class);
+                startActivityForResult(intent, LAUNCH_CHANGE_PASSWORD_ACTIVITY);
+            }
+        });
+
     }
 
     @Override
     public void onBackPressed() {
         returnResultToPreviousActivity();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode){
+            // Came back from ProductEditActivity
+            case LAUNCH_CHANGE_PASSWORD_ACTIVITY:
+                // Result OK
+                if(resultCode == Activity.RESULT_OK){
+                    Snackbar.make(layout, getString(R.string.profile_pass_change_successful), Snackbar.LENGTH_LONG).show();
+                }
+                break;
+        }
     }
 
     /**
