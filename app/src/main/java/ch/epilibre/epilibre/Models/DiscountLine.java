@@ -4,24 +4,24 @@ import java.io.Serializable;
 
 public class DiscountLine extends BasketLine implements Serializable {
 
-    private int percent;
+    private Discount discount;
 
-    public DiscountLine(Product product, double quantity, int percent, double price) {
+    public DiscountLine(Product product, double quantity, Discount discount, double price) {
         super(product, quantity, price);
-        this.percent = percent;
+        this.discount = discount;
     }
 
-    public int getPercent() {
-        return percent;
+    public Discount getDiscount() {
+        return discount;
     }
 
     @Override
     public String getMainInfo() {
-        return "Rabais collaborateur";
+        return discount.getInfo();
     }
 
     @Override
     public String getDetails() {
-        return percent + "%";
+        return discount.getPercent() + "%";
     }
 }

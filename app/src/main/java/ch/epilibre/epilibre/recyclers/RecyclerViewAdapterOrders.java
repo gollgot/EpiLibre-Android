@@ -2,6 +2,7 @@ package ch.epilibre.epilibre.recyclers;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,11 +61,12 @@ public class RecyclerViewAdapterOrders extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         int nbProducts = orders.get(position).getBasketLines().size();
+
         if(orders.get(position).hasDiscount()){
             --nbProducts;
         }
 
-        String itemsOrtho = orders.get(position).getBasketLines().size() > 1 ? context.getString(R.string.main_items_plurial) : context.getString(R.string.main_items_singular);
+        String itemsOrtho = nbProducts > 1 ? context.getString(R.string.main_items_plurial) : context.getString(R.string.main_items_singular);
 
         holder.tvDate.setText(orders.get(position).getDate());
         holder.tvSeller.setText(orders.get(position).getSeller());

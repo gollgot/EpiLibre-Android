@@ -18,6 +18,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.Models.BasketLine;
+import ch.epilibre.epilibre.Models.Discount;
 import ch.epilibre.epilibre.Models.DiscountLine;
 import ch.epilibre.epilibre.Models.Order;
 import ch.epilibre.epilibre.Models.Role;
@@ -41,11 +43,14 @@ import ch.epilibre.epilibre.Models.User;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.Utils;
+import ch.epilibre.epilibre.dialogs.AddToBasketDialog;
+import ch.epilibre.epilibre.dialogs.DiscountDialog;
+import ch.epilibre.epilibre.dialogs.DiscountDialogListener;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterBasketLine;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DiscountDialogListener {
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
@@ -64,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerViewAdapterBasketLine adapter;
     private RecyclerView recyclerViewBasketLines;
     private Button btnCheckout;
-    private Button btnDiscount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadNavigationDrawer();
 
         Button btnAddProduct = findViewById(R.id.mainBtnAddProduct);
-        btnDiscount = findViewById(R.id.mainBtnDiscount);
         btnCheckout = findViewById(R.id.mainBtnCheckout);
         tvTotalPrice = findViewById(R.id.mainTvTotalPrice);
         mainLayout = findViewById(R.id.mainLayout);
@@ -103,41 +106,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
 
-                // Nb real products (without discount lines)
-                int nbProducts = basketLines.get(basketLines.size()-1) instanceof DiscountLine ? basketLines.size() - 1 : basketLines.size();
-
-                String itemsOrtho = nbProducts > 1 ? getString(R.string.main_items_plurial) : getString(R.string.main_items_singular);
-
                 final double finalTotalPrice = Utils.getTotalPrice(basketLines);
-                new MaterialAlertDialogBuilder(MainActivity.this)
-                        .setTitle("Validation")
-                        .setMessage("Voulez vous vraiment valider le payement de "
-                                + nbProducts + " " + itemsOrtho + " pour un total de "
-                                + Utils.decimalFormat.format(finalTotalPrice) + " CHF ?")
-                        .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                checkout(finalTotalPrice);
-                            }
-                        })
-                        .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        })
-                        .show();
+
+                // Launch the discountDialog, claculate the discount price and after valid the dialog, call the "applyDiscount" callback method in this class
+                DiscountDialog discountDialog = new DiscountDialog(MainActivity.this, finalTotalPrice);
+                discountDialog.show(((FragmentActivity)MainActivity.this).getSupportFragmentManager(), "main_discount_dialog");
             }
         });
 
 
         initRecyclerView();
-
-        btnDiscount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addDiscount();
-            }
-        });
-
     }
 
     /**
@@ -150,40 +128,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         updateBasket(basketLines);
     }
 
-    private void addDiscount(){
-        final double totalPrice = Utils.getTotalPrice(basketLines);
-        double discountPrice = Utils.calculateDiscount(totalPrice);
-
-        DiscountLine discountLine = new DiscountLine(null, 0, Utils.DISCOUNT_PERCENT, discountPrice);
-        basketLines.add(discountLine);
-        updateBasket(basketLines);
-
-        // hide the button to prevent to add more discount
-        btnDiscount.setVisibility(View.GONE);
-    }
-
     /**
      * Update the recycler view with basket lines
      * @param basketLines ArrayList of BasketLine
      */
     private void updateBasket(ArrayList<BasketLine> basketLines) {
-        adapter = new RecyclerViewAdapterBasketLine(recyclerViewBasketLines, MainActivity.this, recyclerBasketLayout, basketLines, tvTotalPrice, btnCheckout, btnDiscount);
+        adapter = new RecyclerViewAdapterBasketLine(recyclerViewBasketLines, MainActivity.this, recyclerBasketLayout, basketLines, tvTotalPrice, btnCheckout);
         recyclerViewBasketLines.setAdapter(adapter);
         recyclerViewBasketLines.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
         // Update total price
         Utils.updateTotalPrice(basketLines, tvTotalPrice);
 
-        // Hide or show the checkout button
+        // Display the checkout button or not
         if(basketLines.size() > 0){
             btnCheckout.setVisibility(View.VISIBLE);
-            // There is some basketLines and no discount (discount all the time at the end of the list)
-            if(!(basketLines.get(basketLines.size()-1) instanceof DiscountLine)){
-                btnDiscount.setVisibility(View.VISIBLE);
-            }
         }else{
             btnCheckout.setVisibility(View.GONE);
-            btnDiscount.setVisibility(View.GONE);
         }
     }
 
@@ -357,16 +318,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case LAUNCH_PRODUCTS_ACTIVITY:
                 if(resultCode == Activity.RESULT_OK){
                     BasketLine basketLine = (BasketLine) data.getSerializableExtra("basketLine");
-
-                    if(basketLines.size() > 0 && basketLines.get(basketLines.size()-1) instanceof DiscountLine){
-                        DiscountLine discountLine = (DiscountLine) basketLines.get(basketLines.size()-1);
-                        basketLines.remove(basketLines.size()-1);
-                        basketLines.add(basketLine);
-                        addDiscount();
-                    }else{
-                        basketLines.add(basketLine);
-                    }
-
+                    basketLines.add(basketLine);
                     updateBasket(basketLines);
                 }
                 break;
@@ -413,17 +365,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Send http request to checkout and reset the basket if successful
      * @param totalPrice The total price of the order
      */
-    private void checkout(double totalPrice) {
-        // Create our 2 string for represent productsId and quantities => e.g: 1,2,3
+    private void checkout(boolean hasDiscount, double totalPrice) {
+        // Create our 3 strings for represent productsId quantities and prices => e.g: 1,2,3
         StringBuilder productsId = new StringBuilder();
         StringBuilder quantities = new StringBuilder();
         StringBuilder prices = new StringBuilder();
 
-        boolean hasDiscount = false;
         int endBasketLinesIndex = basketLines.size();
-
-        if(basketLines.get(basketLines.size()-1) instanceof DiscountLine){
-            hasDiscount = true;
+        // Check if has discount
+        if(hasDiscount){
             endBasketLinesIndex = endBasketLinesIndex-1;
         }
 
@@ -448,6 +398,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         httpCheckoutRequest.addParam("prices", prices.toString());
         if(hasDiscount){
             httpCheckoutRequest.addParam("discountPrice", String.valueOf(basketLines.get(endBasketLinesIndex).getPrice()));
+            httpCheckoutRequest.addParam("discountInfo", String.valueOf(basketLines.get(endBasketLinesIndex).getMainInfo()));
+            httpCheckoutRequest.addParam("discountPercent", String.valueOf(((DiscountLine)basketLines.get(endBasketLinesIndex)).getDiscount().getPercent()));
         }
         httpCheckoutRequest.executeRequest(new RequestCallback() {
             @Override
@@ -466,8 +418,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     double totalPrice = jsonObjectResource.getDouble("totalPrice");
                     boolean hasDiscount = jsonObjectResource.getBoolean("hasDiscount");
                     double discountPrice = jsonObjectResource.getDouble("discountPrice");
+                    String discountInfo = jsonObjectResource.getString("discountInfo");
+                    int discountPercent = jsonObjectResource.getInt("discountPercent");
 
-                    Order order = new Order(date, seller, totalPrice, hasDiscount, discountPrice, basketLinesBackup);
+                    Discount discount = hasDiscount ? new Discount(discountPercent, discountInfo) : null;
+
+                    Order order = new Order(date, seller, totalPrice, discountPrice, discount, basketLinesBackup);
                     Intent intentOrderDetails = new Intent(MainActivity.this, OrderDetails.class);
                     intentOrderDetails.putExtra("order", order);
                     intentOrderDetails.putExtra("fromCheckout", true);
@@ -555,5 +511,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //close navigation drawer
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void applyDiscount(final DiscountLine discountLine) {
+        final boolean hasDiscount = discountLine != null;
+        int nbProducts = basketLines.size();
+        double totalPrice = Utils.getTotalPrice(basketLines);
+        String itemsOrtho = basketLines.size() > 1 ? getString(R.string.main_items_plurial) : getString(R.string.main_items_singular);
+
+        if(hasDiscount){
+            totalPrice += discountLine.getPrice();
+        }
+
+        final double finalTotalPrice = totalPrice;
+        new MaterialAlertDialogBuilder(MainActivity.this)
+                .setTitle("Validation")
+                .setMessage("Voulez vous vraiment valider le payement de "
+                        + nbProducts + " " + itemsOrtho + " pour un total de "
+                        + Utils.decimalFormat.format(finalTotalPrice) + " CHF ?")
+                .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(hasDiscount){
+                            basketLines.add(discountLine);
+                        }
+                        checkout(hasDiscount, finalTotalPrice);
+                    }
+                })
+                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) { }
+                })
+                .show();
+
     }
 }

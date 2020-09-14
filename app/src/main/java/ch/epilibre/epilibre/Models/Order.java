@@ -8,16 +8,16 @@ public class Order implements Serializable {
     private String date;
     private String seller;
     private double totalPrice;
-    private boolean hasDiscount;
     private double discountPrice;
+    private Discount discount;
     private ArrayList<BasketLine> basketLines;
 
-    public Order(String date, String seller, double totalPrice, boolean hasDiscount, double discountPrice, ArrayList<BasketLine> basketLines) {
+    public Order(String date, String seller, double totalPrice, double discountPrice, Discount discount, ArrayList<BasketLine> basketLines) {
         this.date = date;
         this.seller = seller;
         this.totalPrice = totalPrice;
-        this.hasDiscount = hasDiscount;
         this.discountPrice = discountPrice;
+        this.discount = discount;
         this.basketLines = basketLines;
     }
 
@@ -40,10 +40,14 @@ public class Order implements Serializable {
     }
 
     public boolean hasDiscount() {
-        return hasDiscount;
+        return discount != null;
     }
 
     public double getDiscountPrice() {
         return discountPrice;
+    }
+
+    public Discount getDiscount() {
+        return discount;
     }
 }

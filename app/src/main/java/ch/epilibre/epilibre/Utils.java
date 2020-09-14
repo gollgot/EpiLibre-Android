@@ -18,12 +18,17 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Models.BasketLine;
+import ch.epilibre.epilibre.Models.Discount;
 
 public class Utils {
 
     public static final String APP_NAME = "EpiLibre";
     public static  final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-    public static final int DISCOUNT_PERCENT = 10;
+    public static final Discount discount = new Discount(Utils.STUDENT_DISCOUNT_PERCENT, "Rabais collaborateur");
+
+    public static final int PHD_STUDENT_DISCOUNT_PERCENT = 5;
+    public static final int STUDENT_DISCOUNT_PERCENT = 10;
+    public static final int ASSOCIATE__DISCOUNT_PERCENT = 20;
 
     /**
      * Hash a string with SHA-256 algorithm
@@ -131,11 +136,12 @@ public class Utils {
     /**
      * Calculate a discount price relative to the static percent value in UTILS
      * /!\ return a negative number that represent the discount
+     * @param discount The Discount to apply
      * @param price The price
      * @return A negative number that represents the discount
      */
-    public static double calculateDiscount(double price){
-        double discountPrice = (DISCOUNT_PERCENT * price / 100) * -1; // * -1 because we want a negative number to reduce the total price
+    public static double calculateDiscount(Discount discount, double price){
+        double discountPrice = (discount.getPercent() * price / 100) * -1; // * -1 because we want a negative number to reduce the total price
         // Price rounded to the lowest 0.05 e.g: 0.94 -> 0.90
         return Math.ceil(discountPrice * 20.0) / 20.0;
     }

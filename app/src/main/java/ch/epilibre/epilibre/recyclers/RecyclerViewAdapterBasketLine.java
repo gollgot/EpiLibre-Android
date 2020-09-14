@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ch.epilibre.epilibre.Models.BasketLine;
+import ch.epilibre.epilibre.Models.Discount;
 import ch.epilibre.epilibre.Models.DiscountLine;
 import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.R;
@@ -47,16 +48,14 @@ public class RecyclerViewAdapterBasketLine extends RecyclerView.Adapter<Recycler
     private ArrayList<BasketLine> basketLines;
     private TextView tvTotalPrice;
     private Button btnCheckout;
-    private Button btnDiscount;
 
-    public RecyclerViewAdapterBasketLine(RecyclerView recyclerView, Context context, ViewGroup layout, ArrayList<BasketLine> basketLines, TextView tvTotalPrice, Button btnCheckout, Button btnDiscount) {
+    public RecyclerViewAdapterBasketLine(RecyclerView recyclerView, Context context, ViewGroup layout, ArrayList<BasketLine> basketLines, TextView tvTotalPrice, Button btnCheckout) {
        this.recyclerView = recyclerView;
         this.context = context;
         this.layout = layout;
         this.basketLines = basketLines;
         this.tvTotalPrice = tvTotalPrice;
         this.btnCheckout = btnCheckout;
-        this.btnDiscount = btnDiscount;
     }
 
     @NonNull
@@ -78,50 +77,14 @@ public class RecyclerViewAdapterBasketLine extends RecyclerView.Adapter<Recycler
             @Override
             public void onClick(View view) {
 
-                // Removed a discount line -> Discount button can comeback again
-                if(basketLines.get(position) instanceof DiscountLine){
-                    btnDiscount.setVisibility(View.VISIBLE);
-                }
-
                 // Update the list
                 basketLines.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, basketLines.size());
 
-
-                // CAREFUL -> There is a discount ! Need to update it !
-                if(basketLines.size() > 1){
-                    int discountPosition = basketLines.size() - 1;
-                    if(basketLines.get(discountPosition) instanceof DiscountLine){
-                        ArrayList<BasketLine> basketLinesWithoutDiscountLine = new ArrayList<>(basketLines);
-                        basketLinesWithoutDiscountLine.remove(discountPosition);
-                        // Calculate the new discount (after the basketline remove and without the discount line that will falsify the total price)
-                        final double totalPrice = Utils.getTotalPrice(basketLinesWithoutDiscountLine);
-                        double discountPrice = Utils.calculateDiscount(totalPrice);
-                        DiscountLine newDiscountLine = new DiscountLine(null, 0, Utils.DISCOUNT_PERCENT, discountPrice);
-
-                        // Remove the old discount and add the new one
-                        basketLines.remove(discountPosition);
-                        basketLines.add(newDiscountLine);
-
-                        // Fetch the RecyclerView's viewHolder that correspond to the line we want to update (the discount one)
-                        // And setup its info
-                        RecyclerViewAdapterBasketLine.ViewHolder viewHolder = (RecyclerViewAdapterBasketLine.ViewHolder) recyclerView.findViewHolderForAdapterPosition(discountPosition);
-                        viewHolder.tvProduct.setText(basketLines.get(discountPosition).getMainInfo());
-                        viewHolder.tvQuantity.setText(basketLines.get(discountPosition).getDetails());
-                        viewHolder.tvPrice.setText(Utils.decimalFormat.format(basketLines.get(discountPosition).getPrice()) + " CHF");
-                    }
-                }
-
-                // Hide the checkout button and discount if the basket is empty
+                // Hide the checkout button if the basket is empty
                 if(basketLines.size() == 0){
                     btnCheckout.setVisibility(View.GONE);
-                    btnDiscount.setVisibility(View.GONE);
-                }
-                // There is only one discount line -> remove it
-                else if(basketLines.size() == 1 && basketLines.get(0) instanceof DiscountLine){
-                    basketLines.remove(0);
-                    notifyItemRangeChanged(position, basketLines.size());
                 }
 
                 // Update total price

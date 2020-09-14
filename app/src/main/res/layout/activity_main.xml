@@ -29,17 +29,6 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
-        <!-- Discount button -->
-        <Button
-            android:id="@+id/mainBtnDiscount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:text="Rabais"
-            app:icon="@drawable/ic_money"
-            app:iconTint="@color/white"
-            android:visibility="gone"/>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

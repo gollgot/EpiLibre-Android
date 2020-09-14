@@ -117,6 +117,8 @@ public class OrderDetails extends AppCompatActivity {
                     sbProducts
                             .append(order.getBasketLines().get(productNb).getMainInfo())
                             .append("\n")
+                            .append(order.getDiscount().getPercent() + "%")
+                            .append("\n")
                             .append(Utils.decimalFormat.format(order.getBasketLines().get(productNb).getPrice())).append(" CHF")
                             .append("\n\n");
                 }

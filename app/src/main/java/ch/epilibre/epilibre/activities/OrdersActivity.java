@@ -45,6 +45,7 @@ import java.util.prefs.Preferences;
 import ch.epilibre.epilibre.Config;
 import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.Models.BasketLine;
+import ch.epilibre.epilibre.Models.Discount;
 import ch.epilibre.epilibre.Models.DiscountLine;
 import ch.epilibre.epilibre.Models.Order;
 import ch.epilibre.epilibre.Models.Product;
@@ -141,6 +142,8 @@ public class OrdersActivity extends AppCompatActivity {
                         double totalPrice = jsonObjectResource.getDouble("totalPrice");
                         boolean hasDiscount = jsonObjectResource.getBoolean("hasDiscount");
                         double discountPrice = jsonObjectResource.getDouble("discountPrice");
+                        String discountInfo = jsonObjectResource.getString("discountInfo");
+                        int discountPercent = jsonObjectResource.getInt("discountPercent");
 
                         // Extract basketLine / product info
                         ArrayList<BasketLine> basketLines = new ArrayList<>();
@@ -151,11 +154,13 @@ public class OrdersActivity extends AppCompatActivity {
                             basketLines.add(new BasketLine(product, jsonObjectProduct.getDouble("quantity"), jsonObjectProduct.getDouble("price")));
                         }
 
+                        // create the discount and add it to basketLines if exists
+                        Discount discount = hasDiscount ? new Discount(discountPercent, discountInfo) : null;
                         if(hasDiscount){
-                            basketLines.add(new DiscountLine(null, 0, 10, discountPrice));
+                            basketLines.add(new DiscountLine(null, 0, discount, discountPrice));
                         }
 
-                        orders.add(new Order(date, seller, totalPrice, hasDiscount, discountPrice, basketLines));
+                        orders.add(new Order(date, seller, totalPrice, discountPrice, discount, basketLines));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
