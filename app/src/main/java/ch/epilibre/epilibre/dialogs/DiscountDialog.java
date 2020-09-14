@@ -32,6 +32,11 @@ public class DiscountDialog extends AppCompatDialogFragment {
     ArrayList<Discount> discounts;
 
 
+    /**
+     * Constructor for create the discount select dialog. Also define here all the available discounts
+     * @param mainActivity The context
+     * @param totalPrice The total price without discount
+     */
     public DiscountDialog(MainActivity mainActivity, double totalPrice){
         this.mainActivity = mainActivity;
         this.totalPrice = totalPrice;
