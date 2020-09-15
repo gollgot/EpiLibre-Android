@@ -34,6 +34,7 @@
                 android:id="@+id/recyclerProductsTvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 tools:text="Graine de pavot" />
 
@@ -51,11 +52,13 @@
                 android:layout_height="wrap_content"
                 tools:text="8.50 CHF / kg" />
 
+            <!-- We dont manage stock now ! Maybe to remove later -->
             <TextView
                 android:id="@+id/recyclerProductsTvStock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="0.80 kg en stock" />
+                tools:text="0.80 kg en stock"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
