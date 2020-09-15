@@ -60,7 +60,7 @@
     <string name="menu_send_send_item">Envoyer</string>
     <string name="order_details_no_message_client_found">Aucune application ne supporte l\'envoi de message</string>
     <string name="menu_download_download_item">Télécharger en CSV</string>
-    <string name="orders_file_saved_download">Fichier sauver dans les téléchargements</string>
+    <string name="orders_file_saved_download">Fichier sauvé dans les téléchargements</string>
     <string name="orders_open">Ouvrir</string>
     <string name="orders_permission_refused_msg">Impossible de télécharger les ventes sans autorisation</string>
     <string name="drawer_item_historic_prices">Historique des prix</string>
