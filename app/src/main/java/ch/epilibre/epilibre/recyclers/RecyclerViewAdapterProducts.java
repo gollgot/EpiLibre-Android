@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -84,7 +85,7 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         String unit = products.get(position).getUnit();
         if(products.get(position).getImage() == null){
             holder.image.setImageResource(R.drawable.no_image);
@@ -102,6 +103,24 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
             public void onClick(View view) {
                 AddToBasketDialog addToBasketDialog = new AddToBasketDialog(products.get(position));
                 addToBasketDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "product_add_dialog");
+            }
+        });
+
+        // tvName must be cut if too long and finish by "..." (ellipsize), long click will display the full name
+        holder.tvName.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(view.getContext(), holder.tvName.getText(), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        // tvCategory must be cut if too long and finish by "..." (ellipsize), long click will display the full name
+        holder.tvCategory.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Toast.makeText(view.getContext(), holder.tvCategory.getText(), Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
     }

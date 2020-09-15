@@ -25,8 +25,9 @@
             android:layout_marginEnd="20dp"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <!-- to refactor later the layout width if possible ... -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -35,6 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textStyle="bold"
                 tools:text="Graine de pavot" />
 
@@ -43,6 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textStyle="italic"
                 tools:text="Graines" />
 
@@ -57,26 +62,29 @@
                 android:id="@+id/recyclerProductsTvStock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="0.80 kg en stock"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:text="0.80 kg en stock" />
 
         </LinearLayout>
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/recyclerProductsBtnAdd"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="20dp"
-            android:padding="10dp"
-            android:scaleType="fitXY"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/btn_light_salmon"
-            app:srcCompat="@drawable/ic_add_shopping" />
+            <ImageButton
+                android:id="@+id/recyclerProductsBtnAdd"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
+                android:scaleType="fitXY"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/btn_light_salmon"
+                app:srcCompat="@drawable/ic_add_shopping" />
+
+        </RelativeLayout>
 
 
     </LinearLayout>
