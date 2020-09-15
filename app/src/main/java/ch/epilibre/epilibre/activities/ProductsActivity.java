@@ -38,12 +38,12 @@ import ch.epilibre.epilibre.CustomNavigationCallback;
 import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.Utils;
-import ch.epilibre.epilibre.dialogs.CustomDialogButtonListener;
+import ch.epilibre.epilibre.dialogs.AddToBasketDialogListener;
 import ch.epilibre.epilibre.http.HttpRequest;
 import ch.epilibre.epilibre.http.RequestCallback;
 import ch.epilibre.epilibre.recyclers.RecyclerViewAdapterProducts;
 
-public class ProductsActivity extends AppCompatActivity implements CustomDialogButtonListener {
+public class ProductsActivity extends AppCompatActivity implements AddToBasketDialogListener {
 
     private RelativeLayout layout;
     private SwipeRefreshLayout swipeRefreshLayout;

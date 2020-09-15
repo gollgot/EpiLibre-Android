@@ -32,7 +32,7 @@ public class AddToBasketDialog extends AppCompatDialogFragment {
     private TextView tvProduct;
     private TextInputLayout etQuantity;
 
-    private CustomDialogButtonListener customDialogButtonListener;
+    private AddToBasketDialogListener addToBasketDialogListener;
 
     /**
      * Constructor
@@ -113,7 +113,7 @@ public class AddToBasketDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View onClick) {
                 if(inputsAreCorrect()){
-                    customDialogButtonListener.addToBasket(product, switchBtnContainer.isChecked(), etWeight, etQuantity);
+                    addToBasketDialogListener.addToBasket(product, switchBtnContainer.isChecked(), etWeight, etQuantity);
                 }
             }
         });
@@ -137,7 +137,7 @@ public class AddToBasketDialog extends AppCompatDialogFragment {
         super.onAttach(context);
 
         try {
-            customDialogButtonListener = (CustomDialogButtonListener) context;
+            addToBasketDialogListener = (AddToBasketDialogListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implements CustomDialogButtonListener");
         }
@@ -168,6 +168,11 @@ public class AddToBasketDialog extends AppCompatDialogFragment {
             // Container weight is empty
             if(TextUtils.isEmpty(strContainerWeight)){
                 etWeight.setError("Poids requis");
+                result = false;
+            }
+            // Product quantity empty
+            else if(TextUtils.isEmpty(strProductWeight)){
+                etQuantity.setError("Quantité requise");
                 result = false;
             }
             // Container weight not empty

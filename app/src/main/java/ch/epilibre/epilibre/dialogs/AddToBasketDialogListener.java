@@ -4,7 +4,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import ch.epilibre.epilibre.Models.Product;
 
-public interface CustomDialogButtonListener {
+public interface AddToBasketDialogListener {
     /**
      * Add to basket button clicked from the AddToBasketDialog
      * @param product Product we want to add to the basket
