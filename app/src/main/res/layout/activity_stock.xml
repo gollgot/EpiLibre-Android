@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/stockLayout"
+    tools:context=".activities.StockActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/stockToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        app:titleTextColor="@color/white"
+        android:background="@color/colorPrimary"
+        app:theme="@style/AppTheme.Toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grayLight"
+        android:orientation="vertical"
+        android:layout_below="@id/stockToolbar">
+
+        <!-- Spinner categories -->
+        <RelativeLayout
+            android:id="@+id/stockSpinnerLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:padding="6dp"
+            android:background="@drawable/recycler_list_item_shape"
+            android:layout_gravity="center_horizontal">
+            <Spinner
+                android:id="@+id/stockSpinnerCategories"
+                style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/stockTvNoResults"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            tools:text='Aucun résultat pour "xyz"'/>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1">
+
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/stockSwipeRefreshLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/stockToolbar">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:background="@color/grayLight"
+                    android:id="@+id/stockRecycler">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <Button
+            android:id="@+id/stockBtnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center_horizontal"
+            android:text="Envoyer"
+            app:icon="@drawable/ic_send"
+            app:iconTint="@color/white"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

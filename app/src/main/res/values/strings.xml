@@ -84,4 +84,6 @@
     <string name="change_password_main_title">Changement de mot de passe</string>
     <string name="profile_pass_change_successful">Le mot de passe à bien été modifié</string>
     <string name="change_password_incorrect_old_password">Ancien mot de passe incorrect</string>
+    <string name="drawer_item_stock">Stock</string>
+    <string name="stock_main_title">Stock</string>
 </resources>

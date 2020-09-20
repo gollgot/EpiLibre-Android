@@ -43,7 +43,6 @@ import ch.epilibre.epilibre.Models.User;
 import ch.epilibre.epilibre.R;
 import ch.epilibre.epilibre.SessionManager;
 import ch.epilibre.epilibre.Utils;
-import ch.epilibre.epilibre.dialogs.AddToBasketDialog;
 import ch.epilibre.epilibre.dialogs.DiscountDialog;
 import ch.epilibre.epilibre.dialogs.DiscountDialogListener;
 import ch.epilibre.epilibre.http.HttpRequest;
@@ -197,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MenuItem itemProducts = menuNav.findItem(R.id.drawer_menu__item_products);
         //MenuItem itemCategories = menuNav.findItem(R.id.drawer_menu__item_categories);
         MenuItem itemHistoricPrices = menuNav.findItem(R.id.drawer_menu__item_historic_prices);
+        MenuItem itemStock = menuNav.findItem(R.id.drawer_menu__item_stock);
 
         // SELLER RESTRICTION
         if(user.getRole() == Role.SELLER){
@@ -504,6 +504,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.drawer_menu__item_users:
                     Intent intentUsers = new Intent(MainActivity.this, UsersActivity.class);
                     startActivity(intentUsers);
+                    break;
+                case R.id.drawer_menu__item_stock:
+                    Intent intentStock = new Intent(MainActivity.this, StockActivity.class);
+                    startActivity(intentStock);
                     break;
             }
         }

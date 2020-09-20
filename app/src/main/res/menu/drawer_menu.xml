@@ -24,6 +24,10 @@
                 android:icon="@drawable/ic_money"
                 android:title="@string/drawer_item_historic_prices"
                 app:actionLayout="@layout/menu_counter"/>
+            <!-- Stock notify -->
+            <item android:id="@+id/drawer_menu__item_stock"
+                android:icon="@drawable/ic_announcement"
+                android:title="@string/drawer_item_stock" />
         </menu>
     </item>
 
