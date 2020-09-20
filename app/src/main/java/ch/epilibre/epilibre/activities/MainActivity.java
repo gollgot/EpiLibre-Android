@@ -195,13 +195,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MenuItem itemUsers = menuNav.findItem(R.id.drawer_menu__item_users);
         MenuItem itemUsersPending = menuNav.findItem(R.id.drawer_menu__item_users_pending);
         MenuItem itemProducts = menuNav.findItem(R.id.drawer_menu__item_products);
-        MenuItem itemCategories = menuNav.findItem(R.id.drawer_menu__item_categories);
+        //MenuItem itemCategories = menuNav.findItem(R.id.drawer_menu__item_categories);
         MenuItem itemHistoricPrices = menuNav.findItem(R.id.drawer_menu__item_historic_prices);
 
         // SELLER RESTRICTION
         if(user.getRole() == Role.SELLER){
             itemProducts.setVisible(false);
-            itemCategories.setVisible(false);
+            //itemCategories.setVisible(false);
             itemHistoricPrices.setVisible(false);
             itemUsers.setVisible(false);
             itemUsersPending.setVisible(false);

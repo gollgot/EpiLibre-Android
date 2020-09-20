@@ -11,9 +11,10 @@
                 android:icon="@drawable/ic_products"
                 android:title="@string/drawer_item_products" />
             <!-- Categories -->
+            <!--
             <item android:id="@+id/drawer_menu__item_categories"
                 android:icon="@drawable/ic_categories"
-                android:title="@string/drawer_item_categories"/>
+                android:title="@string/drawer_item_categories"/>-->
             <!-- Orders -->
             <item android:id="@+id/drawer_menu__item_orders"
                 android:icon="@drawable/ic_receipts"
