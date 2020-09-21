@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 final double finalTotalPrice = Utils.getTotalPrice(basketLines);
 
                 // Launch the discountDialog, claculate the discount price and after valid the dialog, call the "applyDiscount" callback method in this class
-                DiscountDialog discountDialog = new DiscountDialog(MainActivity.this, finalTotalPrice);
+                DiscountDialog discountDialog = new DiscountDialog(MainActivity.this, finalTotalPrice, basketLines);
                 discountDialog.show(((FragmentActivity)MainActivity.this).getSupportFragmentManager(), "main_discount_dialog");
             }
         });
