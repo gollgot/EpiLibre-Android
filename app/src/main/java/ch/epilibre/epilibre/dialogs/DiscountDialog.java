@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import java.util.ArrayList;
 
+import ch.epilibre.epilibre.Models.BasketLine;
 import ch.epilibre.epilibre.Models.Discount;
 import ch.epilibre.epilibre.Models.DiscountLine;
 import ch.epilibre.epilibre.R;
@@ -30,16 +31,19 @@ public class DiscountDialog extends AppCompatDialogFragment {
     private double totalPrice;
     private Spinner spinnerDiscount;
     ArrayList<Discount> discounts;
+    ArrayList<BasketLine> basketLines;
 
 
     /**
      * Constructor for create the discount select dialog. Also define here all the available discounts
      * @param mainActivity The context
      * @param totalPrice The total price without discount
+     * @param basketLines All basketLines in the basket
      */
-    public DiscountDialog(MainActivity mainActivity, double totalPrice){
+    public DiscountDialog(MainActivity mainActivity, double totalPrice, ArrayList<BasketLine> basketLines){
         this.mainActivity = mainActivity;
         this.totalPrice = totalPrice;
+        this.basketLines = basketLines;
         this.discounts = new ArrayList<>();
         discounts.add(new Discount(Utils.PHD_STUDENT_DISCOUNT_PERCENT, "Rabais doctorant"));
         discounts.add(new Discount(Utils.STUDENT_DISCOUNT_PERCENT, "Rabais étudiant"));
@@ -70,6 +74,14 @@ public class DiscountDialog extends AppCompatDialogFragment {
                         // Create the discount line if we choose a discount other wise it will be null
                         if(spinnerDiscount.getSelectedItemPosition() > 0){
                             Discount discountChoose = discounts.get(spinnerDiscount.getSelectedItemPosition()-1);
+
+                            // /!\ DONT APPLY DISCOUNTS ON CAUTIONS PRODUCT !!! A CAUTION IS A CAUTION /!\
+                            for(BasketLine basketLine : basketLines){
+                                if(basketLine.getProduct().getCategory().toLowerCase().equals("cautions")){
+                                    totalPrice -= basketLine.getProduct().getPrice();
+                                }
+                            }
+
                             double discountPrice = Utils.calculateDiscount(discountChoose, totalPrice);
 
                             discountLine = new DiscountLine(null, 0, discountChoose, discountPrice);
