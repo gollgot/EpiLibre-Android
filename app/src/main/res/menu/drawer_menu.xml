@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/drawer_group_shop">
+        <menu>
+            <!-- Products-->
+            <item android:id="@+id/drawer_menu__item_products"
+                android:icon="@drawable/ic_products"
+                android:title="@string/drawer_item_products" />
+            <!-- Categories -->
+            <!--
+            <item android:id="@+id/drawer_menu__item_categories"
+                android:icon="@drawable/ic_categories"
+                android:title="@string/drawer_item_categories"/>-->
+            <!-- Orders -->
+            <item android:id="@+id/drawer_menu__item_orders"
+                android:icon="@drawable/ic_receipts"
+                android:title="@string/drawer_item_orders" />
+            <!-- Historic prices -->
+            <item android:id="@+id/drawer_menu__item_historic_prices"
+                android:icon="@drawable/ic_money"
+                android:title="@string/drawer_item_historic_prices"
+                app:actionLayout="@layout/menu_counter"/>
+            <!-- Stock notify -->
+            <item android:id="@+id/drawer_menu__item_stock"
+                android:icon="@drawable/ic_announcement"
+                android:title="@string/drawer_item_stock" />
+        </menu>
+    </item>
+
+    <item android:title="@string/drawer_group_users">
+        <menu>
+            <!-- Pending user validation -->
+            <item android:id="@+id/drawer_menu__item_users_pending"
+                android:icon="@drawable/ic_person_add"
+                android:title="@string/users_pending_main_title"
+                app:actionLayout="@layout/menu_counter"/>
+            <!-- All Users -->
+            <item android:id="@+id/drawer_menu__item_users"
+                android:icon="@drawable/ic_users"
+                android:title="@string/drawer_item_users"/>
+        </menu>
+    </item>
+
+
+</menu>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.UsersPendingActivity"
+    android:id="@+id/usersPendingLayout">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/productEditToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        app:titleTextColor="@color/white"
+        android:background="@color/colorPrimary" />
+
+    <ScrollView
+        android:layout_below="@id/productEditToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/productEditLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+            <!-- Delete button -->
+            <Button
+                android:id="@+id/productEditBtnDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/redDelete"
+                android:text="@string/product_edit_delete"
+                android:drawableLeft="@drawable/ic_trash"
+                android:drawableTint="@color/white"/>
+
+            <!-- Last modification -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/product_edit_last_update"
+                android:textSize="18sp"/>
+            <TextView
+                android:id="@+id/productEditTvLastUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="John Doe, le 12.08.2020 13:30"
+                android:textSize="14sp" />
+
+            <!-- Edit text Name -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/productEditEtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/product_hint_name"
+                app:startIconDrawable="@drawable/ic_text"
+                app:endIconMode="clear_text"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Spinner category -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/product_edit_category"
+                android:textSize="18sp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:background="@drawable/spinner_layout_shape">
+                <Spinner
+                    android:id="@+id/productEditSpinnerCategories"
+                    style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <!-- Spinner unit -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/product_edit_unit"
+                android:textSize="18sp"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:background="@drawable/spinner_layout_shape">
+                <Spinner
+                    android:id="@+id/productEditSpinnerUnits"
+                    style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <!-- Edit text price -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/productEditEtPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/product_hint_price"
+                app:startIconDrawable="@drawable/ic_money"
+                app:endIconMode="clear_text"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Image -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/product_edit_image"
+                android:textSize="18sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/productEditImage"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginEnd="20dp"
+                    tools:srcCompat="@drawable/no_image" />
+
+                <Button
+                    android:id="@+id/productEditBtnImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/product_edit_choose_text"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:layout_gravity="center_vertical"/>
+
+                <ImageView
+                    android:id="@+id/productEditImageRedo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_redo"
+                    android:scaleType="fitXY"
+                    android:scaleX="-1"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center_vertical" />
+
+                <ImageView
+                    android:id="@+id/productEditImageDelete"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_trash"
+                    android:scaleType="fitXY"
+                    android:layout_marginStart="20dp"
+                    android:layout_gravity="center_vertical" />
+
+            </LinearLayout>
+
+            <!-- Edit button -->
+            <Button
+                android:id="@+id/productEditBtnEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/product_edit_edit"
+                app:iconGravity="textStart"
+                app:icon="@drawable/ic_check"
+                android:drawableTint="@color/white"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/productEditLoader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/colorPrimary"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Large"
+        android:visibility="gone"/>
+
+</RelativeLayout>

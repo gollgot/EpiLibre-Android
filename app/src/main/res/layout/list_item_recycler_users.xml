@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@drawable/recycler_list_item_shape"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:padding="10dp"
+    android:id="@+id/recyclerUsersLayout">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/recyclerUsersTvFirstname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="John"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/recyclerUsersTvLastname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                tools:text="Doe"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="(" />
+
+            <TextView
+                android:id="@+id/recyclerUsersTvRole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="super administrateur" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=")" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/recyclerUsersTvEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="john.doe@johndoe.com"/>
+
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/recyclerUsersBtnEdit"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:scaleType="fitCenter"
+        android:layout_marginStart="15dp"
+        android:layout_alignParentEnd="true"
+        android:background="@color/white"
+        android:src="@drawable/ic_edit"
+        android:tint="@color/colorPrimary"
+        android:scaleX="-1"
+        />
+
+
+</RelativeLayout>

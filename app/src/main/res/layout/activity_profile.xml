@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.ProfileActivity"
+    android:id="@+id/profileLayout">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/profileToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        app:titleTextColor="@color/white"
+        android:background="@color/colorPrimary" />
+
+    <LinearLayout
+        android:layout_below="@id/profileToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <!-- Button change password -->
+        <Button
+            android:id="@+id/profileBtnChangePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_btn_change_password"
+            android:layout_gravity="center_horizontal"
+            app:iconGravity="textStart"
+            app:icon="@drawable/ic_lock"
+            android:backgroundTint="@color/lightSalmon"/>
+
+        <!-- Edit text first name -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileEtFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/product_hint_firstname"
+            app:startIconDrawable="@drawable/ic_text"
+            app:endIconMode="clear_text"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="45"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Edit text last name -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileEtLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/product_hint_name"
+            app:startIconDrawable="@drawable/ic_text"
+            app:endIconMode="clear_text"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="45"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Edit text email -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileEtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/profile_hint_email"
+            app:startIconDrawable="@drawable/ic_mail"
+            app:endIconMode="clear_text"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="255"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Edit text role -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/profileEtRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="@string/profile_hint_role"
+            app:startIconDrawable="@drawable/ic_role"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Button change password -->
+        <Button
+            android:id="@+id/profileBtnEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/profile_btn_edit"
+            app:iconGravity="textStart"
+            app:icon="@drawable/ic_check"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+
+    <!-- INFINITE PROGRESS BAR (Loader) with 80% black background -->
+    <RelativeLayout
+        android:id="@+id/profileLayoutLoaderBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:alpha="0.8"
+        android:visibility="gone"/>
+    <ProgressBar
+        android:id="@+id/profileLoader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/colorPrimary"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Large"
+        android:visibility="gone"/>
+
+</RelativeLayout>

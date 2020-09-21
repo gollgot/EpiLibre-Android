@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:background="@drawable/recycler_list_item_shape"
+    android:layout_marginRight="20dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
+    android:paddingTop="5dp"
+    android:paddingLeft="10dp"
+    android:id="@+id/recyclerProductsStockLayout">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/recyclerProductsStockTvProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Dentifrice"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/recyclerProductsStockTvCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Produits ménagers"/>
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/recyclerProductsStockCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/colorPrimary"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>
