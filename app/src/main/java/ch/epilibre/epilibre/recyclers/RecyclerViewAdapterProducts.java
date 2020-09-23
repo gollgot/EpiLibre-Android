@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,12 +32,11 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout layout;
+        ConstraintLayout layout;
         ImageView image;
         TextView tvName;
         TextView tvCategory;
         TextView tvPrice;
-        TextView tvStock;
         ImageButton btnAdd;
 
         public ViewHolder(@NonNull View itemView) {
@@ -46,7 +46,6 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
             tvName = itemView.findViewById(R.id.recyclerProductsTvName);
             tvCategory = itemView.findViewById(R.id.recyclerProductsTvCategory);
             tvPrice= itemView.findViewById(R.id.recyclerProductsTvPrice);
-            tvStock= itemView.findViewById(R.id.recyclerProductsTvStock);
             btnAdd = itemView.findViewById(R.id.recyclerProductsBtnAdd);
         }
     }
@@ -97,7 +96,6 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
         holder.tvName.setText(products.get(position).getName());
         holder.tvCategory.setText(products.get(position).getCategory());
         holder.tvPrice.setText(Utils.decimalFormat.format(products.get(position).getPrice()) + " CHF / " + unit);
-        holder.tvStock.setText(products.get(position).getStock() + " " + unit + " en stock");
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

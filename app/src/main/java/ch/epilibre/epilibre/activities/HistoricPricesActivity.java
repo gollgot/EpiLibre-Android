@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -123,7 +124,7 @@ public class HistoricPricesActivity extends AppCompatActivity {
                     }
 
                     // Create the recycler view
-                    RelativeLayout recyclerItemLayout = findViewById(R.id.recyclerHistoricPricesLayout);
+                    ConstraintLayout recyclerItemLayout = findViewById(R.id.recyclerHistoricPricesLayout);
                     RecyclerViewAdapterHistoricPrices adapter = new RecyclerViewAdapterHistoricPrices(HistoricPricesActivity.this, recyclerItemLayout, historicPrices);
                     recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(HistoricPricesActivity.this));

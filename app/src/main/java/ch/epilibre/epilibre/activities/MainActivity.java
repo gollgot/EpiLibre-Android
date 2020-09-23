@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ArrayList<BasketLine> basketLines;
     private TextView tvTotalPrice;
-    private RelativeLayout recyclerBasketLayout;
+    private ConstraintLayout recyclerBasketLayout;
     private LinearLayout mainLayout;
     private RecyclerViewAdapterBasketLine adapter;
     private RecyclerView recyclerViewBasketLines;
