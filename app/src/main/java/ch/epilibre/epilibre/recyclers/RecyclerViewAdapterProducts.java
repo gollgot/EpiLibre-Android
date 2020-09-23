@@ -96,31 +96,31 @@ public class RecyclerViewAdapterProducts extends RecyclerView.Adapter<RecyclerVi
         holder.tvName.setText(products.get(position).getName());
         holder.tvCategory.setText(products.get(position).getCategory());
         holder.tvPrice.setText(Utils.decimalFormat.format(products.get(position).getPrice()) + " CHF / " + unit);
+
+        // Clic on add button
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddToBasketDialog addToBasketDialog = new AddToBasketDialog(products.get(position));
-                addToBasketDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "product_add_dialog");
+                addToBasket(products.get(position));
             }
         });
 
-        // tvName must be cut if too long and finish by "..." (ellipsize), long click will display the full name
-        holder.tvName.setOnLongClickListener(new View.OnLongClickListener() {
+        // Clic on the list item layout
+        holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(view.getContext(), holder.tvName.getText(), Toast.LENGTH_SHORT).show();
-                return true;
+            public void onClick(View view) {
+                addToBasket(products.get(position));
             }
         });
+    }
 
-        // tvCategory must be cut if too long and finish by "..." (ellipsize), long click will display the full name
-        holder.tvCategory.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Toast.makeText(view.getContext(), holder.tvCategory.getText(), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
+    /**
+     * Add to basket
+     * @param product Product
+     */
+    private void addToBasket(Product product) {
+        AddToBasketDialog addToBasketDialog = new AddToBasketDialog(product);
+        addToBasketDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "product_add_dialog");
     }
 
     @Override
