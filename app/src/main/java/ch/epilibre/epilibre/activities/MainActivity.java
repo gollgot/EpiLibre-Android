@@ -534,7 +534,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .setTitle("Validation")
                 .setMessage("Voulez vous vraiment valider le payement de "
                         + nbProducts + " " + itemsOrtho + " pour un total de "
-                        + Utils.decimalFormat.format(finalTotalPrice) + " CHF ?")
+                        + Utils.decimalFormat.format(finalTotalPrice) + " CHF ?"
+                        + "\n\nSi oui, veuillez faire payer avec camipro avant de valider l'achat et n'oubliez pas les cautions.")
                 .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
