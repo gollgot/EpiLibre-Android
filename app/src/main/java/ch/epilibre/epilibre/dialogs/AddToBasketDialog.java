@@ -82,9 +82,12 @@ public class AddToBasketDialog extends AppCompatDialogFragment {
         // Set the product textView
         tvProduct.setText(product.getName() + " - " + product.getPrice() + " CHF / " + product.getUnit());
 
+        // /!\ If we have a product unit of KiloGrams -> we want to use Grams for our weight / quantity
+        String quantityUnit = product.getUnit().toLowerCase().equals("kg") ? "g" : product.getUnit();
+
         // Set the hints
-        etWeight.setHint("Poids du contenant (" + product.getUnit() + ")");
-        etQuantity.setHint(getString(R.string.product_dialog_quantity )+ " (" + product.getUnit() + ")");
+        etWeight.setHint("Poids du contenant (" + quantityUnit + ")");
+        etQuantity.setHint(getString(R.string.product_dialog_quantity )+ " (" + quantityUnit + ")");
 
         // Toogle the switch button to display or not the weight edit text
         switchBtnContainer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.text.HtmlCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
@@ -38,6 +40,7 @@ import ch.epilibre.epilibre.Models.BasketLine;
 import ch.epilibre.epilibre.Models.Discount;
 import ch.epilibre.epilibre.Models.DiscountLine;
 import ch.epilibre.epilibre.Models.Order;
+import ch.epilibre.epilibre.Models.Product;
 import ch.epilibre.epilibre.Models.Role;
 import ch.epilibre.epilibre.Models.User;
 import ch.epilibre.epilibre.R;
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private ArrayList<BasketLine> basketLines;
     private TextView tvTotalPrice;
-    private RelativeLayout recyclerBasketLayout;
+    private ConstraintLayout recyclerBasketLayout;
     private LinearLayout mainLayout;
     private RecyclerViewAdapterBasketLine adapter;
     private RecyclerView recyclerViewBasketLines;
@@ -385,7 +388,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 prices.append(";");
             }
 
-            productsId.append(basketLines.get(i).getProduct().getId());
+            Product product = basketLines.get(i).getProduct();
+            // For basketLines in KG, the user chose the quantity in GRAMS, so we have to set the right quantity in KG to store them correctly in database
+            if(product.getUnit().toLowerCase().equals("kg")){
+                basketLines.get(i).setQuantity(basketLines.get(i).getQuantity() / 1000);
+            }
+
+            productsId.append(product.getId());
             quantities.append(basketLines.get(i).getQuantity());
             prices.append(basketLines.get(i).getPrice());
         }
@@ -437,6 +446,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void getErrorNoInternet(){ }
         });
+    }
+
+    @Override
+    public void applyDiscount(final DiscountLine discountLine) {
+        final boolean hasDiscount = discountLine != null;
+        int nbProducts = basketLines.size();
+        double totalPrice = Utils.getTotalPrice(basketLines);
+        String itemsOrtho = basketLines.size() > 1 ? getString(R.string.main_items_plurial) : getString(R.string.main_items_singular);
+
+        if(hasDiscount){
+            totalPrice += discountLine.getPrice();
+        }
+
+        final double finalTotalPrice = totalPrice;
+        new MaterialAlertDialogBuilder(MainActivity.this)
+                .setTitle("Validation")
+                .setMessage(
+                    HtmlCompat.fromHtml(
+                        "Voulez vous vraiment valider le payement de "
+                        + nbProducts + " " + itemsOrtho + " pour un total de <b>"
+                        + Utils.decimalFormat.format(finalTotalPrice) + " CHF </b> ?"
+                        + "<br><br>Si oui, veuillez faire payer avec <b>camipro avant de valider l'achat</b> et n'oubliez pas les <b>cautions</b>."
+                    , HtmlCompat.FROM_HTML_MODE_LEGACY))
+                .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(hasDiscount){
+                            basketLines.add(discountLine);
+                        }
+                        checkout(hasDiscount, finalTotalPrice);
+                    }
+                })
+                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) { }
+                })
+                .show();
+
     }
 
 
@@ -515,39 +562,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //close navigation drawer
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void applyDiscount(final DiscountLine discountLine) {
-        final boolean hasDiscount = discountLine != null;
-        int nbProducts = basketLines.size();
-        double totalPrice = Utils.getTotalPrice(basketLines);
-        String itemsOrtho = basketLines.size() > 1 ? getString(R.string.main_items_plurial) : getString(R.string.main_items_singular);
-
-        if(hasDiscount){
-            totalPrice += discountLine.getPrice();
-        }
-
-        final double finalTotalPrice = totalPrice;
-        new MaterialAlertDialogBuilder(MainActivity.this)
-                .setTitle("Validation")
-                .setMessage("Voulez vous vraiment valider le payement de "
-                        + nbProducts + " " + itemsOrtho + " pour un total de "
-                        + Utils.decimalFormat.format(finalTotalPrice) + " CHF ?")
-                .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if(hasDiscount){
-                            basketLines.add(discountLine);
-                        }
-                        checkout(hasDiscount, finalTotalPrice);
-                    }
-                })
-                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) { }
-                })
-                .show();
-
     }
 }

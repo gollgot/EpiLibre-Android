@@ -2,6 +2,8 @@ package ch.epilibre.epilibre.Models;
 
 import java.io.Serializable;
 
+import ch.epilibre.epilibre.Utils;
+
 public class BasketLine implements Serializable {
 
     private Product product;
@@ -32,5 +34,9 @@ public class BasketLine implements Serializable {
 
     public String getDetails(){
         return "x " + quantity + " " + product.getUnit();
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
     }
 }

@@ -29,6 +29,7 @@
 
             <!-- Delete button -->
             <Button
+                android:visibility="gone"
                 android:id="@+id/productEditBtnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +43,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:text="@string/product_edit_last_update"
                 android:textSize="18sp"/>
             <TextView

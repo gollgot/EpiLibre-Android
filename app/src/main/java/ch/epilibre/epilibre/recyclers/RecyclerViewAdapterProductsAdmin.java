@@ -44,12 +44,24 @@ public class RecyclerViewAdapterProductsAdmin extends RecyclerViewAdapterProduct
         holder.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(Utils.isConnectedToInternet(RecyclerViewAdapterProductsAdmin.this.getContext())){
-                    productsAdminActivity.startEditActivity(products.get(position));
-                }else{
-                    Utils.NoInternetSnackBar(RecyclerViewAdapterProductsAdmin.this.getContext(), RecyclerViewAdapterProductsAdmin.this.getLayout());
-                }
+                startEditProductActivity(products.get(position));
             }
         });
+
+        // Clic on the list item layout
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startEditProductActivity(products.get(position));
+            }
+        });
+    }
+
+    private void startEditProductActivity(Product product){
+        if(Utils.isConnectedToInternet(RecyclerViewAdapterProductsAdmin.this.getContext())){
+            productsAdminActivity.startEditActivity(product);
+        }else{
+            Utils.NoInternetSnackBar(RecyclerViewAdapterProductsAdmin.this.getContext(), RecyclerViewAdapterProductsAdmin.this.getLayout());
+        }
     }
 }

@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class RecyclerViewAdapterBasketLine extends RecyclerView.Adapter<Recycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout layout;
+        ConstraintLayout layout;
         TextView tvProduct;
         TextView tvQuantity;
         TextView tvPrice;
@@ -68,9 +69,12 @@ public class RecyclerViewAdapterBasketLine extends RecyclerView.Adapter<Recycler
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        // For product in KG, the user enter an amount in GRAMS, so the quantity unit will be "g"
+        String quantityUnitDisplayed = basketLines.get(position).getProduct().getUnit().toLowerCase().equals("kg") ? "g" : basketLines.get(position).getProduct().getUnit();
+
         // Use getMainInfo() and getDetails() as polymorphic liaison to display the right info (from BasketLine or DiscountLine)
         holder.tvProduct.setText(basketLines.get(position).getMainInfo());
-        holder.tvQuantity.setText(basketLines.get(position).getDetails());
+        holder.tvQuantity.setText("x " + basketLines.get(position).getQuantity() + " " + quantityUnitDisplayed);
         holder.tvPrice.setText(Utils.decimalFormat.format(basketLines.get(position).getPrice()) + " CHF");
 
         holder.btnRemove.setOnClickListener(new View.OnClickListener() {
