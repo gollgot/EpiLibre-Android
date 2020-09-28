@@ -3,6 +3,7 @@ package ch.epilibre.epilibre.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -290,8 +291,13 @@ public class ProductsActivity extends AppCompatActivity implements AddToBasketDi
                 BigDecimal.valueOf(Double.parseDouble(etQuantity.getEditText().getText().toString())).subtract(BigDecimal.valueOf(Double.parseDouble(etWeight.getEditText().getText().toString()))):
                 BigDecimal.valueOf(Double.parseDouble(etQuantity.getEditText().getText().toString()));
 
-        // Price rounded to the highest 0.05 e.g: 0.91 -> 0.95 
-        double price = Math.ceil(quantity.doubleValue() * product.getPrice() * 20.0) / 20.0;
+        // For product quantity in KG, the user enter the quantity / container wight in "g", so we have to check here and divide per 1000 if we used grams to calculate the price
+        BigDecimal quantityForCalculation = product.getUnit().toLowerCase().equals("kg") ? BigDecimal.valueOf(quantity.doubleValue() / 1000) : quantity;
+        BigDecimal productPrice = BigDecimal.valueOf(product.getPrice());
+        BigDecimal factorToRound = BigDecimal.valueOf(20.0);
+
+        // Price rounded to the highest 0.05 e.g: 0.91 -> 0.95
+        double price = Math.ceil(quantityForCalculation.multiply(productPrice).multiply(factorToRound).doubleValue()) / factorToRound.doubleValue();
 
         BasketLine basketLine = new BasketLine(product, quantity.doubleValue(), price);
 
