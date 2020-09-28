@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.text.HtmlCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
@@ -461,10 +462,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final double finalTotalPrice = totalPrice;
         new MaterialAlertDialogBuilder(MainActivity.this)
                 .setTitle("Validation")
-                .setMessage("Voulez vous vraiment valider le payement de "
-                        + nbProducts + " " + itemsOrtho + " pour un total de "
-                        + Utils.decimalFormat.format(finalTotalPrice) + " CHF ?"
-                        + "\n\nSi oui, veuillez faire payer avec camipro avant de valider l'achat et n'oubliez pas les cautions.")
+                .setMessage(
+                    HtmlCompat.fromHtml(
+                        "Voulez vous vraiment valider le payement de "
+                        + nbProducts + " " + itemsOrtho + " pour un total de <b>"
+                        + Utils.decimalFormat.format(finalTotalPrice) + " CHF </b> ?"
+                        + "<br><br>Si oui, veuillez faire payer avec <b>camipro avant de valider l'achat</b> et n'oubliez pas les <b>cautions</b>."
+                    , HtmlCompat.FROM_HTML_MODE_LEGACY))
                 .setPositiveButton("Valider", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
